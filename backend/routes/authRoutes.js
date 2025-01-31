@@ -1,6 +1,6 @@
 import express from "express";
 import { register, login, logout, refreshAccessToken } from "../controllers/authController.js";
-import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { authMiddleware, refreshTokenMiddleware } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -48,8 +48,11 @@ router.post("/refresh-token", async (req, res) => {
     }
 });
 
-router.get('/profile', authMiddleware, (req, res) => {
-    res.json(req.user); // Aquí deberías devolver los detalles del usuario si la autenticación fue exitosa
+router.get('/profile', authMiddleware, refreshTokenMiddleware, (req, res) => {
+    res.json({
+        message: "Perfil obtenido correctamente",
+        user: req.user
+    });
 });
 
 export default router;
