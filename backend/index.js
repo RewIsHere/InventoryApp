@@ -1,16 +1,20 @@
-import express from "express";
-import cors from "cors";
-//import authRoutes from "./routes/auth.routes.js";
-//import userRoutes from "./routes/user.routes.js";
+import express from 'express';
+import authRoutes from './routes/authRoutes.js';
+import cors from 'cors';
 
+// Crear una aplicación de Express
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// Middlewares
+app.use(express.json()); // Para parsear JSON en las solicitudes
+app.use(cors()); // Para habilitar CORS
 
 // Rutas
-//app.use("/api/auth", authRoutes);
-//app.use("/api/users", userRoutes);
+app.use('/api/auth', authRoutes);
 
+// Configuración del puerto
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Servidor corriendo en http://localhost:${PORT}`));
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
