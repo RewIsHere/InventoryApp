@@ -28,8 +28,57 @@ export const createProduct = async (req, res) => {
 };
 
 // Listar productos
+// Controlador: Listar productos (con o sin filtros)
 export const listProducts = async (req, res) => {
-    const { data, error } = await supabase.from('products').select('*');
+    const { status, category, sort, stock_alert } = req.query;
+
+    let query = supabase.from('products').select('*');
+
+    // Filtro por estado
+    if (status && status !== 'all') {
+        query = query.eq('status', status.toUpperCase());
+    }
+
+    // Filtro por categoría
+    if (category) {
+        query = query.eq('category_id', category);
+    }
+
+    // Filtro por alerta de stock (dinámico basado en min_stock)
+    if (stock_alert && stock_alert !== 'all') {
+        switch (stock_alert) {
+            case 'low':
+                query = query.lte('stock', supabase.helpers.raw('min_stock')); // Stock <= min_stock
+                break;
+            case 'out_of_stock':
+                query = query.eq('stock', 0); // Sin stock
+                break;
+            case 'normal':
+                query = query.gt('stock', supabase.helpers.raw('min_stock')); // Stock > min_stock
+                break;
+        }
+    }
+
+    // Ordenar resultados
+    if (sort) {
+        switch (sort) {
+            case 'name_asc':
+                query = query.order('name', { ascending: true });
+                break;
+            case 'name_desc':
+                query = query.order('name', { ascending: false });
+                break;
+            case 'stock_asc':
+                query = query.order('stock', { ascending: true });
+                break;
+            case 'stock_desc':
+                query = query.order('stock', { ascending: false });
+                break;
+        }
+    }
+
+    // Ejecutar la consulta
+    const { data, error } = await query;
 
     if (error) return res.status(500).json({ error: error.message });
     res.status(200).json(data);
@@ -158,6 +207,52 @@ export const adjustStock = async (req, res) => {
     });
 
     res.status(200).json({ message: 'Stock ajustado correctamente.' });
+};
+
+// Activar/Desactivar un producto
+export const toggleProductStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body; // 'ACTIVE' o 'INACTIVE'
+    const userId = req.user.id;
+
+    const { error } = await supabase
+        .from('products')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    // Registrar en el historial
+    await supabase.from('product_history').insert({
+        product_id: id,
+        user_id: userId,
+        action: 'status_updated',
+        details: { status }
+    });
+
+    res.status(200).json({ message: `Producto ${status.toLowerCase()} correctamente.` });
+};
+
+export const getProductDetails = async (req, res) => {
+    const { id } = req.params;
+
+    // Obtener el producto
+    const { data: product, error: productError } = await supabase
+        .from('products')
+        .select(`
+            *,
+            category:categories(*),
+            images:product_images(*),
+            notes:product_notes(*),
+            history:product_history(*)
+        `)
+        .eq('id', id)
+        .single();
+
+    if (productError) return res.status(500).json({ error: productError.message });
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado.' });
+
+    res.status(200).json(product);
 };
 
 // Subir una imagen
