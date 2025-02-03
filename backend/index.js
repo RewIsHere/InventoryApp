@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 import cors from 'cors';
 
 // Crear una aplicación de Express
@@ -13,6 +14,7 @@ app.use(cors()); // Para habilitar CORS
 // Rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/products/categories', categoryRoutes);
 
 // Configuración del puerto
 const PORT = process.env.PORT || 3000;
