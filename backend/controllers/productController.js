@@ -121,11 +121,6 @@ export const updateProduct = async (req, res) => {
         historyDetails.min_stock = { old: oldProduct.min_stock, new: min_stock };
     }
 
-    if (status && status !== oldProduct.status) {
-        updates.status = status;
-        historyDetails.status = { old: oldProduct.status, new: status };
-    }
-
     if (Object.keys(updates).length === 0) {
         return res.status(400).json({ message: 'No hay cambios para aplicar.' });
     }
