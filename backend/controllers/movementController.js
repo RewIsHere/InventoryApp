@@ -244,3 +244,160 @@ export const confirmMovement = async (req, res) => {
     }
 };
 
+
+export const listPendingProducts = async (req, res) => {
+    try {
+        const { barcode, startDate, endDate, movement_id } = req.query;
+
+        let query = supabase.from('pending_reviews').select(`
+            *,
+            movement:movements(*),
+            created_by:users(*)
+        `);
+
+        // Filtrar por código de barras
+        if (barcode) query = query.eq('barcode', barcode);
+
+        // Filtrar por rango de fechas
+        if (startDate && endDate) query = query.range('created_at', startDate, endDate);
+
+        // Filtrar por ID de movimiento
+        if (movement_id) query = query.eq('movement_id', movement_id);
+
+        // Ejecutar la consulta
+        const { data, error } = await query;
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.status(200).json(data);
+    } catch (err) {
+        console.error("Error inesperado:", err.message);
+        res.status(500).json({ error: "Ocurrió un error inesperado." });
+    }
+};
+
+export const getPendingProductDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Consultar el producto pendiente y su movimiento asociado
+        const { data, error } = await supabase
+            .from('pending_reviews')
+            .select(`
+                *,
+                movement:movements(*),
+                created_by:users(*)
+            `)
+            .eq('id', id)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: "Producto pendiente no encontrado." });
+
+        res.status(200).json(data);
+    } catch (err) {
+        console.error("Error inesperado:", err.message);
+        res.status(500).json({ error: "Ocurrió un error inesperado." });
+    }
+};
+
+// movementController.js
+
+export const registerPendingProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, description, min_stock, category_id } = req.body;
+        const userId = req.user.id;
+
+        // Validaciones
+        if (!name || typeof name !== 'string') {
+            return res.status(400).json({ error: "El campo 'name' es obligatorio y debe ser una cadena de texto." });
+        }
+        if (!min_stock || typeof min_stock !== 'number' || min_stock < 0) {
+            return res.status(400).json({ error: "El campo 'min_stock' es obligatorio y debe ser un número mayor o igual a cero." });
+        }
+        if (!category_id || typeof category_id !== 'string') {
+            return res.status(400).json({ error: "El campo 'category_id' es obligatorio y debe ser un UUID válido." });
+        }
+
+        // Obtener el producto pendiente
+        const { data: pending, error: fetchError } = await supabase
+            .from('pending_reviews')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (fetchError) return res.status(500).json({ error: fetchError.message });
+        if (!pending) return res.status(404).json({ error: "Producto pendiente no encontrado." });
+
+        // Validar que la categoría exista
+        const { data: categoryData, error: categoryError } = await supabase
+            .from('product_categories')
+            .select('id')
+            .eq('id', category_id)
+            .single();
+
+        if (categoryError || !categoryData) {
+            return res.status(400).json({ error: "La categoría especificada no existe." });
+        }
+
+        // Crear el producto en la base de datos
+        const { data: product, error: productError } = await supabase
+            .from('products')
+            .insert({
+                name,
+                description,
+                barcode: pending.barcode,
+                stock: pending.quantity,
+                min_stock,
+                category_id,
+                created_by: userId
+            })
+            .select(); // Obtener el producto recién creado
+
+        if (productError) return res.status(500).json({ error: productError.message });
+
+        // Registrar en el historial
+        const productId = product[0].id;
+        const { error: historyError } = await supabase.from('product_history').insert({
+            product_id: productId,
+            user_id: userId,
+            action: 'product_created_from_pending',
+            details: {
+                name,
+                description,
+                barcode: pending.barcode,
+                stock: pending.quantity,
+                min_stock,
+                category_id,
+                movement_id: pending.movement_id // Contexto del movimiento
+            }
+        });
+
+        if (historyError) {
+            console.error("Error al registrar el historial:", historyError.message);
+            // Continuar aunque falle el historial, ya que el producto se creó correctamente
+        }
+
+        // Actualizar el estado del detalle del movimiento
+        const { error: detailsError } = await supabase
+            .from('movement_details')
+            .update({ status: 'REGISTERED', product_id: productId })
+            .eq('barcode', pending.barcode)
+            .eq('movement_id', pending.movement_id);
+
+        if (detailsError) return res.status(500).json({ error: detailsError.message });
+
+        // Eliminar el producto de la lista de pendientes
+        const { error: deleteError } = await supabase
+            .from('pending_reviews')
+            .delete()
+            .eq('id', id);
+
+        if (deleteError) return res.status(500).json({ error: deleteError.message });
+
+        res.status(201).json({ message: "Producto registrado correctamente.", product: product[0] });
+    } catch (err) {
+        console.error("Error inesperado:", err.message);
+        res.status(500).json({ error: "Ocurrió un error inesperado." });
+    }
+};

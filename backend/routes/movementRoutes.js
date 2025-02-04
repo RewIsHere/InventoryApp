@@ -1,12 +1,14 @@
 import express from 'express';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import {
+    listMovements,
+    getMovementDetails,
     startMovement,
     scanProducts,
     confirmMovement,
-    registerPendingProduct,
-    listMovements,
-    getMovementDetails
+    listPendingProducts,
+    getPendingProductDetails,
+    registerPendingProduct
 } from '../controllers/movementController.js';
 
 const router = express.Router();
@@ -26,5 +28,12 @@ router.post('/temp/:id/scan', authMiddleware, scanProducts);
 // Confirmar un movimiento
 router.post('/temp/:id/confirm', authMiddleware, confirmMovement);
 
+// Listar productos pendientes
+router.get('/pending-reviews', authMiddleware, listPendingProducts);
 
+// Obtener detalles de un producto pendiente específico
+router.get('/pending-reviews/:id', authMiddleware, getPendingProductDetails);
+
+// Registrar un producto pendiente
+router.post('/pending-reviews/:id/register', authMiddleware, registerPendingProduct);
 export default router;
