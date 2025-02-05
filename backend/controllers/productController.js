@@ -278,6 +278,83 @@ export const adjustStock = async (req, res) => {
     res.status(200).json({ message: 'Stock ajustado correctamente.' });
 };
 
+// productController.js
+
+export const updateProductStock = async (productId, quantity, type, userId) => {
+    try {
+        // Validaciones
+        if (!productId || typeof productId !== 'string') {
+            throw new Error("El campo 'productId' es obligatorio y debe ser un UUID válido.");
+        }
+        if (!quantity || typeof quantity !== 'number' || quantity <= 0) {
+            throw new Error("El campo 'quantity' es obligatorio y debe ser un número mayor que cero.");
+        }
+        if (!type || !['ENTRY', 'EXIT'].includes(type.toUpperCase())) {
+            throw new Error("El campo 'type' es obligatorio y debe ser 'ENTRY' o 'EXIT'.");
+        }
+        if (!userId || typeof userId !== 'string') {
+            throw new Error("El campo 'userId' es obligatorio y debe ser un UUID válido.");
+        }
+
+        // Determinar la operación y la acción
+        const operation = type === 'ENTRY' ? '+' : '-';
+        const action = type === 'ENTRY' ? 'stock_added' : 'stock_removed';
+
+        // Obtener el stock actual para validar que no sea negativo
+        const { data: product, error: fetchError } = await supabase
+            .from('products')
+            .select('stock')
+            .eq('id', productId)
+            .single();
+
+        if (fetchError) {
+            console.error("Error al obtener el producto:", fetchError.message);
+            throw new Error("No se pudo encontrar el producto.");
+        }
+
+        // Calcular el nuevo stock
+        let newStock;
+        if (type === 'ENTRY') {
+            newStock = product.stock + quantity;
+        } else {
+            newStock = product.stock - quantity;
+
+            // Validar que el stock no sea negativo
+            if (newStock < 0) {
+                throw new Error("El stock no puede ser negativo.");
+            }
+        }
+
+        // Actualizar el stock del producto usando una consulta SQL directa
+        const { error: stockError } = await supabase.rpc('update_stock', {
+            product_id: productId,
+            quantity_change: quantity,
+            operation: operation
+        });
+
+        if (stockError) {
+            console.error("Error al actualizar el stock:", stockError.message);
+            throw new Error("Ocurrió un error al actualizar el stock del producto.");
+        }
+
+        // Registrar en el historial
+        const { error: historyError } = await supabase.from('product_history').insert({
+            product_id: productId,
+            user_id: userId,
+            action,
+            details: { quantity, type }
+        });
+
+        if (historyError) {
+            console.error("Error al registrar en el historial:", historyError.message);
+            throw new Error("Ocurrió un error al registrar el historial del producto.");
+        }
+    } catch (err) {
+        console.error("Error inesperado en updateProductStock:", err.message);
+        throw err;
+    }
+};
+
 // Activar/Desactivar un producto
 export const toggleProductStatus = async (req, res) => {
     const { id } = req.params;
