@@ -5,16 +5,24 @@ import {
     getMovementDetails,
     startMovement,
     scanProducts,
+    updateScannedProductQuantity,
+    deleteScannedProduct,
     confirmMovement,
-    listPendingProducts,
-    getPendingProductDetails,
-    registerPendingProduct
+    getPendingMovement,
+    getIncompleteMovements,
+    handleUnregisteredProducts
 } from '../controllers/movementController.js';
 
 const router = express.Router();
 
 // Listar movimientos finalizados
 router.get('/', authMiddleware, listMovements);
+
+// Detectar movimientos no confirmados (Paso 1)
+router.get('/pending', authMiddleware, getPendingMovement);
+
+// Detectar movimientos incompletos (Paso 2 pendiente)
+router.get('/incomplete', authMiddleware, getIncompleteMovements);
 
 // Obtener detalles de un movimiento específico
 router.get('/:id', authMiddleware, getMovementDetails); 
@@ -25,15 +33,16 @@ router.post('/start', authMiddleware, startMovement);
 // Escanear productos en el carrito temporal
 router.post('/temp/:id/scan', authMiddleware, scanProducts);
 
+// Editar cantidad de un producto escaneado
+router.put('/temp/:temp_movement_id/products/:barcode/quantity', authMiddleware, updateScannedProductQuantity);
+
+// Eliminar un producto escaneado
+router.delete('/temp/:temp_movement_id/products/:barcode', authMiddleware,  deleteScannedProduct);
+
 // Confirmar un movimiento
 router.post('/temp/:id/confirm', authMiddleware, confirmMovement);
 
-// Listar productos pendientes
-router.get('/pending-reviews', authMiddleware, listPendingProducts);
+// Manejar productos no registrados (Paso 2)
+router.post('/:id/unregistered-products/action', authMiddleware,  handleUnregisteredProducts);
 
-// Obtener detalles de un producto pendiente específico
-router.get('/pending-reviews/:id', authMiddleware, getPendingProductDetails);
-
-// Registrar un producto pendiente
-router.post('/pending-reviews/:id/register', authMiddleware, registerPendingProduct);
 export default router;
