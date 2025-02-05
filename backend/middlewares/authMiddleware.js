@@ -8,10 +8,15 @@ export const authMiddleware = async (req, res, next) => {
         if (!token) {
             return res.status(401).json({ error: "Authorization token missing" });
         }
-
         // Verificar el token con la clave secreta
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+
+        // Validar que el token contenga los campos necesarios
+        if (!decoded.id || !decoded.role) {
+            return res.status(401).json({ error: "Invalid token payload" });
+        }
+
+        req.user = decoded; // Adjuntar los datos del usuario a la solicitud
         next();
     } catch (err) {
         if (err.name === "TokenExpiredError") {
