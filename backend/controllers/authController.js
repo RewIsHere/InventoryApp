@@ -18,7 +18,6 @@ const loginSchema = z.object({
     password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
-// Registrar un usuario
 export const register = async (username, name, surnames, email, password, role) => {
     // Validar los datos con Zod
     try {
@@ -27,8 +26,32 @@ export const register = async (username, name, surnames, email, password, role) 
         throw new Error(error.errors.map(e => e.message).join(", "));
     }
 
+    // Verificar si el username ya está en uso
+    const { data: existingUsername, error: usernameError } = await supabase
+        .from("users")
+        .select("id")
+        .eq("username", username)
+        .single();
+
+    if (existingUsername) {
+        throw new Error("Username is already in use by another user");
+    }
+
+    // Verificar si el email ya está en uso
+    const { data: existingEmail, error: emailError } = await supabase
+        .from("users")
+        .select("id")
+        .eq("email", email)
+        .single();
+
+    if (existingEmail) {
+        throw new Error("Email is already in use by another user");
+    }
+
+    // Cifrar la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Insertar el nuevo usuario en la base de datos
     const { data, error } = await supabase
         .from("users")
         .insert([{ username, name, surnames, email, password: hashedPassword, role }])
@@ -194,6 +217,135 @@ export const listUsers = async (queryParams) => {
     } catch (err) {
         throw new Error(err.message);
     }
+};
+
+export const updateUserDetails = async (userId, updates) => {
+    // Obtener los datos actuales del usuario
+    const { data: user, error: userError } = await supabase
+        .from("users")
+        .select("id, email, role, username, name, surnames, password")
+        .eq("id", userId)
+        .single();
+
+    if (userError || !user) {
+        throw new Error("User not found");
+    }
+
+    // Proteger al superadministrador
+    if (user.role === "superadmin") {
+        if (updates.role && updates.role !== "superadmin") {
+            throw new Error("Cannot modify the role of a superadmin account");
+        }
+    }
+
+    // Validar la contraseña actual si se proporciona una nueva contraseña (solo para /profile)
+    if (updates.newPassword && !updates.currentPassword) {
+        throw new Error("Current password is required to update the password");
+    }
+
+    if (updates.currentPassword && updates.newPassword) {
+        const isPasswordValid = await bcrypt.compare(updates.currentPassword, user.password);
+        if (!isPasswordValid) {
+            throw new Error("Current password is incorrect");
+        }
+
+        // Verificar si la nueva contraseña es igual a la actual
+        const isNewPasswordSame = await bcrypt.compare(updates.newPassword, user.password);
+        if (isNewPasswordSame) {
+            throw new Error("New password must be different from the current password");
+        }
+    }
+
+    // Preparar los datos para la actualización
+    const updateData = {};
+    const messages = [];
+
+    if (updates.email && updates.email !== user.email) {
+        // Verificar que el correo no esté en uso por otro usuario
+        const { data: existingUser, error: emailError } = await supabase
+            .from("users")
+            .select("id")
+            .eq("email", updates.email)
+            .neq("id", userId)
+            .single();
+        if (existingUser) {
+            throw new Error("Email is already in use by another user");
+        }
+        updateData.email = updates.email;
+    } else if (updates.email) {
+        messages.push("Email is already up to date");
+    }
+
+    if (updates.username && updates.username !== user.username) {
+        // Verificar que el username no esté en uso por otro usuario
+        const { data: existingUsername, error: usernameError } = await supabase
+            .from("users")
+            .select("id")
+            .eq("username", updates.username)
+            .neq("id", userId)
+            .single();
+        if (existingUsername) {
+            throw new Error("Username is already in use by another user");
+        }
+        updateData.username = updates.username;
+    } else if (updates.username) {
+        messages.push("Username is already up to date");
+    }
+
+    if (updates.name && updates.name !== user.name) {
+        updateData.name = updates.name;
+    } else if (updates.name) {
+        messages.push("Name is already up to date");
+    }
+
+    if (updates.surnames && updates.surnames !== user.surnames) {
+        updateData.surnames = updates.surnames;
+    } else if (updates.surnames) {
+        messages.push("Surnames are already up to date");
+    }
+
+    if (updates.role && updates.role !== user.role) {
+        // Verificar que el nuevo rol sea válido
+        const validRoles = ["admin", "employee", "superadmin"];
+        if (!validRoles.includes(updates.role)) {
+            throw new Error("Invalid role provided");
+        }
+        updateData.role = updates.role;
+    } else if (updates.role) {
+        messages.push("Role is already up to date");
+    }
+
+    // Manejar el campo password
+    if (updates.password) {
+        const hashedPassword = await bcrypt.hash(updates.password, 10);
+        updateData.password = hashedPassword;
+    } else if (updates.newPassword) {
+        const hashedPassword = await bcrypt.hash(updates.newPassword, 10);
+        updateData.password = hashedPassword;
+    }
+
+    // Si no hay cambios, devolver un mensaje
+    if (Object.keys(updateData).length === 0 && messages.length > 0) {
+        return { message: messages.join(", ") };
+    }
+
+    // Si no se proporcionaron campos válidos, lanzar un error
+    if (Object.keys(updateData).length === 0 && messages.length === 0) {
+        throw new Error("No valid fields provided for update");
+    }
+
+    // Actualizar el campo updated_at automáticamente
+    updateData.updated_at = new Date().toISOString();
+
+    // Actualizar los detalles del usuario
+    const { error } = await supabase
+        .from("users")
+        .update(updateData)
+        .eq("id", userId);
+
+    if (error) throw new Error("Error updating user details");
+
+    return { message: "User details updated successfully" };
 };
 
 // Refrescar el token de acceso
