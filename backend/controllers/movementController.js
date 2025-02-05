@@ -1,4 +1,5 @@
 import supabase from "../config/db.js";
+import { updateProductStock } from './productController.js';
 
 // Listar movimientos finalizados
 export const listMovements = async (req, res) => {
@@ -57,6 +58,32 @@ export const getMovementDetails = async (req, res) => {
     }
 };
 
+//  Detectar Movimientos No Confirmados (Paso 1)
+export const getPendingMovement = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // Consultar movimientos temporales del usuario
+        const { data, error } = await supabase
+            .from('temp_movements')
+            .select(`
+                *,
+                details:temp_movement_details(*)
+            `)
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false }) // Ordenar por fecha descendente
+            .limit(1); // Obtener solo el último movimiento temporal
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data || data.length === 0) return res.status(404).json({ message: "No hay movimientos pendientes." });
+
+        res.status(200).json(data[0]);
+    } catch (err) {
+        console.error("Error inesperado:", err.message);
+        res.status(500).json({ error: "Ocurrió un error inesperado." });
+    }
+};
+
 // Iniciar un movimiento temporal
 export const startMovement = async (req, res) => {
     try {
@@ -90,7 +117,7 @@ export const startMovement = async (req, res) => {
 // Escanear productos en el carrito temporal
 export const scanProducts = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params; // ID del movimiento temporal
         const { barcode, quantity } = req.body;
 
         // Validaciones
@@ -107,9 +134,9 @@ export const scanProducts = async (req, res) => {
             .select('*')
             .eq('temp_movement_id', id)
             .eq('barcode', barcode)
-            .single();
+            .maybeSingle(); // Usamos .maybeSingle() en lugar de .single()
 
-        if (fetchError && fetchError.message !== "No rows found") {
+        if (fetchError) {
             return res.status(500).json({ error: fetchError.message });
         }
 
@@ -121,6 +148,8 @@ export const scanProducts = async (req, res) => {
                 .eq('id', existingProduct.id);
 
             if (error) return res.status(500).json({ error: error.message });
+
+            res.status(200).json({ message: "Cantidad del producto actualizada correctamente." });
         } else {
             // Si el producto no existe, insertarlo
             const { error } = await supabase
@@ -132,29 +161,109 @@ export const scanProducts = async (req, res) => {
                 });
 
             if (error) return res.status(500).json({ error: error.message });
-        }
 
-        res.status(201).json({ message: "Producto escaneado correctamente." });
+            res.status(201).json({ message: "Producto escaneado correctamente." });
+        }
     } catch (err) {
         console.error("Error inesperado:", err.message);
         res.status(500).json({ error: "Ocurrió un error inesperado." });
     }
 };
 
+// Actualizar cantidad de un producto escaneado en el carrito temporal
+export const updateScannedProductQuantity = async (req, res) => {
+    try {
+        const { temp_movement_id, barcode } = req.params;
+        const { quantity } = req.body;
+
+        // Validaciones
+        if (!quantity || typeof quantity !== 'number' || quantity <= 0) {
+            return res.status(400).json({ error: "La cantidad debe ser un número mayor que cero." });
+        }
+
+        // Verificar si el producto existe en el carrito temporal
+        const { data: existingProduct, error: fetchError } = await supabase
+            .from('temp_movement_details')
+            .select('*')
+            .eq('temp_movement_id', temp_movement_id)
+            .eq('barcode', barcode)
+            .single();
+
+        if (fetchError && fetchError.message !== "No rows found") {
+            return res.status(500).json({ error: fetchError.message });
+        }
+        if (!existingProduct) {
+            return res.status(404).json({ error: "Producto no encontrado en el carrito temporal." });
+        }
+
+        // Actualizar la cantidad del producto
+        const { error } = await supabase
+            .from('temp_movement_details')
+            .update({ quantity })
+            .eq('id', existingProduct.id);
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.status(200).json({ message: "Cantidad del producto actualizada correctamente." });
+    } catch (err) {
+        console.error("Error inesperado:", err.message);
+        res.status(500).json({ error: "Ocurrió un error inesperado." });
+    }
+};
+
+// Eliminar un producto escaneado del carrito temporal
+export const deleteScannedProduct = async (req, res) => {
+    try {
+        const { temp_movement_id, barcode } = req.params;
+
+        // Verificar si el producto existe en el carrito temporal
+        const { data: existingProduct, error: fetchError } = await supabase
+            .from('temp_movement_details')
+            .select('*')
+            .eq('temp_movement_id', temp_movement_id)
+            .eq('barcode', barcode)
+            .single();
+
+        if (fetchError && fetchError.message !== "No rows found") {
+            return res.status(500).json({ error: fetchError.message });
+        }
+        if (!existingProduct) {
+            return res.status(404).json({ error: "Producto no encontrado en el carrito temporal." });
+        }
+
+        // Eliminar el producto del carrito temporal
+        const { error } = await supabase
+            .from('temp_movement_details')
+            .delete()
+            .eq('id', existingProduct.id);
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.status(200).json({ message: "Producto eliminado correctamente." });
+    } catch (err) {
+        console.error("Error inesperado:", err.message);
+        res.status(500).json({ error: "Ocurrió un error inesperado." });
+    }
+};
 // Confirmar un movimiento
 export const confirmMovement = async (req, res) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
 
-        // Validar que el carrito temporal exista
+        // Validar que el carrito temporal exista, pertenezca al usuario y esté pendiente
         const { data: tempMovement, error: tempError } = await supabase
             .from('temp_movements')
             .select('*')
             .eq('id', id)
-            .single();
+            .eq('user_id', userId)
+            .maybeSingle();
 
-        if (tempError || !tempMovement) {
-            return res.status(404).json({ error: "Carrito temporal no encontrado." });
+        if (tempError) {
+            return res.status(500).json({ error: tempError.message });
+        }
+        if (!tempMovement) {
+            return res.status(404).json({ error: "Carrito temporal no encontrado, no pertenece al usuario o ya fue confirmado." });
         }
 
         // Obtener los detalles del carrito temporal
@@ -177,7 +286,7 @@ export const confirmMovement = async (req, res) => {
                 .from('products')
                 .select('id')
                 .eq('barcode', detail.barcode)
-                .single();
+                .maybeSingle();
 
             if (productError && productError.message !== "No rows found") {
                 return res.status(500).json({ error: productError.message });
@@ -190,52 +299,59 @@ export const confirmMovement = async (req, res) => {
             }
         }
 
+        // Determinar el estado del movimiento
+        const movementStatus = unregistered.length > 0 ? 'COMPLETED_WITH_UNREGISTERED' : 'COMPLETED';
+
         // Crear el movimiento finalizado
         const { data: movement, error: movementError } = await supabase
             .from('movements')
             .insert({
                 type: tempMovement.type,
-                created_by: tempMovement.user_id,
-                status: 'COMPLETED'
+                created_by: userId,
+                status: movementStatus // Asegúrate de que este valor sea válido
             })
             .select();
 
         if (movementError) return res.status(500).json({ error: movementError.message });
 
-        // Guardar los detalles del movimiento
+        const movementId = movement[0].id;
+
+        // Guardar los detalles del movimiento para productos registrados
         for (const detail of registered) {
             await supabase.from('movement_details').insert({
-                movement_id: movement[0].id,
+                movement_id: movementId,
                 product_id: detail.product_id,
                 barcode: detail.barcode,
                 quantity: detail.quantity,
                 status: 'REGISTERED'
             });
 
-            // Actualizar el stock del producto
-            await updateProductStock(detail.product_id, detail.quantity, tempMovement.type, tempMovement.user_id);
+            // Llamar a la función updateProductStock del controlador de productos
+            await updateProductStock(detail.product_id, detail.quantity, tempMovement.type, userId);
         }
 
+        // Guardar los detalles del movimiento para productos no registrados
         for (const detail of unregistered) {
             await supabase.from('movement_details').insert({
-                movement_id: movement[0].id,
+                movement_id: movementId,
                 product_id: null,
                 barcode: detail.barcode,
                 quantity: detail.quantity,
                 status: 'UNREGISTERED'
             });
-
-            // Guardar en la tabla de pendientes
-            await supabase.from('pending_reviews').insert({
-                movement_id: movement[0].id,
-                barcode: detail.barcode,
-                quantity: detail.quantity
-            });
         }
 
-        // Limpiar el carrito temporal
-        await supabase.from('temp_movements').delete().eq('id', id);
+        // Eliminar el carrito temporal y sus detalles
         await supabase.from('temp_movement_details').delete().eq('temp_movement_id', id);
+        await supabase.from('temp_movements').delete().eq('id', id);
+
+        // Si hay productos no registrados, indicar que el usuario debe tomar una acción
+        if (unregistered.length > 0) {
+            return res.status(200).json({
+                message: "Movimiento confirmado correctamente, pero hay productos no registrados pendientes.",
+                unregisteredProducts: unregistered.map(p => ({ barcode: p.barcode, quantity: p.quantity }))
+            });
+        }
 
         res.status(200).json({ message: "Movimiento confirmado correctamente." });
     } catch (err) {
@@ -244,160 +360,160 @@ export const confirmMovement = async (req, res) => {
     }
 };
 
-
-export const listPendingProducts = async (req, res) => {
+// 5. Detectar Movimientos Incompletos (Paso 2 Pendiente)
+export const getIncompleteMovements = async (req, res) => {
     try {
-        const { barcode, startDate, endDate, movement_id } = req.query;
-
-        let query = supabase.from('pending_reviews').select(`
-            *,
-            movement:movements(*),
-            created_by:users(*)
-        `);
-
-        // Filtrar por código de barras
-        if (barcode) query = query.eq('barcode', barcode);
-
-        // Filtrar por rango de fechas
-        if (startDate && endDate) query = query.range('created_at', startDate, endDate);
-
-        // Filtrar por ID de movimiento
-        if (movement_id) query = query.eq('movement_id', movement_id);
-
-        // Ejecutar la consulta
-        const { data, error } = await query;
-
-        if (error) return res.status(500).json({ error: error.message });
-        res.status(200).json(data);
-    } catch (err) {
-        console.error("Error inesperado:", err.message);
-        res.status(500).json({ error: "Ocurrió un error inesperado." });
-    }
-};
-
-export const getPendingProductDetails = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        // Consultar el producto pendiente y su movimiento asociado
-        const { data, error } = await supabase
-            .from('pending_reviews')
-            .select(`
-                *,
-                movement:movements(*),
-                created_by:users(*)
-            `)
-            .eq('id', id)
-            .single();
-
-        if (error) return res.status(500).json({ error: error.message });
-        if (!data) return res.status(404).json({ error: "Producto pendiente no encontrado." });
-
-        res.status(200).json(data);
-    } catch (err) {
-        console.error("Error inesperado:", err.message);
-        res.status(500).json({ error: "Ocurrió un error inesperado." });
-    }
-};
-
-// movementController.js
-
-export const registerPendingProduct = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { name, description, min_stock, category_id } = req.body;
         const userId = req.user.id;
 
-        // Validaciones
-        if (!name || typeof name !== 'string') {
-            return res.status(400).json({ error: "El campo 'name' es obligatorio y debe ser una cadena de texto." });
-        }
-        if (!min_stock || typeof min_stock !== 'number' || min_stock < 0) {
-            return res.status(400).json({ error: "El campo 'min_stock' es obligatorio y debe ser un número mayor o igual a cero." });
-        }
-        if (!category_id || typeof category_id !== 'string') {
-            return res.status(400).json({ error: "El campo 'category_id' es obligatorio y debe ser un UUID válido." });
-        }
-
-        // Obtener el producto pendiente
-        const { data: pending, error: fetchError } = await supabase
-            .from('pending_reviews')
-            .select('*')
-            .eq('id', id)
-            .single();
+        // Consultar movimientos con productos no registrados pendientes
+        const { data: incompleteMovements, error: fetchError } = await supabase
+            .from('movements')
+            .select(`
+                *,
+                details:movement_details(*)
+            `)
+            .eq('created_by', userId)
+            .eq('status', 'COMPLETED_WITH_UNREGISTERED');
 
         if (fetchError) return res.status(500).json({ error: fetchError.message });
-        if (!pending) return res.status(404).json({ error: "Producto pendiente no encontrado." });
-
-        // Validar que la categoría exista
-        const { data: categoryData, error: categoryError } = await supabase
-            .from('product_categories')
-            .select('id')
-            .eq('id', category_id)
-            .single();
-
-        if (categoryError || !categoryData) {
-            return res.status(400).json({ error: "La categoría especificada no existe." });
+        if (!incompleteMovements || incompleteMovements.length === 0) {
+            return res.status(404).json({ message: "No hay movimientos incompletos pendientes." });
         }
 
-        // Crear el producto en la base de datos
-        const { data: product, error: productError } = await supabase
-            .from('products')
-            .insert({
-                name,
-                description,
-                barcode: pending.barcode,
-                stock: pending.quantity,
-                min_stock,
-                category_id,
-                created_by: userId
-            })
-            .select(); // Obtener el producto recién creado
-
-        if (productError) return res.status(500).json({ error: productError.message });
-
-        // Registrar en el historial
-        const productId = product[0].id;
-        const { error: historyError } = await supabase.from('product_history').insert({
-            product_id: productId,
-            user_id: userId,
-            action: 'product_created_from_pending',
-            details: {
-                name,
-                description,
-                barcode: pending.barcode,
-                stock: pending.quantity,
-                min_stock,
-                category_id,
-                movement_id: pending.movement_id // Contexto del movimiento
+        // Filtrar solo los productos no registrados que no están en pending_reviews
+        const movementsWithUnregistered = [];
+        for (const movement of incompleteMovements) {
+            const filteredDetails = [];
+            for (const detail of movement.details) {
+                if (detail.status === 'UNREGISTERED') {
+                    // Verificar si el producto ya está en pending_reviews
+                    const { data: existingReview, error: reviewError } = await supabase
+                        .from('pending_reviews')
+                        .select('*')
+                        .eq('movement_id', movement.id)
+                        .eq('barcode', detail.barcode)
+                        .maybeSingle();
+                    if (reviewError && reviewError.message !== "No rows found") {
+                        return res.status(500).json({ error: reviewError.message });
+                    }
+                    if (!existingReview) {
+                        filteredDetails.push(detail);
+                    }
+                }
             }
-        });
-
-        if (historyError) {
-            console.error("Error al registrar el historial:", historyError.message);
-            // Continuar aunque falle el historial, ya que el producto se creó correctamente
+            if (filteredDetails.length > 0) {
+                movementsWithUnregistered.push({
+                    ...movement,
+                    details: filteredDetails
+                });
+            }
         }
 
-        // Actualizar el estado del detalle del movimiento
-        const { error: detailsError } = await supabase
-            .from('movement_details')
-            .update({ status: 'REGISTERED', product_id: productId })
-            .eq('barcode', pending.barcode)
-            .eq('movement_id', pending.movement_id);
+        if (movementsWithUnregistered.length === 0) {
+            return res.status(404).json({ message: "No hay movimientos incompletos pendientes." });
+        }
 
-        if (detailsError) return res.status(500).json({ error: detailsError.message });
-
-        // Eliminar el producto de la lista de pendientes
-        const { error: deleteError } = await supabase
-            .from('pending_reviews')
-            .delete()
-            .eq('id', id);
-
-        if (deleteError) return res.status(500).json({ error: deleteError.message });
-
-        res.status(201).json({ message: "Producto registrado correctamente.", product: product[0] });
+        res.status(200).json(movementsWithUnregistered);
     } catch (err) {
         console.error("Error inesperado:", err.message);
+        res.status(500).json({ error: "Ocurrió un error inesperado." });
+    }
+};
+
+export const handleUnregisteredProducts = async (req, res) => {
+    try {
+        const { id } = req.params; // ID del movimiento
+        const userId = req.user.id;
+
+        // Validar que el ID del movimiento sea un UUID válido
+        function isValidUUID(uuid) {
+            return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(uuid);
+        }
+
+        if (!isValidUUID(id)) {
+            return res.status(400).json({ error: "ID de movimiento inválido." });
+        }
+        if (!isValidUUID(userId)) {
+            return res.status(400).json({ error: "ID de usuario inválido." });
+        }
+
+        // Obtener los detalles del movimiento
+        const { data: movementDetails, error: detailsError } = await supabase
+            .from('movement_details')
+            .select('*')
+            .eq('movement_id', id)
+            .eq('status', 'UNREGISTERED');
+
+        if (detailsError) return res.status(500).json({ error: detailsError.message });
+        if (!movementDetails || movementDetails.length === 0) {
+            return res.status(404).json({ error: "No hay productos no registrados pendientes en este movimiento." });
+        }
+
+        let productsSaved = false; // Bandera para rastrear inserciones
+
+        // Procesar los productos no registrados
+        for (const detail of movementDetails) {
+
+            // Validar los datos
+            if (typeof detail.barcode !== 'number' || detail.barcode <= 0) {
+                return res.status(400).json({ error: "El campo 'barcode' debe ser un número positivo." });
+            }
+            if (typeof detail.quantity !== 'number' || detail.quantity <= 0) {
+                return res.status(400).json({ error: "El campo 'quantity' debe ser un número positivo." });
+            }
+
+            // Verificar si el producto ya está en pending_reviews
+            const { data: existingReview, error: reviewError } = await supabase
+                .from('pending_reviews')
+                .select('*')
+                .eq('movement_id', id)
+                .eq('barcode', detail.barcode)
+                .maybeSingle();
+
+            if (reviewError && reviewError.message !== "No rows found") {
+                return res.status(500).json({ error: reviewError.message });
+            }
+
+            console.log("Producto ya en pending_reviews:", !!existingReview);
+
+            if (!existingReview) {
+                const { error: insertError } = await supabase.from('pending_reviews').insert({
+                    movement_id: id,
+                    barcode: detail.barcode,
+                    quantity: detail.quantity,
+                    created_by: userId
+                });
+
+                if (insertError) {
+                    return res.status(500).json({ error: insertError.message });
+                }
+
+                productsSaved = true; // Marcar que se guardó un producto
+            }
+        }
+
+        // Actualizar el estado del movimiento si no quedan productos pendientes
+        const { data: remainingUnregistered, error: remainingError } = await supabase
+            .from('movement_details')
+            .select('*')
+            .eq('movement_id', id)
+            .eq('status', 'UNREGISTERED');
+
+        if (remainingError) return res.status(500).json({ error: remainingError.message });
+
+        if (remainingUnregistered.length === 0) {
+            await supabase
+                .from('movements')
+                .update({ status: 'COMPLETED' })
+                .eq('id', id);
+        }
+
+        if (!productsSaved) {
+            return res.status(400).json({ error: "Todos los productos ya fueron guardados para revisión previamente." });
+        }
+
+        res.status(200).json({ message: "Productos no registrados guardados para revisión correctamente." });
+    } catch (err) {
         res.status(500).json({ error: "Ocurrió un error inesperado." });
     }
 };
