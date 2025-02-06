@@ -1,5 +1,6 @@
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import movementRoutes from './routes/movementRoutes.js';
@@ -15,6 +16,7 @@ app.use(cors()); // Para habilitar CORS
 
 // Rutas
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/products/categories', categoryRoutes);
 app.use('/api/movements', movementRoutes);
