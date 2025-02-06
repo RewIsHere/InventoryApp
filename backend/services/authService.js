@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import supabase from "../config/db.js";
 import { validateRegister, validateLogin, resetPasswordSchema } from "../validations/authValidation.js";
-import { isUsernameValid, isPasswordStrong } from "../utils/validationUtils.js";
+import { isUsernameValid } from "../utils/validationUtils.js";
 
 // Generar token de restablecimiento de contraseña
 export const generateResetToken = (userId) => {

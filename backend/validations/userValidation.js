@@ -70,7 +70,7 @@ export const validateListUsersQuery = (queryParams) => {
 
 // Esquema de validación para el ID de usuario
 export const validateUserId = (id) => {
-    const schema = z.string().refine(value => !isNaN(parseInt(value, 10)), "Invalid user ID");
+    const schema = z.string().uuid("Invalid user ID: Must be a valid UUID");
     return schema.parse(id);
 };
 
