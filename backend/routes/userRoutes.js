@@ -76,7 +76,7 @@ const adminUpdateSchema = z.object({
         .optional(),
 });
 
-router.patch("/users/:id", authMiddleware, adminMiddleware, async (req, res) => {
+router.patch("/:id", authMiddleware, adminMiddleware, async (req, res) => {
     try {
         // Verificar si el body está vacío
         if (Object.keys(req.body).length === 0) {
@@ -102,7 +102,7 @@ router.patch("/users/:id", authMiddleware, adminMiddleware, async (req, res) => 
 });
 
 // Ruta para listar usuarios con paginación, filtros y ordenamiento
-router.get("/users", authMiddleware, adminMiddleware, async (req, res) => {
+router.get("/", authMiddleware, adminMiddleware, async (req, res) => {
     try {
         // Extraer query parameters
         const queryParams = {
@@ -125,7 +125,7 @@ router.get("/users", authMiddleware, adminMiddleware, async (req, res) => {
 });
 
 // Obtener los detalles de un usuario especifo
-router.get("/users/:id", authMiddleware, adminMiddleware, async (req, res) => {
+router.get("/:id", authMiddleware, adminMiddleware, async (req, res) => {
     try {
         const userId = req.params.id;
         const userDetails = await getUserDetails(userId);
@@ -136,7 +136,7 @@ router.get("/users/:id", authMiddleware, adminMiddleware, async (req, res) => {
 });
 
 // Eliminar la cuenta de un usuario
-router.delete("/users/:id", authMiddleware, adminMiddleware, async (req, res) => {
+router.delete("/:id", authMiddleware, adminMiddleware, async (req, res) => {
     try {
         const userId = req.params.id;
         const result = await deleteUser(userId);
@@ -147,7 +147,7 @@ router.delete("/users/:id", authMiddleware, adminMiddleware, async (req, res) =>
 });
 
 // Activar o desactivar la cuenta de un usuario
-router.patch("/users/:id/toggle-active", authMiddleware, adminMiddleware, validateToggleActiveBody, async (req, res) => {
+router.patch("/:id/toggle-active", authMiddleware, adminMiddleware, validateToggleActiveBody, async (req, res) => {
     try {
         const userId = req.params.id;
         const { isActive } = req.body; // true para activar, false para desactivar
