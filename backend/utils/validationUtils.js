@@ -4,8 +4,3 @@ export const isUsernameValid = (username) => {
     return usernameRegex.test(username);
 };
 
-// Validar fortaleza de la contraseña
-export const isPasswordStrong = (password) => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-    return passwordRegex.test(password);
-};

@@ -1,20 +1,11 @@
-import { z } from "zod";
+import { validateToggleActiveBody } from "../validations/userValidation.js";
 
-// Esquema de validación para el body
-const toggleActiveSchema = z.object({
-    isActive: z.boolean({
-        required_error: "isActive is required and must be a boolean",
-    }),
-});
-
-// Middleware para validar el body
+// Middleware para validar el cuerpo de la solicitud (toggle-active)
 export const validateToggleActiveBody = (req, res, next) => {
     try {
-        // Validar el body con Zod
-        toggleActiveSchema.parse(req.body);
-        next(); // Continuar si la validación es exitosa
+        req.body = validateToggleActiveBody(req.body);
+        next();
     } catch (error) {
-        // Devolver un error 400 con los mensajes de validación
         return res.status(400).json({ error: error.errors.map(e => e.message).join(", ") });
     }
 };

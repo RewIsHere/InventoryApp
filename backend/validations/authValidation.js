@@ -32,10 +32,8 @@ export const validateLogin = (data) => {
     const schema = z.object({
         email: z.string().email("Invalid email format"),
         password: z.string()
-        .min(8, "Password must be at least 8 characters long")
-        .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/, "Password must include letters, numbers, and special characters")
-        .refine(value => !/\s/.test(value), "Password cannot contain spaces"),
+            .min(8, "Password must be at least 8 characters long")
+            .refine(value => !/\s/.test(value), "Password cannot contain spaces"),
     });
-
     return schema.parse(data);
 };

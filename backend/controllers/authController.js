@@ -1,4 +1,5 @@
 import { registerUserService, loginUserService, logoutUserService, refreshAccessTokenService, getProfileService, forgotPasswordService, resetPasswordService } from "../services/authService.js";
+import { ZodError } from "zod";
 
 // Registro de usuario
 export const register = async (req, res) => {
@@ -6,7 +7,11 @@ export const register = async (req, res) => {
         const result = await registerUserService(req.body);
         res.status(201).json(result);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        if (error instanceof ZodError) {
+            const zodErrors = error.errors.map(err => err.message);
+            return res.status(400).json({ error: zodErrors.join(", ") });
+        }
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -16,10 +21,14 @@ export const login = async (req, res) => {
         const result = await loginUserService(req.body);
         res.status(200).json(result);
     } catch (error) {
+        if (error instanceof ZodError) {
+            const zodErrors = error.errors.map(err => err.message);
+            return res.status(400).json({ error: zodErrors.join(", ") });
+        }
         if (error.message === "Invalid credentials") {
             return res.status(401).json({ error: "Invalid credentials" });
         }
-        res.status(500).json({ error: "An error occurred while processing your request" });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -39,10 +48,14 @@ export const refreshAccessToken = async (req, res) => {
         const result = await refreshAccessTokenService(req.body.refreshToken);
         res.status(200).json(result);
     } catch (error) {
+        if (error instanceof ZodError) {
+            const zodErrors = error.errors.map(err => err.message);
+            return res.status(400).json({ error: zodErrors.join(", ") });
+        }
         if (error.message === "Invalid or expired refresh token") {
             return res.status(401).json({ error: "Invalid or expired refresh token" });
         }
-        res.status(500).json({ error: "An error occurred while processing your request" });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -78,6 +91,10 @@ export const resetPassword = async (req, res) => {
         const result = await resetPasswordService(req.body);
         res.status(200).json(result);
     } catch (error) {
+        if (error instanceof ZodError) {
+            const zodErrors = error.errors.map(err => err.message);
+            return res.status(400).json({ error: zodErrors.join(", ") });
+        }
         if (error.message === "Invalid or expired token") {
             return res.status(400).json({ error: "Invalid or expired token" });
         }
@@ -87,6 +104,6 @@ export const resetPassword = async (req, res) => {
         if (error.message === "New password must be different from the current password") {
             return res.status(400).json({ error: "New password must be different from the current password" });
         }
-        res.status(500).json({ error: "An error occurred while processing your request" });
+        res.status(500).json({ error: error.message });
     }
 };

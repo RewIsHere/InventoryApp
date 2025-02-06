@@ -45,13 +45,6 @@ export const registerUserService = async (userData) => {
         throw new Error("Username can only contain letters, numbers, underscores (_), and hyphens (-)");
     }
 
-    // Validar fortaleza de la contraseña
-    if (!isPasswordStrong(password)) {
-        throw new Error(
-            "Password must include at least one letter, one number, and one special character"
-        );
-    }
-
     // Verificar si el username ya está en uso
     const { data: existingUsername } = await supabase
         .from("users")
@@ -86,45 +79,54 @@ export const registerUserService = async (userData) => {
     return { message: "User registered successfully", user: data };
 };
 
-// Iniciar sesión
 export const loginUserService = async ({ email, password }) => {
-    // Validar los datos con Zod
-    const { email: validatedEmail, password: validatedPassword } = validateLogin({ email, password });
+    try {
+        // Validar los datos con Zod
+        const { email: validatedEmail, password: validatedPassword } = validateLogin({ email, password });
 
-    // Buscar al usuario por correo electrónico
-    const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", validatedEmail)
-        .single();
-    if (userError || !user) {
-        throw new Error("Invalid credentials");
+        // Buscar al usuario por correo electrónico
+        const { data: user, error: userError } = await supabase
+            .from("users")
+            .select("*")
+            .eq("email", validatedEmail)
+            .single();
+
+        if (userError || !user) {
+            console.error("User not found or database error:", userError);
+            throw new Error("Invalid credentials");
+        }
+
+        // Verificar la contraseña
+        const isMatch = await bcrypt.compare(validatedPassword, user.password);
+        if (!isMatch) {
+            console.error("Password mismatch:", validatedPassword, user.password);
+            throw new Error("Invalid credentials");
+        }
+
+        // Generar tokens
+        const accessToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        const refreshToken = jwt.sign({ id: user.id }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
+
+        // Guardar el refresh token en la BD
+        const { error: updateError } = await supabase
+            .from("users")
+            .update({ refresh_token: refreshToken })
+            .eq("id", user.id);
+
+        if (updateError) {
+            console.error("Error updating refresh token:", updateError);
+            throw new Error("Error updating refresh token");
+        }
+
+        return {
+            accessToken,
+            refreshToken,
+            user: { id: user.id, username: user.username, role: user.role },
+        };
+    } catch (error) {
+        console.error("Error in loginUserService:", error);
+        throw error;
     }
-
-    // Verificar la contraseña
-    const isMatch = await bcrypt.compare(validatedPassword, user.password);
-    if (!isMatch) {
-        throw new Error("Invalid credentials");
-    }
-
-    // Generar tokens
-    const accessToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "15m" });
-    const refreshToken = jwt.sign({ id: user.id }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
-
-    // Guardar el refresh token en la BD
-    const { error: updateError } = await supabase
-        .from("users")
-        .update({ refresh_token: refreshToken })
-        .eq("id", user.id);
-    if (updateError) {
-        throw new Error("Error updating refresh token");
-    }
-
-    return {
-        accessToken,
-        refreshToken,
-        user: { id: user.id, username: user.username, role: user.role },
-    };
 };
 
 // Cerrar sesión

@@ -15,12 +15,12 @@ app.use(express.json()); // Para parsear JSON en las solicitudes
 app.use(cors()); // Para habilitar CORS
 
 // Rutas
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/products/categories', categoryRoutes);
-app.use('/api/movements', movementRoutes);
-app.use('/api/pending-reviews', pendingProductsRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/products/categories', categoryRoutes);
+app.use('/api/v1/movements', movementRoutes);
+app.use('/api/v1/pending-reviews', pendingProductsRoutes);
 
 // Configuración del puerto
 const PORT = process.env.PORT || 3000;
