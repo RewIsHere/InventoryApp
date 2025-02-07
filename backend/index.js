@@ -5,6 +5,7 @@ import productRoutes from './routes/productRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import movementRoutes from './routes/movementRoutes.js';
 import pendingProductsRoutes from './routes/pendingProductsRoutes.js';
+import statsRoutes from "./routes/statsRoutes.js";
 import cors from 'cors';
 
 // Crear una aplicación de Express
@@ -21,6 +22,7 @@ app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/products/categories', categoryRoutes);
 app.use('/api/v1/movements', movementRoutes);
 app.use('/api/v1/pending-reviews', pendingProductsRoutes);
+app.use('/api/v1/stats', statsRoutes);
 
 // Configuración del puerto
 const PORT = process.env.PORT || 3000;
