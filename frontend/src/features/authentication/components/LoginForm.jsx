@@ -35,6 +35,9 @@ const LoginForm = () => {
 
   return (
     <Card className={styles.card}>
+      <div className={styles.imgContainer}>
+      <img className={styles.imgLogo}  src="https://jpctdxgxtcilpeqfqull.supabase.co/storage/v1/object/public/product_images/public/c004079a-11db-4b85-8fa1-05a6ef0e6d9f/logo.png" alt="" />
+      </div>
       <h2 className={styles.title}>Iniciar Sesión</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         <Input
@@ -53,11 +56,11 @@ const LoginForm = () => {
         />
         <Button
           type="submit"
-          variant="primary"
+          variant="secondary"
           size="large"
           disabled={loading}
         >
-          {loading ? "Cargando..." : "Iniciar Sesión"}
+          {loading ? "Cargando..." : "Acceder"}
         </Button>
       </form>
     </Card>

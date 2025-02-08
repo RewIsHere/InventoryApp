@@ -4,23 +4,26 @@
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 4px;
+  border-radius: 12px;
   padding: var(--spacing-small) var(--spacing-medium);
   font-size: var(--font-size-base);
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-duration) var(--transition-easing);
   text-decoration: none;
-  color: #fff;
+  color: #231c1c;
   background-color: var(--color-primary);
 }
 
 /* Variantes de color */
 .button.primary {
-  background-color: var(--color-primary);
+  background-color: #39DB7D;
+  color: #231c1c;
 }
 
 .button.secondary {
-  background-color: var(--color-secondary);
+  background-color: #006fee;
+  color: #ffffff;
 }
 
 .button.danger {
@@ -51,7 +54,7 @@
 }
 
 .button.large {
-  padding: var(--spacing-large);
+  padding: 14px;
   font-size: var(--font-size-large);
 }
 

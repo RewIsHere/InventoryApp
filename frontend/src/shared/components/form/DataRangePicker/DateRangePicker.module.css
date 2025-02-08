@@ -1,60 +1,220 @@
+/* Estilos generales */
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-small);
-    width: 100%;
+  background-color: #2D2D2D; /* Fondo oscuro */
+  border-radius: 12px;
+  padding: 10px; /* Reducción del padding */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px; /* Reducción del margen */
+  padding: 0 8px; /* Espaciado a los lados */
+}
+
+.header h2 {
+  font-size: 0.7rem; /* Tamaño más pequeño */
+  font-weight: bold;
+  color: white;
+  text-overflow: ellipsis; /* Recorta el texto si excede */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el texto que se desborda */
+  flex-grow: 1; /* Hace que el texto ocupe el espacio disponible */
+  text-align: center; /* Centra el texto */
+}
+
+.button {
+  background-color: #444444;
+  color: white;
+  padding: 4px; /* Reducción del padding */
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.button:hover {
+  background-color: #6B6B6B;
+}
+
+/* Contenedor relativo para el input y el calendario */
+.relativeContainer {
+  position: relative; /* Permite posicionar el calendario respecto a este contenedor */
+  width: 100%;
+  display: flex; /* Añadido para centrar horizontalmente */
+  justify-content: center; /* Centra el calendario respecto al input */
+}
+
+.calendarContainer {
+  position: absolute; /* Hace que el calendario no afecte el layout */
+  z-index: 10; /* Superpone al contenido */
+  width: auto; /* Ancho adaptable */
+  max-width: clamp(180px, 80%, 220px); /* Ancho adaptable más pequeño */
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  padding: 6px; /* Reducción del padding */
+  max-height: clamp(180px, 70vh, 220px); /* Altura adaptable más pequeña */
+  overflow: hidden; /* No mostrar scroll */
+  transform: translateY(15%) !important; /* Ajusta el desplazamiento */
+}
+
+/* Posición del calendario */
+.positionTop {
+  bottom: calc(100% + 5px); /* Arriba del input */
+}
+
+.positionBottom {
+  top: calc(100% + 5px); /* Debajo del input */
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3.5px; /* Reducción del espacio entre días */
+}
+
+/* Contenedor de los días de la semana */
+.weekDaysContainer {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 3px; /* Espaciado entre los días de la semana y el calendario */
+}
+
+.weekDay {
+  color: #A1A1A1;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.6rem;
+  padding: 2px;
+}
+
+.dayButton {
+  background-color: transparent;
+  border: none;
+  color: #A1A1A1;
+  padding: 4px; /* Reducción del padding */
+  font-size: 0.7rem; /* Tamaño más pequeño */
+  border-radius: 6px; /* Reducción del radio de borde */
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dayButton:hover {
+  background-color: #4A4A4A;
+}
+
+.selectedDate {
+  background-color: #4A90E2;
+  color: white;
+}
+
+.selectedDate:hover {
+  background-color: #357ABD;
+}
+
+.inRange {
+  background-color: #4C6B9A;
+  color: white;
+}
+
+.inRange:hover {
+  background-color: #365D8E;
+}
+
+.hoveredDate {
+  background-color: #3A5A77;
+}
+
+.dateInfo {
+  margin-top: 8px; /* Reducción del margen */
+  font-size: 0.7rem; /* Tamaño más pequeño */
+}
+
+.text-white {
+  color: white;
+}
+
+.text-gray-400 {
+  color: #A1A1A1;
+}
+
+.text-gray-600 {
+  color: #B3B3B3;
+}
+
+/* Estilos del input */
+.input {
+  padding: 6px; /* Reducción del padding */
+  border: 1px solid #444;
+  border-radius: 6px; /* Reducción del radio de borde */
+  background-color: #333;
+  color: white;
+  width: 100%;
+  font-size: 0.7rem; /* Tamaño más pequeño */
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 3px #4A90E2; /* Sombra más pequeña al recibir foco */
+}
+
+/* Media Queries Modernas */
+/* Pantallas pequeñas (hasta 600px) */
+@media (width < 600px) {
+  .dayButton {
+    font-size: 0.6rem;
+    padding: 3px;
   }
-  
-  .label {
-    color: var(--color-primary);
-    font-size: var(--font-size-base);
+  .weekDay {
+    font-size: 0.5rem;
+    padding: 1px;
   }
-  
-  .inputWrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-bg);
-    border-radius: 4px;
-    padding: var(--spacing-small);
-    cursor: pointer;
-    transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+/* Estilos específicos para el input del DateRangePicker */
+.dateRangePickerInput {
+  width: 100%;
+  padding: var(--spacing-small);
+  font-size: var(--font-size-base);
+  background-color: #18181b;
+  color: var(--color-text);
+  border: 1px solid #18181b;
+  border-radius: 12px;
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.dateRangePickerInput:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+/* Pantallas medianas (entre 600px y 1024px) */
+@media (width >= 600px) and (width <= 1024px) {
+  .dayButton {
+    font-size: 0.7rem;
+    padding: 4px;
   }
-  
-  .inputWrapper:hover {
-    border-color: var(--color-primary);
+  .weekDay {
+    font-size: 0.6rem;
+    padding: 2px;
   }
-  
-  .input {
-    flex: 1;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    color: var(--color-text);
-    font-size: var(--font-size-base);
+}
+
+/* Pantallas grandes (>1024px) */
+@media (width > 1024px) {
+  .dayButton {
+    font-size: 0.8rem;
+    padding: 5px;
   }
-  
-  .calendarIcon {
-    margin-left: var(--spacing-small);
-    color: var(--color-text-secondary);
+  .weekDay {
+    font-size: 0.7rem;
+    padding: 3px;
   }
-  
-  .calendarContainer {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    margin-top: var(--spacing-small);
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-bg);
-    border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  .calendar {
-    width: 100%;
-    border: none;
-  }
+}

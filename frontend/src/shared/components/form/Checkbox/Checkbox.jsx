@@ -6,7 +6,6 @@ const Checkbox = ({ label, checked, onChange, disabled = false }) => {
   return (
     <motion.div
       className={`${styles.checkboxContainer} ${disabled ? styles.disabled : ""}`}
-      whileTap={{ scale: 0.95 }}
       onClick={() => !disabled && onChange(!checked)}
     >
       {/* Casilla de verificación */}
@@ -14,7 +13,7 @@ const Checkbox = ({ label, checked, onChange, disabled = false }) => {
         className={`${styles.checkbox} ${checked ? styles.checked : ""}`}
         initial={false}
         animate={{
-          borderColor: checked ? "var(--color-primary)" : "transparent",
+          borderColor: checked ? "var(--color-primary)" : "#CCC",
           backgroundColor: checked ? "var(--color-primary)" : "transparent",
         }}
         transition={{ duration: 0.2 }}
@@ -28,11 +27,16 @@ const Checkbox = ({ label, checked, onChange, disabled = false }) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
           >
-            <path
+            <motion.path
               fill="none"
               stroke="#fff"
               strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="M5 12l5 5l10 -10"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             />
           </motion.svg>
         )}
