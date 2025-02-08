@@ -1,46 +1,26 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./shared/context/AuthContext"; // Importamos ambos desde el mismo archivo
-import MainLayout from "./shared/components/layout/MainLayout/MainLayout";
-import AuthLayout from "./shared/components/layout/AuthLayout";
-import LoginPage from "./features/auth/pages/LoginPage";
-import Dashboard from "./features/dashboard/pages/DashboardPage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./shared/context/AuthContext";
+import LoginPage from "./features/authentication/pages/LoginPage";
+import DashboardPage from "./features/dashboard/pages/DashboardPage";
+import ProtectedRoute from "./shared/components/ProtectedRoute";
+import MainLayout from "./shared/components/layout/MainLayout";
 
-// Componente para proteger rutas
-const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
-  if (!user) {
-    return <Navigate to="/" />;
-  }
-  return children;
-};
-
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <Router>
         <Routes>
           {/* Ruta pública: Inicio de Sesión */}
-          <Route
-            path="/"
-            element={
-              <AuthLayout>
-                <LoginPage />
-              </AuthLayout>
-            }
-          />
+          <Route path="/" element={<LoginPage />} />
 
           {/* Rutas protegidas */}
           <Route
-            path="/*"
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <MainLayout>
-                  <Routes>
-                    {/* Dashboard */}
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    {/* Agrega más rutas protegidas aquí */}
-                  </Routes>
+                  <DashboardPage />
                 </MainLayout>
               </ProtectedRoute>
             }
@@ -49,6 +29,6 @@ function App() {
       </Router>
     </AuthProvider>
   );
-}
+};
 
 export default App;

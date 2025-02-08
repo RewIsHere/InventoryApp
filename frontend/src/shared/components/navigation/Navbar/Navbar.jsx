@@ -1,5 +1,5 @@
 import React from "react";
-import NavLinkButton from "../NavLinkButton";
+import NavButton from "../../buttons/NavButton";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
@@ -7,18 +7,18 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       {/* Enlaces de Navegación */}
       <div className={styles.links}>
-        <NavLinkButton to="/" variant="solid" icon={<i className="fas fa-home"></i>}>
+        <NavButton to="/" variant="solid" >
           Inicio
-        </NavLinkButton>
-        <NavLinkButton to="/productos" icon={<i className="fas fa-box"></i>}>
+        </NavButton>
+        <NavButton to="/productos" >
           Productos
-        </NavLinkButton>
-        <NavLinkButton to="/movimientos" icon={<i className="fas fa-exchange-alt"></i>}>
+        </NavButton>
+        <NavButton to="/movimientos" >
           Movimientos
-        </NavLinkButton>
-        <NavLinkButton to="/perfil" icon={<i className="fas fa-user"></i>}>
+        </NavButton>
+        <NavButton to="/perfil" >
           Perfil
-        </NavLinkButton>
+        </NavButton>
       </div>
     </nav>
   );

@@ -1,0 +1,42 @@
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: var(--spacing-medium);
+    border-radius: 8px;
+    color: var(--color-text);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999; /* Asegura que esté por encima de otros elementos */
+  }
+  
+  .toast.success {
+    background-color: var(--color-success);
+  }
+  
+  .toast.error {
+    background-color: var(--color-danger);
+  }
+  
+  /* Animación personalizada */
+  .toast {
+    animation: fadeInOut 3s ease-in-out;
+  }
+  
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    10% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    90% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+  }
