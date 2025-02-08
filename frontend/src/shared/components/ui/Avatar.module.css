@@ -1,0 +1,16 @@
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Forma circular */
+    font-size: calc(var(--font-size-base) * 1.2); /* Tamaño de fuente ajustado */
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase; /* Convertir las iniciales a mayúsculas */
+    transition: transform var(--transition-duration) var(--transition-easing),
+                box-shadow var(--transition-duration) var(--transition-easing);
+  }
+  
+  .avatar:hover {
+    transform: scale(1.1); /* Efecto de escala al pasar el cursor */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  }

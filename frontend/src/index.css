@@ -1,68 +1,62 @@
+@import url(shared/styles/global.css);
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Paleta de colores (Modo Oscuro) */
+  --color-bg: #121212; /* Fondo principal */
+  --color-bg-secondary: #1e1e1e; /* Fondo secundario (cards, formularios) */
+  --color-text: #ffffff; /* Texto principal */
+  --color-text-secondary: #b0b0b0; /* Texto secundario */
+  --color-primary: #673ab7; /* Color primario (botones, enlaces) */
+  --color-primary-hover: #512da8; /* Hover del color primario */
+  --color-success: #4caf50; /* Éxito */
+  --color-danger: #f44336; /* Error */
+  --color-selection: rgba(0, 255, 0, 0.1); /* Verde suave para filas seleccionadas */
+  --color-selection-hover: rgba(0, 255, 0, 0.2); /* Verde un poco más intenso al pasar el cursor */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Espaciado */
+  --spacing-small: 8px;
+  --spacing-medium: 16px;
+  --spacing-large: 24px;
+  --spacing-xlarge: 32px;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Tipografía */
+  --font-family: 'Roboto', sans-serif;
+  --font-size-base: 16px;
+  --font-size-small: 14px;
+  --font-size-large: 18px;
+
+  /* Transiciones */
+  --transition-duration: 0.3s;
+  --transition-easing: ease-in-out;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* Estilos globales básicos */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color var(--transition-duration) var(--transition-easing),
+              color var(--transition-duration) var(--transition-easing);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-primary);
+  margin: 0;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background-color var(--transition-duration) var(--transition-easing),
+              transform var(--transition-duration) var(--transition-easing);
 }

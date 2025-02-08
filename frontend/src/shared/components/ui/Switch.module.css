@@ -1,0 +1,52 @@
+.switchContainer {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .switchTrack {
+    width: 40px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: var(--color-bg-secondary);
+    position: relative;
+    transition: background-color var(--transition-duration) var(--transition-easing);
+  }
+  
+  .switchTrack.checked {
+    background-color: var(--color-primary);
+  }
+  
+  .switchThumb {
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+  }
+  
+  .switchTrack.checked .switchThumb {
+    left: calc(100% - 18px);
+  }
+  
+  .label {
+    margin-left: var(--spacing-small);
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+  }
+  
+  .disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .disabled .switchTrack {
+    background-color: var(--color-bg-secondary);
+  }
+  
+  .disabled .switchTrack.checked {
+    background-color: var(--color-bg-secondary);
+  }

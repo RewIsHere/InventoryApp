@@ -1,0 +1,63 @@
+.container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    color: var(--color-text);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform var(--transition-duration) var(--transition-easing),
+                background-color var(--transition-duration) var(--transition-easing);
+  }
+  
+  .iconButton:hover {
+    background-color: var(--color-bg-secondary);
+  }
+  
+  .iconButton.active {
+    background-color: var(--color-bg-secondary);
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 10;
+    margin-top: var(--spacing-small);
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    padding: var(--spacing-small) var(--spacing-medium);
+    cursor: pointer;
+    transition: background-color var(--transition-duration) var(--transition-easing);
+  }
+  
+  .option:hover {
+    background-color: var(--color-bg-hover);
+  }
+  
+  .optionIcon {
+    font-size: var(--font-size-large);
+    color: var(--color-primary);
+  }
+  
+  .optionText {
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+  }

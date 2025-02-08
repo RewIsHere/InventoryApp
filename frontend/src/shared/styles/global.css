@@ -1,0 +1,179 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    font-family: var(--font-family);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    scroll-behavior: smooth; /* Desplazamiento suave */
+  }
+  
+  /* Variables globales */
+  :root {
+    --color-bg: #121212;
+    --color-bg-secondary: #1e1e1e;
+    --color-text: #ffffff;
+    --color-primary: #673ab7;
+    --color-danger: #f44336;
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 24px;
+    --font-family: 'Roboto', sans-serif;
+  }
+  
+  
+  /* Clases utilitarias para texto */
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-left {
+    text-align: left;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
+  .text-primary {
+    color: var(--color-primary);
+  }
+  
+  .text-success {
+    color: var(--color-success);
+  }
+  
+  .text-danger {
+    color: var(--color-danger);
+  }
+  
+  /* Clases utilitarias para márgenes y padding */
+  .mt-small {
+    margin-top: var(--spacing-small);
+  }
+  
+  .mt-medium {
+    margin-top: var(--spacing-medium);
+  }
+  
+  .mt-large {
+    margin-top: var(--spacing-large);
+  }
+  
+  .mb-small {
+    margin-bottom: var(--spacing-small);
+  }
+  
+  .mb-medium {
+    margin-bottom: var(--spacing-medium);
+  }
+  
+  .mb-large {
+    margin-bottom: var(--spacing-large);
+  }
+  
+  .p-small {
+    padding: var(--spacing-small);
+  }
+  
+  .p-medium {
+    padding: var(--spacing-medium);
+  }
+  
+  .p-large {
+    padding: var(--spacing-large);
+  }
+  
+  .px-small {
+    padding-left: var(--spacing-small);
+    padding-right: var(--spacing-small);
+  }
+  
+  .px-medium {
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+  }
+  
+  .px-large {
+    padding-left: var(--spacing-large);
+    padding-right: var(--spacing-large);
+  }
+  
+  .py-small {
+    padding-top: var(--spacing-small);
+    padding-bottom: var(--spacing-small);
+  }
+  
+  .py-medium {
+    padding-top: var(--spacing-medium);
+    padding-bottom: var(--spacing-medium);
+  }
+  
+  .py-large {
+    padding-top: var(--spacing-large);
+    padding-bottom: var(--spacing-large);
+  }
+  
+  /* Flexbox utilitario */
+  .flex {
+    display: flex;
+  }
+  
+  .flex-column {
+    flex-direction: column;
+  }
+  
+  .justify-center {
+    justify-content: center;
+  }
+  
+  .align-center {
+    align-items: center;
+  }
+  
+  .gap-small {
+    gap: var(--spacing-small);
+  }
+  
+  .gap-medium {
+    gap: var(--spacing-medium);
+  }
+  
+  .gap-large {
+    gap: var(--spacing-large);
+  }
+  
+  /* Animaciones */
+  .fade-in {
+    animation: fadeIn var(--transition-duration) ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .slide-up {
+    animation: slideUp var(--transition-duration) ease-in-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }

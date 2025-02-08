@@ -1,0 +1,24 @@
+.container {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-small); /* Espaciado entre el ícono y el texto */
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-duration) var(--transition-easing);
+  }
+  
+  .container:hover {
+    color: var(--color-primary);
+  }
+  
+  .icon {
+    font-size: var(--font-size-large); /* Tamaño del ícono */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .text {
+    font-size: var(--font-size-base); /* Tamaño del texto */
+    font-weight: var(--font-weight-regular);
+  }

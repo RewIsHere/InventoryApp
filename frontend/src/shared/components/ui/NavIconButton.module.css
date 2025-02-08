@@ -1,0 +1,41 @@
+.iconButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+    color: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform var(--transition-duration) var(--transition-easing),
+                color var(--transition-duration) var(--transition-easing);
+  }
+  
+  .iconButton:hover {
+    color: var(--color-primary-hover);
+  }
+  
+  .iconButton.small {
+    width: 30px;
+    height: 30px;
+    font-size: var(--font-size-small);
+  }
+  
+  .iconButton.medium {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-base);
+  }
+  
+  .iconButton.large {
+    width: 50px;
+    height: 50px;
+    font-size: var(--font-size-large);
+  }
+  
+  .iconButton.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
