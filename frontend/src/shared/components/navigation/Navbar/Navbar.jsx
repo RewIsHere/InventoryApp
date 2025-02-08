@@ -1,13 +1,10 @@
 import React from "react";
-import NavLinkButton from "./NavButton";
+import NavLinkButton from "../NavLinkButton";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
   return (
     <nav className={styles.navbar}>
-      {/* Logo */}
-      <div className={styles.logo}>MiApp</div>
-
       {/* Enlaces de Navegación */}
       <div className={styles.links}>
         <NavLinkButton to="/" variant="solid" icon={<i className="fas fa-home"></i>}>

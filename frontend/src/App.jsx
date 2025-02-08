@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./shared/context/AuthContext"; // Importamos ambos desde el mismo archivo
-import MainLayout from "./shared/layouts/MainLayout";
-import AuthLayout from "./shared/layouts/AuthLayout";
+import MainLayout from "./shared/components/layout/MainLayout/MainLayout";
+import AuthLayout from "./shared/components/layout/AuthLayout";
 import LoginPage from "./features/auth/pages/LoginPage";
 import Dashboard from "./features/dashboard/pages/DashboardPage";
 

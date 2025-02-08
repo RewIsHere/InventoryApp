@@ -1,4 +1,4 @@
-@import url(shared/styles/global.css);
+@import url("./global.css");
 
 :root {
   /* Paleta de colores (Modo Oscuro) */
@@ -20,7 +20,7 @@
   --spacing-xlarge: 32px;
 
   /* Tipografía */
-  --font-family: 'Roboto', sans-serif;
+  --font-family: "Roboto", sans-serif;
   --font-size-base: 16px;
   --font-size-small: 14px;
   --font-size-large: 18px;
