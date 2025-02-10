@@ -56,7 +56,6 @@
   background-color: #1f1f1f;
   border-radius: 8px;
   padding: 6px; /* Reducción del padding */
-  max-height: clamp(180px, 70vh, 220px); /* Altura adaptable más pequeña */
   overflow: hidden; /* No mostrar scroll */
   transform: translateY(15%) !important; /* Ajusta el desplazamiento */
 }
@@ -194,6 +193,16 @@
   border-color: var(--color-primary);
   outline: none;
 }
+
+/* module.css */
+.grayText {
+  color: gray;
+}
+
+.whiteText {
+  color: white;
+}
+
 
 /* Pantallas medianas (entre 600px y 1024px) */
 @media (width >= 600px) and (width <= 1024px) {

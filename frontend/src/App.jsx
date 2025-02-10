@@ -5,6 +5,7 @@ import LoginPage from "./features/authentication/pages/LoginPage";
 import DashboardPage from "./features/dashboard/pages/DashboardPage";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
 import MainLayout from "./shared/components/layout/MainLayout";
+import { ToastProvider } from "./shared/context/ToastContext";
 import Test from "./Test";
 
 const App = () => {
@@ -13,7 +14,9 @@ const App = () => {
       <Router>
         <Routes>
           {/* Ruta pública: Inicio de Sesión */}
-          <Route path="/" element={<Test />} />
+          <Route path="/" element={    <ToastProvider>
+<Test />     </ToastProvider>
+} />
 
           {/* Rutas protegidas */}
           <Route

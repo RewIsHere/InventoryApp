@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DateRangePicker from "./shared/components/form/DataRangePicker";
+import DateRangePicker from ".";
 
 const App = () => {
   const [dates, setDates] = useState({ startDate: null, endDate: null });

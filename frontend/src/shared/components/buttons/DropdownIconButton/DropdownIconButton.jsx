@@ -1,15 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./DropdownIconButton.module.css";
 
 const DropdownIconButton = ({ icon, options, onOptionClick }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);  // Referencia para el dropdown
 
   // Manejar la selección de una opción
   const handleOptionClick = (option) => {
     setIsOpen(false); // Cerrar el menú
     if (onOptionClick) onOptionClick(option); // Llamar al callback con la opción seleccionada
   };
+
+  // Detectar clic fuera del dropdown para cerrarlo
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);  // Cerrar dropdown si el clic es fuera del contenedor
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside); // Detectar clics fuera
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside); // Limpiar el event listener
+    };
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -30,6 +45,7 @@ const DropdownIconButton = ({ icon, options, onOptionClick }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={dropdownRef}  // Referencia al dropdown
             className={styles.dropdownMenu}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

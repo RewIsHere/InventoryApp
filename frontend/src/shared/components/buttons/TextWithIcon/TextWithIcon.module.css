@@ -5,6 +5,8 @@
     color: var(--color-text-secondary);
     cursor: pointer;
     transition: color var(--transition-duration) var(--transition-easing);
+    padding: 5px;
+    border-radius: 14px;
   }
   
   .container:hover {

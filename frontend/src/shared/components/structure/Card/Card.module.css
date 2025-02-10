@@ -1,6 +1,67 @@
 .card {
-    background-color: var(--color-bg-secondary);
-    border-radius: 22px;
-    padding: var(--spacing-medium);
-  }
-  
+  background-color: var(--color-bg-secondary);
+  border-radius: 22px;
+  padding: var(--spacing-medium);
+  transition: all 0.3s ease;
+  display: inline-block;
+  position: relative;
+}
+
+/* Estilo de sombra */
+.card.md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card.lg {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo de bordes redondeados */
+.card.lg {
+  border-radius: 16px;
+}
+
+.card.xl {
+  border-radius: 32px;
+}
+
+/* Full Width */
+.card.fullWidth {
+  width: 100%;
+}
+
+/* Hoverable - Cambia el fondo o escala cuando se pasa el ratón */
+.card.hoverable:hover {
+  background-color: var(--color-bg-hover);
+  cursor: pointer;
+}
+
+.card.pressable:active {
+  transform: scale(0.98); /* Efecto de escala al hacer clic */
+}
+
+/* Estilos para el difuminado */
+.card.blurred {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.card.footerBlurred {
+  padding-bottom: 40px;
+  backdrop-filter: blur(5px);
+}
+
+/* Estilo deshabilitado */
+.card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Estilo para texto seleccionable */
+.card.allowTextSelectionOnPress {
+  user-select: auto;
+}
+
+.card.noRipple:active {
+  transform: none;
+}

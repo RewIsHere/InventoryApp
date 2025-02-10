@@ -13,6 +13,8 @@
   text-decoration: none;
   color: #231c1c;
   background-color: var(--color-primary);
+  position: relative; /* Necesario para la animación de ::after */
+  overflow: hidden; /* Para asegurarnos de que el círculo no se salga del botón */
 }
 
 /* Variantes de color */

@@ -1,93 +1,106 @@
 .tableContainer {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    border-radius: 8px;
-  }
-  
-  .header {
-    display: grid;
-    grid-template-columns: 50px repeat(auto-fill, minmax(150px, 1fr));
-    background-color: var(--color-bg-secondary);
-    padding: var(--spacing-small);
-    border-radius: 8px 8px 0 0;
-  }
-  
-  .columnHeader {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text);
-    text-align: left;
-    padding: var(--spacing-small);
-  }
-  
-  .body {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .row {
-    display: grid;
-    grid-template-columns: 50px repeat(auto-fill, minmax(150px, 1fr));
-    align-items: center;
-    background-color: var(--color-bg);
-    padding: var(--spacing-small);
-    transition: background-color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .row:hover {
-    background-color: var(--color-bg-hover);
-  }
-  
-  .checkboxCell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  .arrowCheckbox {
-    width: 24px;
-    height: 24px;
-    border: 2px solid var(--color-border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform var(--transition-duration) var(--transition-easing),
-                background-color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .arrowCheckbox.checked {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    transform: rotate(180deg);
-  }
-  
-  .arrowIcon {
-    width: 16px;
-    height: 16px;
-    fill: var(--color-text);
-    transition: transform var(--transition-duration) var(--transition-easing);
-  }
-  
-  .arrowCheckbox.checked .arrowIcon {
-    transform: rotate(180deg);
-  }
-  
-  .cell {
-    font-size: var(--font-size-base);
-    color: var(--color-text);
-    padding: var(--spacing-small);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+}
 
-  .row.selected {
-    background-color: var(--color-selection); /* Color de fondo para filas seleccionadas */
-  }
-  
-  .row.selected:hover {
-    background-color: var(--color-selection-hover); /* Color al pasar el cursor sobre una fila seleccionada */
-  }
+.header {
+  display: grid;
+  grid-template-columns: 50px repeat(auto-fill, minmax(150px, 1fr));
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-small);
+  border-radius: 8px 8px 0 0;
+}
+
+.columnHeader {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  text-align: left;
+  padding: var(--spacing-small);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 50px repeat(auto-fill, minmax(150px, 1fr));
+  align-items: center;
+  background-color: var(--color-bg);
+  padding: var(--spacing-small);
+  transition: background-color var(--transition-duration) var(--transition-easing);
+}
+
+.row:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.checkboxCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.arrowCheckbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--transition-duration) var(--transition-easing),
+              background-color var(--transition-duration) var(--transition-easing),
+              border-color var(--transition-duration) var(--transition-easing);
+}
+
+.arrowCheckbox.checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.arrowIcon {
+  width: 16px;
+  height: 16px;
+  fill: var(--color-text);
+  transition: transform var(--transition-duration) var(--transition-easing);
+}
+
+
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkboxPath {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cell {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  padding: var(--spacing-small);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row.selected {
+  background-color: var(--color-selection); /* Color de fondo para filas seleccionadas */
+}
+
+.row.selected:hover {
+  background-color: var(--color-selection-hover); /* Color al pasar el cursor sobre una fila seleccionada */
+}

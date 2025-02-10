@@ -1,60 +1,96 @@
 .container {
-    margin-bottom: var(--spacing-medium);
-  }
-  
-  .label {
-    display: block;
-    margin-bottom: var(--spacing-small);
-    color: var(--color-primary);
-  }
-  
-  .inputWrapper {
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--color-bg-secondary);
-    border-radius: 4px;
-    overflow: hidden;
-    background-color: var(--color-bg-secondary);
-    transition: border-color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .numberInput {
-    width: 100%;
-    padding: var(--spacing-small);
-    font-size: var(--font-size-base);
-    text-align: center;
-    background-color: transparent;
-    color: var(--color-text);
-    border: none;
-    outline: none;
-  }
-  
-  .button {
-    padding: var(--spacing-small) var(--spacing-medium);
-    font-size: var(--font-size-large);
-    font-weight: bold;
-    background-color: var(--color-bg-secondary);
-    color: var(--color-primary);
-    border: none;
-    cursor: pointer;
-    transition: background-color var(--transition-duration) var(--transition-easing),
-                transform var(--transition-duration) var(--transition-easing);
-  }
-  
-  .button:hover:not(:disabled) {
-    background-color: var(--color-primary);
-    color: #fff;
-  }
-  
-  .button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  .decrement {
-    border-right: 1px solid var(--color-bg);
-  }
-  
-  .increment {
-    border-left: 1px solid var(--color-bg);
-  }
+  margin-bottom: var(--spacing-medium);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--spacing-small);
+  color: var(--color-primary);
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--color-bg-secondary);
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.numberInput {
+  width: 100%;
+  padding: var(--spacing-small);
+  font-size: var(--font-size-base);
+  text-align: center;
+  background-color: transparent;
+  color: var(--color-text);
+  border: none;
+  outline: none;
+}
+
+.numberInput {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: none; /* Chrome, Safari */
+  appearance: none; /* Para otros navegadores */
+}
+
+.numberInput::-webkit-outer-spin-button,
+.numberInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.button {
+  position: relative; /* Necesario para posicionar el ::after */
+  padding: var(--spacing-small) var(--spacing-medium);
+  font-size: var(--font-size-large);
+  font-weight: bold;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-primary);
+  border: none;
+  cursor: pointer;
+  overflow: hidden; /* Asegura que el efecto no desborde el botón */
+  transition: background-color var(--transition-duration) var(--transition-easing), /* Para el cambio de color */
+              transform 0.5s ease-out; /* Transición suave para el botón */
+}
+
+.button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1); /* Color de fondo del círculo de expansión */
+  border-radius: 50%;
+  transform: scale(0); /* Comienza desde un punto pequeño */
+  transition: transform 0.5s ease-out; /* Transición suave y más lenta */
+}
+
+.button:active::after {
+  transform: scale(4); /* Expande hasta cubrir todo el botón */
+}
+
+/* Esto asegura que la animación termina una vez que el clic se realiza */
+.button:active {
+  transform: scale(1); /* Restaura el tamaño del botón después del clic */
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.decrement {
+  border-right: 1px solid var(--color-bg);
+}
+
+.increment {
+  border-left: 1px solid var(--color-bg);
+}

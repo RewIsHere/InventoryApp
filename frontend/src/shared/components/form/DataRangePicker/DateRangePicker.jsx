@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react"; 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./DateRangePicker.module.css";
@@ -18,7 +18,6 @@ export default function DateRangePicker({ onChange }) {
   const calendarRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Manejar clics fuera del calendario
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -27,15 +26,14 @@ export default function DateRangePicker({ onChange }) {
         !inputRef.current.contains(e.target)
       ) {
         setIsCalendarOpen(false);
-        setIsSelecting(false); // Reiniciar selección al cerrar
-        setHoveredDate(null); // Limpiar fecha hover
+        setIsSelecting(false);
+        setHoveredDate(null);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Ajustar posición del calendario
   useEffect(() => {
     if (calendarRef.current && isCalendarOpen) {
       const inputRect = inputRef.current.getBoundingClientRect();
@@ -55,7 +53,6 @@ export default function DateRangePicker({ onChange }) {
     }
   }, [isCalendarOpen]);
 
-  // Obtener días del mes actual
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -80,21 +77,24 @@ export default function DateRangePicker({ onChange }) {
     return days;
   };
 
-  // Manejar clic en una fecha
   const handleDateClick = (date) => {
     if (!isSelecting || !selectedRange.startDate) {
       setSelectedRange({ startDate: date, endDate: null });
       setIsSelecting(true);
     } else {
+      const startDate = selectedRange.startDate;
+      const endDate = date;
+
+      // Asegurarse de que startDate sea siempre la fecha más temprana
       const range = {
-        startDate: selectedRange.startDate,
-        endDate: date,
+        startDate: startDate < endDate ? startDate : endDate,
+        endDate: startDate < endDate ? endDate : startDate,
       };
+
       setSelectedRange(range);
       setIsSelecting(false);
       setIsCalendarOpen(false);
 
-      // Emitir el rango de fechas al componente padre
       if (onChange) {
         onChange(range);
       }
@@ -107,7 +107,6 @@ export default function DateRangePicker({ onChange }) {
     }
   };
 
-  // Verificar si una fecha está en el rango
   const isDateInRange = (date) => {
     if (!selectedRange.startDate || !selectedRange.endDate) {
       if (isSelecting && selectedRange.startDate && hoveredDate) {
@@ -121,7 +120,6 @@ export default function DateRangePicker({ onChange }) {
     return date >= selectedRange.startDate && date <= selectedRange.endDate;
   };
 
-  // Verificar si una fecha está seleccionada
   const isDateSelected = (date) => {
     return (
       date.toDateString() === selectedRange.startDate?.toDateString() ||
@@ -129,12 +127,10 @@ export default function DateRangePicker({ onChange }) {
     );
   };
 
-  // Verificar si una fecha pertenece al mes actual
   const isCurrentMonth = (date) => {
     return date.getMonth() === currentMonth.getMonth();
   };
 
-  // Navegar entre meses
   const navigateMonth = (direction) => {
     setDirection(direction);
     setIsNavigating(true);
@@ -149,7 +145,6 @@ export default function DateRangePicker({ onChange }) {
     });
   };
 
-  // Formatear fecha como día/mes/año
   const formatDate = (date) => {
     if (!date) return "";
     const day = String(date.getDate()).padStart(2, "0");
@@ -226,7 +221,6 @@ export default function DateRangePicker({ onChange }) {
               </button>
             </div>
 
-            {/* Weekdays estáticos */}
             <div className={styles.weekDaysContainer}>
               {weekDays.map((day) => (
                 <div key={day} className={styles.weekDay}>
@@ -235,7 +229,6 @@ export default function DateRangePicker({ onChange }) {
               ))}
             </div>
 
-            {/* Contenido animado del calendario */}
             <motion.div
               className={styles.calendar}
               key={currentMonth.toISOString()}
@@ -252,7 +245,7 @@ export default function DateRangePicker({ onChange }) {
                   onMouseLeave={() => setHoveredDate(null)}
                   className={`${
                     styles.dayButton
-                  } ${isCurrentMonth(date) ? "text-gray-900" : "text-gray-400"} ${
+                  } ${isCurrentMonth(date) ? styles.whiteText : styles.grayText} ${
                     isDateSelected(date) ? styles.selectedDate : ""
                   } ${isDateInRange(date) && !isDateSelected(date) ? styles.inRange : ""} ${
                     isSelecting &&

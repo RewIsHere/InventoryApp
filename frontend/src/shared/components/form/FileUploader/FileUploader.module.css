@@ -1,119 +1,204 @@
+/* Contenedor principal */
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-large);
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-large);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Zona de arrastre y carga */
+.dropZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  border: 2px dashed var(--color-primary);
+  border-radius: 8px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--transition-duration) var(--transition-easing),
+    background-color var(--transition-duration) var(--transition-easing);
+}
+
+.dropZone:hover {
+  border-color: var(--color-primary-hover);
+}
+
+.dropZone.dragging {
+  border-color: var(--color-success);
+  background-color: var(--color-bg-hover);
+}
+
+/* Icono de la zona de carga */
+.icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-small);
+  color: var(--color-primary);
+}
+
+/* Input de archivos oculto */
+.fileInput {
+  display: none; /* Ocultar el input de archivos */
+}
+
+/* Lista de archivos */
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-small);
+}
+
+/* Tarjetas de archivo */
+.card {
+  position: relative; /* Contexto de posicionamiento relativo */
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-small);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-bg);
+  border-radius: 4px;
+  transition: background-color var(--transition-duration) var(--transition-easing);
+  overflow: hidden; /* Asegura que el contenido no se desborde */
+}
+
+.card:hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* Contenido del Card */
+.cardContent {
+  position: relative; /* Asegura que este contenedor tenga un contexto de posicionamiento */
+  z-index: 2; /* Colocar el contenido encima de la barra de progreso */
+  display: flex;
+  align-items: center;
+  width: 100%; /* Ocupa todo el ancho del Card */
+}
+
+.thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: var(--spacing-small);
+}
+
+/* Detalles del archivo */
+.details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.fileName {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+
+.fileSize {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+/* Botón de eliminar */
+.removeButton {
+  background-color: transparent;
+  border: none;
+  color: var(--color-danger);
+  font-size: 18px;
+  cursor: pointer;
+  transition: color var(--transition-duration) var(--transition-easing);
+  z-index: 2; /* Asegura que el botón esté encima de la barra de progreso */
+}
+
+.removeButton:hover {
+  color: var(--color-danger-hover);
+}
+
+/* Barra de progreso que ocupa todo el Card */
+.progressBarBackground {
+  position: absolute; /* Posicionamiento absoluto dentro del Card */
+  top: 0;
+  left: 0;
+  width: 100%; /* Ocupa todo el ancho del Card */
+  height: 100%; /* Ocupa todo el alto del Card */
+  background-color: var(--color-bg-secondary); /* Color de fondo */
+  z-index: 1; /* Colocar detrás del contenido */
+  overflow: hidden;
+}
+
+/* Relleno de la barra de progreso */
+.progressBarFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%; /* Ocupa todo el alto */
+  background-color: rgba(57, 219, 125, 0.5); /* Color de relleno */
+  z-index: 1; /* Colocar detrás del contenido */
+}
+
+/* Estilos del contenedor de progreso circular */
+.progressContainer {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  flex-direction: column;
+  background: transparent;
+}
+
+/* Estilos generales del spinner circular */
+.spinner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  transform: rotate(-90deg); /* Rotación para que el progreso comience desde la parte superior */
+  animation: spin 1s linear infinite; /* Rotación infinita */
+}
+
+.progressBackground,
+.progressRing {
+  fill: none;
+  stroke-width: 4;
+}
+
+.progressBackground {
+  stroke: var(--color-bg);
+}
+
+.progressRing {
+  stroke: var(--color-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+/* Estilo del texto que muestra el porcentaje */
+.progressText {
+  position: absolute;
+  font-size: var(--font-size-small);
+  color: var(--color-text);
+  font-weight: bold;
+  text-align: center;
+  z-index: 1;
+  line-height: 64px; /* Asegura que el texto esté centrado verticalmente */
+  width: 100%;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); /* Comienza en 0 */
   }
-  
-  .dropZone {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 200px;
-    border: 2px dashed var(--color-primary);
-    border-radius: 8px;
-    background-color: var(--color-bg-secondary);
-    color: var(--color-text);
-    text-align: center;
-    cursor: pointer;
-    transition: border-color var(--transition-duration) var(--transition-easing),
-                background-color var(--transition-duration) var(--transition-easing);
+  100% {
+    transform: rotate(360deg); /* Termina en 360 */
   }
-  
-  .dropZone:hover {
-    border-color: var(--color-primary-hover);
-  }
-  
-  .dropZone.dragging {
-    border-color: var(--color-success);
-    background-color: var(--color-bg-hover);
-  }
-  
-  .icon {
-    font-size: 48px;
-    margin-bottom: var(--spacing-small);
-    color: var(--color-primary);
-  }
-  
-  .fileInput {
-    display: none; /* Ocultar el input de archivos */
-  }
-  
-  .loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: var(--font-size-base);
-    color: var(--color-text-secondary);
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
-  }
-  
-  .fileList {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-small);
-  }
-  
-  .card {
-    display: flex;
-    align-items: center;
-    padding: var(--spacing-small);
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-bg);
-    border-radius: 4px;
-    transition: background-color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .card:hover {
-    background-color: var(--color-bg-hover);
-  }
-  
-  .thumbnail {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-right: var(--spacing-small);
-  }
-  
-  .details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .fileName {
-    font-size: var(--font-size-base);
-    color: var(--color-text);
-  }
-  
-  .fileSize {
-    font-size: var(--font-size-small);
-    color: var(--color-text-secondary);
-  }
-  
-  .removeButton {
-    background-color: transparent;
-    border: none;
-    color: var(--color-danger);
-    font-size: 18px;
-    cursor: pointer;
-    transition: color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .removeButton:hover {
-    color: var(--color-danger-hover);
-  }
+}

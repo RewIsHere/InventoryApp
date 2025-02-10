@@ -1,42 +1,48 @@
-.toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: var(--spacing-medium);
-    border-radius: 8px;
-    color: var(--color-text);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 9999; /* Asegura que esté por encima de otros elementos */
-  }
-  
-  .toast.success {
-    background-color: var(--color-success);
-  }
-  
-  .toast.error {
-    background-color: var(--color-danger);
-  }
-  
-  /* Animación personalizada */
-  .toast {
-    animation: fadeInOut 3s ease-in-out;
-  }
-  
-  @keyframes fadeInOut {
-    0% {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-    10% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    90% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-  }
+/* Contenedor principal del Toast */
+.toastWrapper {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; /* Asegura que esté encima de otros elementos */
+  pointer-events: none; /* Evita que el contenedor intercepte clics */
+}
+
+/* Contenedor de cada notificación */
+.toastContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white; /* Texto blanco */
+  font-size: 14px;
+  font-weight: bold;
+  max-width: 400px;
+  width: 100%;
+  margin-bottom: 10px; /* Espacio entre notificaciones */
+  pointer-events: auto; /* Habilita clics en el Toast */
+}
+
+/* Mensaje del Toast */
+.toastMessage {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+}
+
+/* Botón de cierre */
+.toastCloseButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+.toastCloseButton:hover {
+  color: #cccccc;
+}

@@ -7,6 +7,7 @@ const NumberInput = ({ label, value: initialValue = 0, min = 0, max = 100, step 
 
   // Función para manejar el cambio de valor
   const handleChange = (newValue) => {
+    // Asegurarse de que el valor esté dentro del rango permitido
     const clampedValue = Math.min(max, Math.max(min, newValue));
     setValue(clampedValue);
     if (onChange) onChange(clampedValue); // Notificar al padre si hay un cambio
@@ -20,6 +21,14 @@ const NumberInput = ({ label, value: initialValue = 0, min = 0, max = 100, step 
   // Decrementar el valor
   const decrement = () => {
     handleChange(value - step);
+  };
+
+  // Manejar el cambio de valor manualmente en el input
+  const handleInputChange = (e) => {
+    const newValue = Number(e.target.value);
+    if (!isNaN(newValue)) {
+      handleChange(newValue);
+    }
   };
 
   return (
@@ -36,13 +45,12 @@ const NumberInput = ({ label, value: initialValue = 0, min = 0, max = 100, step 
           -
         </motion.button>
 
-        {/* Campo de número */}
+        {/* Campo de número editable */}
         <motion.input
           type="number"
           value={value}
-          onChange={(e) => handleChange(Number(e.target.value))}
+          onChange={handleInputChange} // Permite cambiar el valor manualmente
           className={styles.numberInput}
-          readOnly
         />
 
         {/* Botón de incremento */}

@@ -1,88 +1,125 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Importar los íconos
 import styles from "./Pagination.module.css";
 
 const Pagination = ({ totalPages }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1", 10));
+  const buttonsRef = useRef([]);
 
-  // Función para manejar el cambio de página
   const handlePageChange = (page) => {
-    searchParams.set("page", page);
-    navigate(`?${searchParams.toString()}`);
+    if (page !== currentPage) {
+      setCurrentPage(page);
+      searchParams.set("page", page);
+      navigate(`?${searchParams.toString()}`);
+    }
   };
 
-  // Generar los números de página visibles
-  const getVisiblePages = () => {
-    const visiblePages = [];
-    if (totalPages <= 5) {
-      // Si hay 5 o menos páginas, mostrar todas
+  const getPageNumbers = () => {
+    const pages = [];
+    const showEllipsis = totalPages > 7;
+
+    if (!showEllipsis) {
       for (let i = 1; i <= totalPages; i++) {
-        visiblePages.push(i);
+        pages.push(i);
       }
     } else {
-      // Mostrar un rango dinámico alrededor de la página actual
-      if (currentPage <= 3) {
-        visiblePages.push(1, 2, 3, "...", totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        visiblePages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
+      if (currentPage <= 4) {
+        for (let i = 1; i <= 5; i++) {
+          pages.push(i);
+        }
+        pages.push(" ... ");
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(1);
+        pages.push(" ... ");
+        for (let i = totalPages - 4; i <= totalPages; i++) {
+          pages.push(i);
+        }
       } else {
-        visiblePages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
+        pages.push(1);
+        pages.push(" ... ");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push(" ... ");
+        pages.push(totalPages);
       }
     }
-    return visiblePages;
+
+    return pages;
   };
 
-  const visiblePages = getVisiblePages();
+  const visiblePages = getPageNumbers();
+
+  useEffect(() => {
+    setCurrentPage(parseInt(searchParams.get("page") || "1", 10));
+  }, [searchParams]);
 
   return (
     <div className={styles.paginationContainer}>
-      {/* Botón Anterior */}
+      {/* Reemplazar el texto con el ícono de flecha izquierda */}
       <motion.button
         className={`${styles.pageButton} ${currentPage === 1 ? styles.disabled : ""}`}
-        onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
-        Anterior
+        <FaChevronLeft /> {/* Flecha izquierda */}
       </motion.button>
 
-      {/* Números de Página */}
       <div className={styles.pages}>
+        {/* Fondo animado alineado correctamente con escalado */}
+        <motion.div
+          className={styles.pageActiveBackground}
+          layout
+          layoutId="bubble"
+          initial={false}
+          animate={{
+            x: buttonsRef.current[visiblePages.indexOf(currentPage)]?.offsetLeft || 0,
+            width: buttonsRef.current[visiblePages.indexOf(currentPage)]?.offsetWidth || 45,
+            scale: 1.1, // Añadimos el efecto de escalado
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        />
+
         {visiblePages.map((page, index) => {
+          const key = typeof page === "number" ? `page-${page}` : `ellipsis-${index}`;
+
           if (page === "...") {
             return (
-              <span key={index} className={styles.ellipsis}>
+              <span key={key} className={styles.ellipsis}>
                 ...
               </span>
             );
           }
+
           return (
-            <motion.button
-              key={page}
+            <button
+              key={key}
+              ref={(el) => (buttonsRef.current[index] = el)}
               className={`${styles.pageButton} ${currentPage === page ? styles.active : ""}`}
               onClick={() => handlePageChange(page)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
             >
               {page}
-            </motion.button>
+            </button>
           );
         })}
       </div>
 
-      {/* Botón Siguiente */}
+      {/* Reemplazar el texto con el ícono de flecha derecha */}
       <motion.button
         className={`${styles.pageButton} ${currentPage === totalPages ? styles.disabled : ""}`}
-        onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+        onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
-        Siguiente
+        <FaChevronRight /> {/* Flecha derecha */}
       </motion.button>
     </div>
   );

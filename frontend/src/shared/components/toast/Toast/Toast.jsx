@@ -1,27 +1,44 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./Toast.module.css";
 
-const Toast = ({ message, type, onClose }) => {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 3000); // Cierra el toast después de 3 segundos
-    return () => clearTimeout(timer);
-  }, [onClose]);
+const Toast = ({ notification, onRemove, index }) => {
+  const getBackgroundColor = (type) => {
+    switch (type) {
+      case "success":
+        return "#4caf50"; // Verde
+      case "error":
+        return "#f44336"; // Rojo
+      case "warning":
+        return "#ff9800"; // Naranja
+      case "info":
+        return "#2196f3"; // Azul
+      default:
+        return "#4caf50"; // Por defecto: verde
+    }
+  };
 
-  return ReactDOM.createPortal(
-    <AnimatePresence>
-      <motion.div
-        className={`${styles.toast} ${styles[type]}`}
-        initial={{ opacity: 0, y: -50 }} // Inicia fuera de la pantalla
-        animate={{ opacity: 1, y: 0 }} // Aparece en la posición correcta
-        exit={{ opacity: 0, y: -50 }} // Sale hacia arriba
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
-        {message}
-      </motion.div>
-    </AnimatePresence>,
-    document.getElementById("toast-root") // Renderizado fuera del árbol principal
+  return (
+    <motion.div
+      layout // Habilita animaciones automáticas de posición
+      initial={{ opacity: 0, y: -50, scale: 0.8 }} // Inicia fuera de la pantalla
+      animate={{ opacity: 1, y: 0, scale: 1 }} // Animación de entrada
+      exit={{ opacity: 0, y: -50, scale: 0.8 }} // Animación de salida
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+      }}
+      className={styles.toastContainer}
+      style={{
+        backgroundColor: getBackgroundColor(notification.type),
+      }}
+    >
+      <p className={styles.toastMessage}>{notification.message}</p>
+      <button className={styles.toastCloseButton} onClick={onRemove}>
+        ✖️
+      </button>
+    </motion.div>
   );
 };
 

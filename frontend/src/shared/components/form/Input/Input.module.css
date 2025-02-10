@@ -16,7 +16,7 @@
     background-color: #18181b;
     color: var(--color-text);
     border: 1px solid #18181b;
-    border-radius: 12px;
+    border-radius: 14px;
     transition: border-color var(--transition-duration) var(--transition-easing);
   }
   
