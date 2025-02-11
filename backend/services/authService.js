@@ -187,7 +187,7 @@ export const getProfileService = async (userId) => {
     // Consultar los datos del usuario en la base de datos
     const { data, error } = await supabase
         .from("users")
-        .select("id, username, email, role")
+        .select("id, name, surnames, username, email, role")
         .eq("id", userId)
         .single();
 

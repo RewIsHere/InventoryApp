@@ -16,6 +16,8 @@
   --color-selection: rgba(0, 255, 0, 0.1); /* Selección suave */
   --color-selection-hover: rgba(0, 255, 0, 0.2);
   --color-titles: #ffffff;
+  --color-navbar: #233a44;
+  --color-navbar-secondary: #5d6b6c;
 
   /* 📏 Espaciado */
   --spacing-small: 8px;

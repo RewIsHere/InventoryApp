@@ -2,7 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./Avatar.module.css"; // Asegúrate de que este archivo exista
 
-const Avatar = ({ name, size = "40px", backgroundColor = "var(--color-primary)", textColor = "var(--color-text)", options }) => {
+const Avatar = ({
+  name,
+  email, // Nuevo prop para el correo electrónico
+  size = "40px",
+  backgroundColor = "var(--color-primary)",
+  textColor = "var(--color-text)",
+  options,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null); // Referencia para el dropdown
   const avatarRef = useRef(null); // Referencia para el avatar
@@ -27,13 +34,14 @@ const Avatar = ({ name, size = "40px", backgroundColor = "var(--color-primary)",
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        dropdownRef.current && !dropdownRef.current.contains(event.target) &&
-        avatarRef.current && !avatarRef.current.contains(event.target)
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        avatarRef.current &&
+        !avatarRef.current.contains(event.target)
       ) {
-        setIsOpen(false);  // Cerrar dropdown si el clic es fuera del contenedor o el avatar
+        setIsOpen(false); // Cerrar dropdown si el clic es fuera del contenedor o el avatar
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside); // Detectar clics fuera
     return () => {
       document.removeEventListener("mousedown", handleClickOutside); // Limpiar el event listener
@@ -63,7 +71,6 @@ const Avatar = ({ name, size = "40px", backgroundColor = "var(--color-primary)",
       >
         {initials}
       </motion.div>
-
       {/* Menú desplegable */}
       <AnimatePresence>
         {isOpen && (
@@ -75,6 +82,12 @@ const Avatar = ({ name, size = "40px", backgroundColor = "var(--color-primary)",
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
+            {/* Encabezado del dropdown */}
+            <div className={styles.dropdownHeader}>
+              <span className={styles.dropdownHeaderText}>{name}</span>
+              <span className={styles.dropdownHeaderSubtext}>{email}</span>
+            </div>
+            {/* Opciones del dropdown */}
             {options.map((option, index) => (
               <motion.div
                 key={index}
