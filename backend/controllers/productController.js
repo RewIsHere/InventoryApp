@@ -79,7 +79,15 @@ export const listProducts = async (req, res) => {
         const { status, category, sort, stock_alert } = req.query;
 
         // Inicializar la consulta base
-        let query = supabase.from('products').select('*');
+        let query = supabase
+            .from('products')
+            .select(`
+                *,
+                product_images (
+                    id,
+                    image_url
+                )
+            `); // Incluir las imágenes relacionadas con el producto
 
         // Filtro por estado
         if (status && status !== 'all') {
@@ -95,14 +103,11 @@ export const listProducts = async (req, res) => {
         if (stock_alert && stock_alert !== 'all') {
             // Usar la función RPC para obtener productos según el tipo de alerta
             const rpcQuery = await supabase.rpc('get_products_by_stock_alert', { alert_type: stock_alert });
-
             if (rpcQuery.error) {
                 return res.status(500).json({ error: rpcQuery.error.message });
             }
-
             // Extraer los IDs de los productos devueltos por la función RPC
             const productIds = rpcQuery.data.map(product => product.id);
-
             // Filtrar los productos por los IDs obtenidos
             query = query.in('id', productIds);
         }
@@ -132,7 +137,16 @@ export const listProducts = async (req, res) => {
             return res.status(500).json({ error: error.message });
         }
 
-        res.status(200).json(data);
+        // Transformar los datos para que las imágenes sean más accesibles
+        const formattedData = data.map(product => ({
+            ...product,
+            images: product.product_images.map(image => ({
+                id: image.id,
+                url: image.image_url
+            }))
+        }));
+
+        res.status(200).json(formattedData);
     } catch (err) {
         console.error("Error inesperado:", err.message);
         res.status(500).json({ error: "Ocurrió un error inesperado." });
