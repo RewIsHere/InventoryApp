@@ -15,7 +15,12 @@ export default defineConfig({
       "@Navigation": path.resolve(__dirname, "./src/shared/components/navigation"),
       "@Structure": path.resolve(__dirname, "./src/shared/components/structure"),
       "@Toast": path.resolve(__dirname, "./src/shared/components/toast/Toast"),
-
+      "@Layout": path.resolve(__dirname, "./src/shared/components/layout"),
+      "@Auth": path.resolve(__dirname, "./src/features/authentication"),
+      "@Dashboard": path.resolve(__dirname, "./src/features/dashboard"),
+      "@Products": path.resolve(__dirname, "./src/features/products"),
+      "@Movements": path.resolve(__dirname, "./src/features/movements"),
+      "@Users": path.resolve(__dirname, "./src/features/users"),
     },
   },
 })

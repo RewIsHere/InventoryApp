@@ -1,26 +1,20 @@
 import React, { useState, useContext } from "react";
 import { useAuthContext } from "../../../shared/context/AuthContext";
-import Input from "../../../shared/components/form/Input";
-import Button from "../../../shared/components/buttons/Button";
-import Card from "../../../shared/components/structure/Card";
+import Input from "@Form/Input";
+import Button from "@Buttons/Button";
+import Card from "@Structure/Card";
 import { ToastContext } from "../../../shared/context/ToastContext"; // Importar ToastContext
-import styles from "./LoginForm.module.css";
-import { Link } from "react-router-dom"; // Importamos Link de React Router DOM
+import styles from "./ForgotPasswordForm.module.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { login, loading } = useAuthContext();
+  const { forgotPassword, loading } = useAuthContext();
   const { addNotification } = useContext(ToastContext); // Obtener addNotification del contexto
 
   // Validar los campos del formulario
   const validateFields = () => {
     if (!email.trim()) {
       addNotification("El correo electrónico es obligatorio.", "error");
-      return false;
-    }
-    if (!password.trim()) {
-      addNotification("La contraseña es obligatoria.", "error");
       return false;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
@@ -36,7 +30,7 @@ const LoginForm = () => {
     if (!validateFields()) return; // Si la validación falla, detener el envío
 
     try {
-      await login(email, password); // Intentar iniciar sesión
+      await forgotPassword(email); // Intentar iniciar sesión
     } catch (error) {
       addNotification(error.message || "Ocurrió un error inesperado.", "error"); // Mostrar mensaje de error
     }
@@ -51,8 +45,8 @@ const LoginForm = () => {
           alt="Logo"
         />
       </div>
-      <h2 className={styles.title}>Iniciar Sesión</h2>
-
+      <h2 className={styles.title}>Recupecion de Contraseña</h2>
+      <p style={{color: "gray", marginBottom: "30px"}}>Introduce tu correo electrónico para buscar tu cuenta.</p>
       {/* Usar el componente Form */}
       <form onSubmit={handleSubmit} className={styles.form}>
         {/* Campo de correo electrónico */}
@@ -63,23 +57,6 @@ const LoginForm = () => {
           value={email}
           onValueChange={(name, newValue) => setEmail(newValue)} // Actualizar el estado del email
         />
-        {/* Campo de contraseña */}
-        <Input
-          label="Contraseña"
-          type="password"
-          placeholder="********"
-          value={password}
-          onValueChange={(name, newValue) => setPassword(newValue)} // Actualizar el estado del password
-        />
-        {/* Boton de contraseña olvidada */}
-      <Link
-        to={"/forgot-password"}
-        target={"_self"}
-        rel={"_self" === "_blank" ? "noopener noreferrer" : undefined}
-        className={`${styles.linkButton}`}
-      >
-        <span>¿Has olvidado tu contraseña?</span>
-      </Link>
         {/* Botón de inicio de sesión */}
         <Button
           type="submit"

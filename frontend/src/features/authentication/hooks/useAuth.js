@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { login as apiLogin, logout as apiLogout } from "../services/authService";
+import { login as apiLogin, logout as apiLogout, forgotPassword as apiForgotPassword, resetPassword as apiResetPassword } from "../services/authService";
 import axios from "axios";
 
 export const useAuth = () => {
@@ -42,5 +42,25 @@ export const useAuth = () => {
     setUser(null);
   };
 
-  return { user, login, logout, loading };
+  // Función para solicitar restablecimiento de contraseña
+  const forgotPassword = async (email) => {
+    try {
+      const response = await apiForgotPassword(email);
+      return response.message; // Mensaje de éxito
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  // Función para restablecer contraseña
+  const resetPassword = async (token, newPassword) => {
+    try {
+      const response = await apiResetPassword(token, newPassword);
+      return response.message; // Mensaje de éxito
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  return { user, login, logout, forgotPassword, resetPassword, loading };
 };
