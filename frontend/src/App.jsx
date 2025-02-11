@@ -1,54 +1,47 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./shared/context/AuthContext"; // Importamos ambos desde el mismo archivo
-import MainLayout from "./shared/components/layout/MainLayout/MainLayout";
-import AuthLayout from "./shared/components/layout/AuthLayout";
-import LoginPage from "./features/auth/pages/LoginPage";
-import Dashboard from "./features/dashboard/pages/DashboardPage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./shared/context/AuthContext";
+import LoginPage from "@Auth/pages/LoginPage";
+import ForgotPassword from "@Auth/pages/ForgotPassword";
+import ResetPassword from "@Auth/pages/ResetPassword";
+import DashboardPage from "@Dashboard/pages/DashboardPage";
+import ProtectedRoute from "@Components/ProtectedRoute";
+import PublicOnlyRoute from "@Components/PublicOnlyRoute"; // Importar el nuevo componente
+import MainLayout from "@Layout/MainLayout";
+import { ToastProvider } from "./shared/context/ToastContext";
+import Test from "./Test";
 
-// Componente para proteger rutas
-const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
-  if (!user) {
-    return <Navigate to="/" />;
-  }
-  return children;
-};
-
-function App() {
+const App = () => {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Ruta pública: Inicio de Sesión */}
-          <Route
-            path="/"
-            element={
-              <AuthLayout>
+    <Router>
+      <ToastProvider>
+        <AuthProvider>
+          <Routes>
+            {/* Ruta publicas */}
+            <Route path="/" element={
+              <PublicOnlyRoute>
                 <LoginPage />
-              </AuthLayout>
-            }
-          />
-
-          {/* Rutas protegidas */}
-          <Route
-            path="/*"
-            element={
-              <ProtectedRoute>
-                <MainLayout>
-                  <Routes>
-                    {/* Dashboard */}
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    {/* Agrega más rutas protegidas aquí */}
-                  </Routes>
-                </MainLayout>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Router>
-    </AuthProvider>
+              </PublicOnlyRoute>} />
+            <Route path="/forgot-password" element={
+              <PublicOnlyRoute>
+                <ForgotPassword />
+              </PublicOnlyRoute>} />
+            <Route path="/reset-password" element={
+              <PublicOnlyRoute>
+                <ResetPassword />
+              </PublicOnlyRoute>} />
+            {/* Rutas protegidas */}
+            <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <DashboardPage />
+                  </MainLayout>
+                </ProtectedRoute>} />
+          </Routes>
+        </AuthProvider>
+      </ToastProvider>
+    </Router>
   );
-}
+};
 
 export default App;

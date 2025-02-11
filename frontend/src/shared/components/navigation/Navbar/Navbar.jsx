@@ -1,26 +1,34 @@
+// Navbar.js
 import React from "react";
-import NavLinkButton from "../NavLinkButton";
+import { FaHome, FaBox, FaHistory, FaUser } from "react-icons/fa"; // Importa los iconos de react-icons
+import { motion } from "framer-motion";
+import NavButton from "../../buttons/NavButton";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
   return (
-    <nav className={styles.navbar}>
+    <motion.nav
+      className={styles.navbar}
+      initial={{ opacity: 0, y: 0 }} // Comienza con opacidad 0 y desplazado hacia arriba
+      animate={{ opacity: 1, y: -20 }} // Se anima a opacidad 1 y sin desplazamiento
+      transition={{ duration: 0.5, ease: "easeOut" }} // Duración de la animación
+    >
       {/* Enlaces de Navegación */}
       <div className={styles.links}>
-        <NavLinkButton to="/" variant="solid" icon={<i className="fas fa-home"></i>}>
+        <NavButton to="/" variant="solid" icon={<FaHome />}>
           Inicio
-        </NavLinkButton>
-        <NavLinkButton to="/productos" icon={<i className="fas fa-box"></i>}>
+        </NavButton>
+        <NavButton to="/productos" icon={<FaBox />}>
           Productos
-        </NavLinkButton>
-        <NavLinkButton to="/movimientos" icon={<i className="fas fa-exchange-alt"></i>}>
+        </NavButton>
+        <NavButton to="/movimientos" icon={<FaHistory />}>
           Movimientos
-        </NavLinkButton>
-        <NavLinkButton to="/perfil" icon={<i className="fas fa-user"></i>}>
+        </NavButton>
+        <NavButton to="/perfil" icon={<FaUser />}>
           Perfil
-        </NavLinkButton>
+        </NavButton>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 

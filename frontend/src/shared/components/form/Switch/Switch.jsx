@@ -6,7 +6,6 @@ const Switch = ({ label, checked, onChange, disabled = false }) => {
   return (
     <motion.div
       className={`${styles.switchContainer} ${disabled ? styles.disabled : ""}`}
-      whileTap={{ scale: 0.95 }}
       onClick={() => !disabled && onChange(!checked)}
     >
       {/* Interruptor */}
@@ -16,7 +15,7 @@ const Switch = ({ label, checked, onChange, disabled = false }) => {
         animate={{
           backgroundColor: checked ? "var(--color-primary)" : "var(--color-bg-secondary)",
         }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: checked ? 0.2 : 0.1 }}
       >
         <motion.div
           className={styles.switchThumb}

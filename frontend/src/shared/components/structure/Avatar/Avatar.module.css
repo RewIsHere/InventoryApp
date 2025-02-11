@@ -14,3 +14,43 @@
     transform: scale(1.1); /* Efecto de escala al pasar el cursor */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
   }
+
+  .container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    top: 100%; /* Menú justo debajo del avatar */
+    right: 50%; /* Centrado horizontalmente respecto al contenedor del avatar */
+    transform: translateX(-50%); /* Ajustar para que se centre perfectamente */
+    background-color: var(--color-bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    width: 200px; /* Ancho fijo del menú */
+    margin-top: 8px; /* Espacio entre el avatar y el menú */
+  }
+  
+  .option {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .option:hover {
+    background-color: gray;
+  }
+  
+  .optionIcon {
+    font-size: 18px;
+  }
+  
+  .optionText {
+    font-size: 14px;
+  }
+  

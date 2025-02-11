@@ -2,16 +2,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--spacing-small) var(--spacing-medium);
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-bold);
-    border-radius: 20px; /* Forma ovalada */
     white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
     transition: transform var(--transition-duration) var(--transition-easing),
                 box-shadow var(--transition-duration) var(--transition-easing);
   }
   
-  .badge:hover {
-    transform: scale(1.05); /* Efecto de escala al pasar el cursor */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  }

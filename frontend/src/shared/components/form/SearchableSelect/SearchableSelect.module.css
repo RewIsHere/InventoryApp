@@ -1,85 +1,147 @@
-.container {
-    position: relative;
-    width: 100%;
-  }
-  
-  .searchBar {
-    display: flex;
-    align-items: center;
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-bg);
-    border-radius: 4px;
-    padding: var(--spacing-small);
-    cursor: pointer;
-    transition: border-color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .searchBar:focus-within {
-    border-color: var(--color-primary);
-  }
-  
-  .searchIcon {
-    margin-right: var(--spacing-small);
-    color: var(--color-text-secondary);
-  }
-  
-  .searchInput {
-    flex: 1;
-    background-color: transparent;
-    color: var(--color-text);
-    border: none;
-    outline: none;
-    font-size: var(--font-size-base);
-  }
-  
-  .optionsList {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-bg);
-    border-radius: 4px;
-    margin-top: var(--spacing-small);
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 10;
-  }
-  
-  .optionItem {
-    padding: var(--spacing-small) var(--spacing-medium);
-    cursor: pointer;
-    transition: background-color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .optionItem:hover {
-    background-color: var(--color-bg-secondary);
-  }
-  
-  .noResults {
-    padding: var(--spacing-small) var(--spacing-medium);
-    color: var(--color-text-secondary);
-    text-align: center;
-  }
-  
-  .actionButton {
-    width: 100%;
-    padding: var(--spacing-small) var(--spacing-medium);
-    margin-top: var(--spacing-small);
-    background-color: var(--color-primary);
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: var(--font-size-base);
-    transition: background-color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .actionButton:hover:not(:disabled) {
-    background-color: var(--color-primary-hover);
-  }
-  
-  .actionButton:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+.container { 
+  position: relative;
+  width: 100%;
+}
+
+.openMenuBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Distribuye el contenido entre los extremos */
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-bg);
+  border-radius: 4px;
+  padding: var(--spacing-small);
+  cursor: pointer;
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.openMenuBar:focus-within {
+  border-color: var(--color-primary);
+}
+
+.arrowIcon {
+  color: var(--color-text-secondary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchIcon {
+  margin-right: var(--spacing-small);
+  color: var(--color-text-secondary);
+}
+
+.placeholder {
+  color: var(--color-text-secondary);
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-bg);
+  border-radius: 4px;
+  padding: var(--spacing-small);
+  cursor: pointer;
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.searchBar:focus-within {
+  border-color: var(--color-primary);
+}
+
+.searchInput {
+  flex: 1;
+  background-color: transparent;
+  color: var(--color-text);
+  border: none;
+  outline: none;
+  font-size: var(--font-size-base);
+}
+
+.optionsList {
+  max-height: 200px; /* Altura máxima de la lista */
+  overflow-y: auto; /* Permite desplazamiento si hay más elementos de los que caben */
+  margin: 0;
+  padding: 0;
+  scrollbar-width: thin; /* Establece el grosor de la barra de desplazamiento */
+  scrollbar-color: var(--color-primary) var(--color-bg); /* Color de la barra de desplazamiento y del fondo */
+}
+
+/* Para navegadores Webkit (Chrome, Safari, etc.) */
+.optionsList::-webkit-scrollbar {
+  width: 8px; /* Grosor de la barra de desplazamiento */
+}
+
+.optionsList::-webkit-scrollbar-track {
+  background-color: var(--color-bg); /* Color del fondo del track */
+  border-radius: 4px; /* Bordes redondeados en el track */
+}
+
+.optionsList::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary); /* Color de la barra de desplazamiento */
+  border-radius: 4px; /* Bordes redondeados de la barra */
+  border: 2px solid var(--color-bg); /* Borde del thumb */
+}
+
+/* Efecto de hover sobre el thumb */
+.optionsList::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary-hover); /* Color cuando el usuario pasa el mouse sobre el thumb */
+}
+
+.optionItem {
+  padding: var(--spacing-small) var(--spacing-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-duration) var(--transition-easing);
+  position: relative; /* Necesario para posicionar el ícono */
+}
+
+.optionItem:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* Estilo cuando se selecciona un elemento */
+.selectedOption {
+  background-color: var(--color-bg-primary); /* Resalta el fondo */
+  border: 1px solid var(--color-primary); /* Opcional: agrega borde */
+}
+
+/* Estilo para el ícono de check */
+.checkIcon {
+  position: absolute;
+  right: var(--spacing-small);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-primary); /* Puedes cambiar el color del ícono */
+}
+
+.noResults {
+  padding: var(--spacing-small) var(--spacing-medium);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.actionContainer {
+  margin-top: var(--spacing-small); /* Espacio entre la lista y el botón */
+}
+
+.actionButton {
+  width: 100%;
+  padding: var(--spacing-small) var(--spacing-medium);
+  background-color: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  transition: background-color var(--transition-duration) var(--transition-easing);
+}
+
+.actionButton:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.actionButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

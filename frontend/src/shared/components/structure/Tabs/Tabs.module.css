@@ -1,35 +1,32 @@
 .tabsContainer {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-small);
-    padding: var(--spacing-small);
-    background-color: var(--color-bg-secondary);
-    border-radius: 8px;
-  }
-  
-  .tab {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-small) var(--spacing-medium);
-    font-size: var(--font-size-base);
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    border-radius: 4px;
-    transition: color var(--transition-duration) var(--transition-easing),
-                transform var(--transition-duration) var(--transition-easing);
-  }
-  
-  .tab:hover {
-    color: var(--color-primary);
-  }
-  
-  .tab.active {
-    color: var(--color-text);
-    background-color: var(--color-primary);
-    font-weight: var(--font-weight-bold);
-  }
-  
-  .tab.active:hover {
-    transform: none;
-  }
+  display: flex;
+  gap: 16px;
+}
+
+.tab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  position: relative;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 9999px;
+  transition: all 0.3s ease-in-out;
+}
+
+.tab:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.tab.active {
+  color: #000;
+}
+
+.bubble {
+  background-color: #fff; /* Color de la burbuja */
+  mix-blend-mode: difference; /* Cambia el color al hacer la mezcla con el fondo */
+  pointer-events: none;
+}

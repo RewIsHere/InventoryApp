@@ -5,17 +5,18 @@
   .label {
     display: block;
     margin-bottom: var(--spacing-small);
-    color: var(--color-primary);
+    color: var(--color-secondary);
+    font-weight: 500;
   }
   
   .input {
     width: 100%;
     padding: var(--spacing-small);
     font-size: var(--font-size-base);
-    background-color: var(--color-bg-secondary);
+    background-color: #18181b;
     color: var(--color-text);
-    border: 1px solid transparent;
-    border-radius: 4px;
+    border: 1px solid #18181b;
+    border-radius: 14px;
     transition: border-color var(--transition-duration) var(--transition-easing);
   }
   

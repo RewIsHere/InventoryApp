@@ -1,55 +1,69 @@
 .paginationContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-small);
-    padding: var(--spacing-medium);
-    background-color: var(--color-bg-secondary);
-    border-radius: 8px;
-  }
-  
-  .pageButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: none;
-    background-color: transparent;
-    color: var(--color-text);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-regular);
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color var(--transition-duration) var(--transition-easing),
-                transform var(--transition-duration) var(--transition-easing);
-  }
-  
-  .pageButton:hover {
-    background-color: var(--color-bg-hover);
-  }
-  
-  .pageButton.active {
-    background-color: var(--color-primary);
-    color: #fff;
-  }
-  
-  .pageButton.disabled {
-    color: var(--color-text-disabled);
-    cursor: not-allowed;
-  }
-  
-  .pageButton.disabled:hover {
-    background-color: transparent;
-  }
-  
-  .pages {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-small);
-  }
-  
-  .ellipsis {
-    font-size: var(--font-size-large);
-    color: var(--color-text-secondary);
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-small);
+  padding: var(--spacing-medium);
+  background-color: var(--color-bg-secondary);
+  border-radius: 8px;
+}
+
+.pages {
+  position: relative;
+  display: flex;
+  align-items: center; /* Centra los botones verticalmente */
+  gap: var(--spacing-small);
+}
+
+.pageButton {
+  position: relative;
+  z-index: 10; /* Asegura que el texto esté por encima del fondo animado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: transparent;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform var(--transition-duration) var(--transition-easing);
+}
+
+.pageButton:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.pageButton.active {
+  color: white;
+  font-weight: bold;
+}
+
+.pageButton.disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+.pageButton.disabled:hover {
+  background-color: transparent;
+}
+
+.ellipsis {
+  font-size: var(--font-size-large);
+  color: var(--color-text-secondary);
+}
+
+/* Fondo animado del botón activo */
+.pageActiveBackground {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-primary);
+  border-radius: 4px;
+  z-index: 0; /* Se coloca detrás de los botones */
+  left: 0;
+  transform: translateY(-50%); /* Mantén el centrado vertical */
+}

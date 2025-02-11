@@ -1,4 +1,4 @@
-import { registerUserService, loginUserService, logoutUserService, refreshAccessTokenService, getProfileService, forgotPasswordService, resetPasswordService } from "../services/authService.js";
+import { registerUserService, loginUserService, logoutUserService, refreshAccessTokenService, getProfileService, forgotPasswordService, resetPasswordService, validateResetTokenService } from "../services/authService.js";
 import { ZodError } from "zod";
 
 // Registro de usuario
@@ -107,3 +107,34 @@ export const resetPassword = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+export const validateResetToken = async (req, res) => {
+    try {
+      const { token } = req.body;
+  
+      // Llamar al servicio para validar el token
+      await validateResetTokenService(token);
+  
+      // Si no hay errores, el token es válido
+      res.status(200).json({ message: "Token is valid" });
+    } catch (error) {
+      console.error("Error during token validation:", error.message);
+  
+      // Manejar errores específicos
+      if (error.message === "The token has expired. Please request a new one.") {
+        return res.status(400).json({ error: "The token has expired. Please request a new one." });
+      }
+      if (error.message === "The token has an invalid format. Please check the link or request a new one.") {
+        return res.status(400).json({ error: "The token has an invalid format. Please check the link or request a new one." });
+      }
+      if (error.message === "Invalid or expired token JWT") {
+        return res.status(400).json({ error: "The token is invalid or has expired." });
+      }
+      if (error.message === "Invalid or expired token BD") {
+        return res.status(400).json({ error: "The token is invalid or has expired." });
+      }
+  
+      // Manejar otros errores inesperados
+      res.status(500).json({ error: "An unexpected error occurred. Please try again later." });
+    }
+  };

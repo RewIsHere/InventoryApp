@@ -1,18 +1,22 @@
 import React from "react";
+import { motion } from "framer-motion"; // Asegúrate de importar motion
 import styles from "./ImageBox.module.css";
 
 const ImageBox = ({ src, alt, size = "medium", borderRadius = "10px" }) => {
   return (
-    <div
+    <motion.div
       className={styles.imageBox}
       style={{
         width: size,
         height: size,
         borderRadius: borderRadius,
       }}
+      initial={{ opacity: 0, y: 20 }} // Animación inicial
+      animate={{ opacity: 1, y: 0 }}   // Animación al estar visible
+      transition={{ duration: 0.5, ease: "easeOut" }} // Duración y tipo de transición
     >
       <img src={src} alt={alt} className={styles.image} />
-    </div>
+    </motion.div>
   );
 };
 

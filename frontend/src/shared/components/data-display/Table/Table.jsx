@@ -1,37 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import styles from "./Table.module.css";
 
-const Table = ({ columns, data, onSelectRows }) => {
+const Table = ({ columns, data, allData, onSelectRows }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    // Si todas las filas de allData están seleccionadas, activar "Seleccionar todo"
+    if (selectedRows.length === allData.length) {
+      setSelectAll(true);
+    } else {
+      setSelectAll(false);
+    }
+  }, [selectedRows, allData]);
 
   // Manejar la selección/deselección de todas las filas
   const handleSelectAll = () => {
     if (selectAll) {
       setSelectedRows([]);
-      setSelectAll(false);
       onSelectRows([]); // Notificar que no hay filas seleccionadas
     } else {
-      const allRowIds = data.map((row) => row.id);
+      const allRowIds = allData.map((row) => row.id); // Seleccionar todas las filas
       setSelectedRows(allRowIds);
-      setSelectAll(true);
       onSelectRows(allRowIds); // Notificar que todas las filas están seleccionadas
     }
   };
 
   // Manejar la selección/deselección de una fila individual
   const handleRowSelect = (id) => {
-    if (selectedRows.includes(id)) {
-      const updatedRows = selectedRows.filter((rowId) => rowId !== id);
-      setSelectedRows(updatedRows);
-      setSelectAll(false); // Desactivar "Seleccionar todo" si no están todas seleccionadas
-      onSelectRows(updatedRows); // Notificar las filas seleccionadas
-    } else {
-      const updatedRows = [...selectedRows, id];
-      setSelectedRows(updatedRows);
-      if (updatedRows.length === data.length) setSelectAll(true); // Activar "Seleccionar todo" si están todas seleccionadas
-      onSelectRows(updatedRows); // Notificar las filas seleccionadas
-    }
+    const updatedRows = selectedRows.includes(id)
+      ? selectedRows.filter((rowId) => rowId !== id)
+      : [...selectedRows, id];
+
+    setSelectedRows(updatedRows);
+    onSelectRows(updatedRows); // Notificar las filas seleccionadas
   };
 
   return (
@@ -73,20 +76,42 @@ const Table = ({ columns, data, onSelectRows }) => {
   );
 };
 
-// Componente de flecha animada para seleccionar filas
 const ArrowCheckbox = ({ checked, onClick }) => {
   return (
     <div
       className={`${styles.arrowCheckbox} ${checked ? styles.checked : ""}`}
       onClick={onClick}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        className={styles.arrowIcon}
+      <motion.div
+        className={styles.checkbox}
+        initial={false}
+        animate={{
+          borderColor: checked ? "var(--color-primary)" : "#CCC",
+          backgroundColor: checked ? "var(--color-primary)" : "gray",
+        }}
+        transition={{ duration: 0.12 }}
       >
-        <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
-      </svg>
+        <motion.svg
+          className={styles.arrowIcon}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: checked ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.path
+            fill="none"
+            stroke="#fff"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M5 12l5 5l10 -10"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: checked ? 1 : 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          />
+        </motion.svg>
+      </motion.div>
     </div>
   );
 };

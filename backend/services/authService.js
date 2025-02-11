@@ -202,79 +202,159 @@ export const getProfileService = async (userId) => {
 export const forgotPasswordService = async (email) => {
     // Validar el correo electrónico
     if (!email) {
-        throw new Error("Email is required");
+      throw new Error("Email is required");
     }
-
+  
     // Verificar si el usuario existe
     const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("id, email")
-        .eq("email", email)
-        .single();
-
+      .from("users")
+      .select("id, email")
+      .eq("email", email)
+      .single();
+  
     if (userError || !user) {
-        throw new Error("User not found");
+      throw new Error("User not found");
     }
-
-    // Generar token único
+  
+    // Generar un nuevo token único
     const resetToken = generateResetToken(user.id);
-
+  
+    // Guardar el token en la base de datos (invalida tokens anteriores)
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ reset_token: resetToken }) // Almacenar el token en la columna `reset_token`
+      .eq("id", user.id);
+  
+    if (updateError) {
+      throw new Error("Error saving reset token");
+    }
+  
     // Construir el enlace de restablecimiento
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-
-    // Enviar correo electrónico
+  
+    // Enviar correo electrónico con el enlace
     await sendResetEmail(user.email, resetLink);
-
+  
     return { message: "Password reset link sent to your email" };
-};
+  };
 
+// Restablecer contraseña
+// Restablecer contraseña
 // Restablecer contraseña
 export const resetPasswordService = async ({ token, newPassword }) => {
     // Validar los datos con Zod
     const validatedData = resetPasswordSchema.parse({ token, newPassword });
-
+  
     // Verificar el token
     let decodedToken;
     try {
-        decodedToken = jwt.verify(validatedData.token, process.env.RESET_PASSWORD_SECRET);
+      decodedToken = jwt.verify(validatedData.token, process.env.RESET_PASSWORD_SECRET);
     } catch (error) {
-        throw new Error("Invalid or expired token");
+      throw new Error("Invalid or expired token JWT");
     }
-
+  
     const userId = decodedToken.userId;
-
+  
     // Obtener los datos actuales del usuario
     const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("password")
-        .eq("id", userId)
-        .single();
-
+      .from("users")
+      .select("password, reset_token") // Incluimos el campo reset_token
+      .eq("id", userId)
+      .single();
+  
     if (userError || !user) {
-        throw new Error("User not found");
+      throw new Error("User not found");
     }
-
+  
+    // Verificar si el token proporcionado coincide con el token almacenado
+    if (user.reset_token !== validatedData.token) {
+      throw new Error("Invalid or expired token BD");
+    }
+  
     // Verificar si la nueva contraseña es igual a la actual
     const isSamePassword = await bcrypt.compare(validatedData.newPassword, user.password);
     if (isSamePassword) {
-        throw new Error("New password must be different from the current password");
+      throw new Error("New password must be different from the current password");
     }
-
+  
     // Cifrar la nueva contraseña
     const hashedPassword = await bcrypt.hash(validatedData.newPassword, 10);
-
-    // Actualizar la contraseña y el campo updated_at en la base de datos
+  
+    // Actualizar la contraseña, limpiar el token de restablecimiento y actualizar el campo updated_at
     const { error } = await supabase
-        .from("users")
-        .update({
-            password: hashedPassword,
-            updated_at: new Date().toISOString(), // Actualizamos el campo updated_at
-        })
-        .eq("id", userId);
-
+      .from("users")
+      .update({
+        password: hashedPassword,
+        reset_token: null, // Limpiar el token después de usarlo
+        updated_at: new Date().toISOString(), // Actualizamos el campo updated_at
+      })
+      .eq("id", userId);
+  
     if (error) {
-        throw new Error("Error updating password");
+      throw new Error("Error updating password");
     }
-
+  
     return { message: "Password updated successfully" };
-};
+  };
+
+  export const validateResetTokenService = async (token) => {
+    try {
+      console.log("Iniciando validación del token:", token);
+  
+      // Verificar el token
+      console.log("Verificando el token...");
+      const decodedToken = jwt.verify(token, process.env.RESET_PASSWORD_SECRET);
+      console.log("Token verificado exitosamente. Decoded token:", decodedToken);
+  
+      // Extraer el ID del usuario del token
+      const userId = decodedToken.userId;
+  
+      // Verificar si el usuario existe en la base de datos y obtener su token almacenado
+      console.log("Buscando al usuario en la base de datos...");
+      const { data: user, error: userError } = await supabase
+        .from("users")
+        .select("id, reset_token") // Incluimos el campo reset_token
+        .eq("id", userId)
+        .single();
+  
+      // Si hay un error o el usuario no existe, lanzamos un error específico
+      if (userError || !user) {
+        throw new Error("User not found");
+      }
+  
+      console.log("Usuario encontrado en la base de datos:", user);
+  
+      // Verificar si el token proporcionado coincide con el token almacenado
+      if (user.reset_token !== token) {
+        throw new Error("Invalid or expired token"); // Mensaje genérico
+      }
+  
+      console.log("El token coincide con el almacenado en la base de datos.");
+  
+      // Si todo está bien, el token es válido
+      console.log("El token es válido.");
+    } catch (error) {
+      console.error("Error durante la validación del token:", error.message);
+  
+      // Manejar errores específicos
+      if (error.name === "TokenExpiredError") {
+        throw new Error("The token has expired. Please request a new one.");
+      }
+      if (error.name === "JsonWebTokenError" || error instanceof SyntaxError) {
+        // Manejar errores específicos de formato inválido
+        if (error.message.includes("bad control character")) {
+          throw new Error("The token has an invalid format. Please check the link or request a new one.");
+        }
+        throw new Error("Invalid or expired token JWT"); // Mensaje genérico para tokens JWT inválidos
+      }
+      if (error.message === "User not found") {
+        throw new Error("User not found");
+      }
+      if (error.message === "Invalid or expired token") {
+        throw new Error("Invalid or expired token BD");
+      }
+  
+      // Manejar otros errores inesperados
+      throw new Error("An unexpected error occurred. Please try again later.");
+    }
+  };

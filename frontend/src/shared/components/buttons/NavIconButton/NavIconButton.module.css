@@ -4,34 +4,36 @@
     justify-content: center;
     text-decoration: none;
     border: none;
-    background-color: transparent;
-    color: var(--color-primary);
-    border-radius: 50%;
+    background-color: #283943;
+    color: #BEC4C4;
     cursor: pointer;
     transition: transform var(--transition-duration) var(--transition-easing),
                 color var(--transition-duration) var(--transition-easing);
   }
   
   .iconButton:hover {
-    color: var(--color-primary-hover);
+    background-color: #2E414D;
   }
   
   .iconButton.small {
     width: 30px;
     height: 30px;
     font-size: var(--font-size-small);
+    border-radius: 10px;
   }
   
   .iconButton.medium {
     width: 40px;
     height: 40px;
     font-size: var(--font-size-base);
+    border-radius: 14px;
   }
   
   .iconButton.large {
     width: 50px;
     height: 50px;
     font-size: var(--font-size-large);
+    border-radius: 18px;
   }
   
   .iconButton.disabled {

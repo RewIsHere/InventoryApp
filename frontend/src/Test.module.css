@@ -1,0 +1,14 @@
+.testContainer {
+    padding: 20px;
+  }
+  
+  .badgeContainer {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  

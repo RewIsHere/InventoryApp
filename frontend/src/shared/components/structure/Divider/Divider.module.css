@@ -1,9 +1,9 @@
 .horizontal {
-    width: 100%;
-    height: 1px;
-  }
-  
-  .vertical {
-    width: 1px;
-    height: 100%;
-  }
+  width: 100%;
+  height: 1px;
+}
+
+.vertical {
+  width: 1px;
+  height: 100%; /* Esto es correcto, pero debemos asegurarnos de que el contenedor tenga una altura específica */
+}

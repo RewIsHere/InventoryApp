@@ -1,5 +1,4 @@
 import React from "react";
-import Logo from "../Logo";
 import Navbar from "../../navigation/Navbar";
 import IconButton from "../../buttons/IconButton";
 import styles from "./Header.module.css";
@@ -10,7 +9,6 @@ const Header = () => {
       {/* Contenedor principal */}
       <div className={styles.container}>
         {/* Logo en el lado izquierdo */}
-        <Logo />
 
         {/* Barra de Navegación Horizontal (Centro) */}
         <Navbar />
