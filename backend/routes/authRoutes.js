@@ -6,7 +6,8 @@ import {
     refreshAccessToken,
     getProfile,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    validateResetToken
 } from "../controllers/authController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { validateRequestBodyMiddleware } from "../middlewares/validateRequestBodyMiddleware.js";
@@ -51,4 +52,11 @@ router.put(
     validateRequestBodyMiddleware(["token", "newPassword"]),
     resetPassword
 );
+
+router.post(
+    "/validate-reset-token",
+    validateRequestBodyMiddleware(["token"]), // Validar que se envíe el token
+    validateResetToken // Nueva ruta para validar el token
+  );
+
 export default router;
