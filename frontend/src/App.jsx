@@ -5,6 +5,7 @@ import LoginPage from "@Auth/pages/LoginPage";
 import ForgotPassword from "@Auth/pages/ForgotPassword";
 import ResetPassword from "@Auth/pages/ResetPassword";
 import DashboardPage from "@Dashboard/pages/DashboardPage";
+import ProductsPage from "@Products/pages/ProductsPage";
 import ProtectedRoute from "@Components/ProtectedRoute";
 import PublicOnlyRoute from "@Components/PublicOnlyRoute"; // Importar el nuevo componente
 import MainLayout from "@Layout/MainLayout";
@@ -35,6 +36,12 @@ const App = () => {
                 <ProtectedRoute>
                   <MainLayout>
                     <DashboardPage />
+                  </MainLayout>
+                </ProtectedRoute>} />
+            <Route path="/products" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <ProductsPage />
                   </MainLayout>
                 </ProtectedRoute>} />
           </Routes>

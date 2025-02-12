@@ -11,12 +11,12 @@ export const AuthProvider = ({ children }) => {
   const { addNotification } = useContext(ToastContext);
 
   // Redirigir al dashboard si el usuario ya está autenticado
-  useEffect(() => {
+/*  useEffect(() => {
     if (!loading && user) {
       navigate("/dashboard", { replace: true });
     }
   }, [user, loading, navigate]);
-
+*/
   // Función para manejar el inicio de sesión
   const handleLogin = async (email, password) => {
     try {

@@ -1,0 +1,15 @@
+.LowStockContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin-bottom: 20px;
+}
+
+.products {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}

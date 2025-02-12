@@ -4,8 +4,10 @@
   justify-content: center;
   gap: var(--spacing-small); /* Espacio entre el ícono y el texto */
   text-decoration: none;
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
+  border: 1px solid var(--color-navbar);
+  outline: 1px solid var(--color-navbar);
+  outline-offset: -1px; /* Mueve el outline hacia adentro */
+  color: var(--color-navbar-secondary);
   background-color: transparent;
   padding: var(--spacing-small) var(--spacing-medium);
   font-size: var(--font-size-base);
@@ -14,24 +16,25 @@
 }
 
 .linkButton:hover {
-  background-color: var(--color-primary);
+  background-color: var(--color-navbar);
+}
+.linkButton:hover span{
   color: #fff;
+}
+.linkButton:hover .icon svg {
+  fill: #39DB7D;
 }
 
 .linkButton.solid {
-  background-color: var(--color-primary);
+  background-color: var(--color-navbar);
   color: #fff;
-  border-color: var(--color-primary);
-}
-
-.linkButton.solid:hover {
-  background-color: var(--color-primary-hover);
+  border-color: var(--color-navbar);
 }
 
 .linkButton.small {
   padding: var(--spacing-small);
   font-size: var(--font-size-small);
-  border-radius: 20px;
+  border-radius: 100px;
 }
 
 .linkButton.medium {
@@ -46,8 +49,14 @@
   border-radius: 40px;
 }
 
-.icon {
+.icon svg {
+  width: 20px;
+  fill: var(--color-navbar-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.linkButton.solid .icon svg {
+  fill: #39DB7D; /* Cambia el color del ícono */
 }

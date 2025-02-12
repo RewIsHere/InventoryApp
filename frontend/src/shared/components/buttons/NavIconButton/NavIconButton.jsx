@@ -18,7 +18,7 @@ const NavIconButton = ({ to = "/", target = "_self", icon, size = "medium", disa
         className={`${styles.iconButton} ${styles[size]} ${disabled ? styles.disabled : ""}`}
         aria-disabled={disabled}
       >
-        {icon}
+      {icon && <span className={styles.icon}>{icon}</span>}
       </Link>
     </motion.div>
   );

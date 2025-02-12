@@ -41,3 +41,14 @@
     cursor: not-allowed;
     pointer-events: none;
   }
+
+  .icon {
+    display: flex;
+  }
+
+  .icon svg{
+    width: 30px;
+    height: auto;
+    display: flex;
+    fill: #bec4c4;
+  }

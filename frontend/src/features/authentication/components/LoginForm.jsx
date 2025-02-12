@@ -24,7 +24,10 @@ const LoginForm = () => {
       return false;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
-      addNotification("El correo electrónico no tiene un formato válido.", "error");
+      addNotification(
+        "El correo electrónico no tiene un formato válido.",
+        "error"
+      );
       return false;
     }
     return true;
@@ -72,14 +75,14 @@ const LoginForm = () => {
           onValueChange={(name, newValue) => setPassword(newValue)} // Actualizar el estado del password
         />
         {/* Boton de contraseña olvidada */}
-      <Link
-        to={"/forgot-password"}
-        target={"_self"}
-        rel={"_self" === "_blank" ? "noopener noreferrer" : undefined}
-        className={`${styles.linkButton}`}
-      >
-        <span>¿Has olvidado tu contraseña?</span>
-      </Link>
+        <Link
+          to={"/forgot-password"}
+          target={"_self"}
+          rel={"_self" === "_blank" ? "noopener noreferrer" : undefined}
+          className={`${styles.linkButton}`}
+        >
+          <span>¿Has olvidado tu contraseña?</span>
+        </Link>
         {/* Botón de inicio de sesión */}
         <Button
           type="submit"
