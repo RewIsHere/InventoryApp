@@ -1,0 +1,21 @@
+{
+	"React Component": {
+	  "prefix": ["rfc"],
+	  "body": [
+		"import React from 'react';",
+		"import styles from './${1:ComponentName}.module.css';",
+		"",
+		"const ${1:ComponentName} = () => {",
+		"  return (",
+		"    <div className={styles.container}>",
+		"      <h1>Prueba</h1>",
+		"    </div>",
+		"  );",
+		"};",
+		"",
+		"export default ${1:ComponentName};"
+	  ],
+	  "description": "Crea un componente funcional de React con estilos en module.css."
+	}
+  }
+  

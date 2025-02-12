@@ -1,0 +1,53 @@
+.card {
+  background-color: #283943;
+  width: 100%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 80px;
+}
+
+.username {
+  color: gray;
+}
+
+.view {
+  background-color: #ffea00;
+  color: #151616;
+  font-weight: 800;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.id {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.products {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: left;
+}
+
+.type {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}

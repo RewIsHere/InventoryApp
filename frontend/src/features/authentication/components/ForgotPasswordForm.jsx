@@ -18,7 +18,10 @@ const LoginForm = () => {
       return false;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
-      addNotification("El correo electrónico no tiene un formato válido.", "error");
+      addNotification(
+        "El correo electrónico no tiene un formato válido.",
+        "error"
+      );
       return false;
     }
     return true;
@@ -46,7 +49,9 @@ const LoginForm = () => {
         />
       </div>
       <h2 className={styles.title}>Recupecion de Contraseña</h2>
-      <p style={{color: "gray", marginBottom: "30px"}}>Introduce tu correo electrónico para buscar tu cuenta.</p>
+      <p style={{ color: "gray", marginBottom: "30px" }}>
+        Introduce tu correo electrónico para buscar tu cuenta.
+      </p>
       {/* Usar el componente Form */}
       <form onSubmit={handleSubmit} className={styles.form}>
         {/* Campo de correo electrónico */}

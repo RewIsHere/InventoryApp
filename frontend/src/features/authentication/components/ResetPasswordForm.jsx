@@ -68,8 +68,8 @@ const ResetPasswordForm = () => {
 
       // Verificar si la respuesta indica éxito
       if (response && response.message === "Password updated successfully") {
-      setIsPasswordReset(true); // Indicar que la contraseña fue restablecida
-    } 
+        setIsPasswordReset(true); // Indicar que la contraseña fue restablecida
+      }
     } catch (error) {
       addNotification(error.message || "Ocurrió un error inesperado.", "error");
     }
@@ -97,7 +97,9 @@ const ResetPasswordForm = () => {
         />
       </div>
       <h2 className={styles.title}>Restablecer Contraseña</h2>
-      <p style={{ color: "gray", marginBottom: "30px" }}>Introduce una nueva contraseña.</p>
+      <p style={{ color: "gray", marginBottom: "30px" }}>
+        Introduce una nueva contraseña.
+      </p>
       {/* Usar el componente Form */}
       <form onSubmit={handleSubmit} className={styles.form}>
         {/* Campo de nueva contraseña */}
@@ -117,11 +119,7 @@ const ResetPasswordForm = () => {
           onValueChange={(name, newValue) => setConfirmPassword(newValue)}
         />
         {/* Botón de restablecer contraseña */}
-        <Button
-          type="submit"
-          variant="secondary"
-          size="large"
-        >
+        <Button type="submit" variant="secondary" size="large">
           Restablecer Contraseña
         </Button>
       </form>

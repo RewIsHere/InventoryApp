@@ -1,10 +1,20 @@
 import React from "react";
+import styles from "./DashboardPage.module.css";
+import LowStock from "../components/LowStock";
+import Stats from "../components/Stats";
+import LatestMovements from "../components/LatestMovements";
 
 const DashboardPage = () => {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>¡Bienvenido al Dashboard!</h1>
-      <p>Esta es la página protegida que solo los usuarios autenticados pueden ver.</p>
+    <div className={styles.MainContainer}>
+      <div className={styles.PageHeader}>
+        <h1 className={styles.PageTitle}>Inicio</h1>
+      </div>
+      <div className={styles.BodyContainer}>
+        <LowStock />
+        <Stats />
+        <LatestMovements />
+      </div>
     </div>
   );
 };
