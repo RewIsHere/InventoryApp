@@ -22,7 +22,7 @@
 }
 
 .imgLogo {
-  width: 200px;
+  width: 100px;
 }
 
 .grow1 {
@@ -34,7 +34,7 @@
 }
 .centrado {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .right {

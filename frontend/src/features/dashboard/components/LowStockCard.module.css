@@ -1,9 +1,10 @@
 .card {
+  background-color: var(--color-bg-second);
   display: flex;
   flex-direction: column;
   width: 500px; /* Ancho fijo */
   min-height: 300px; /* Altura mínima para asegurar consistencia */
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden; /* Evita que el contenido se desborde */
   padding: 16px; /* Espaciado interno */
   box-sizing: border-box; /* Incluye padding en el cálculo del tamaño */

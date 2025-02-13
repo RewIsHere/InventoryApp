@@ -1,34 +1,35 @@
 .container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas */
-    gap: var(--spacing-small); /* Espaciado entre botones */
-  }
-  
-  .button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--color-border);
-    background-color: transparent;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-base);
-    padding: var(--spacing-small) var(--spacing-medium);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all var(--transition-duration) var(--transition-easing);
-  }
-  
-  .button:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
-  
-  .button.active {
-    background-color: var(--color-success);
-    border-color: var(--color-success);
-    color: #fff;
-  }
-  
-  .button:not(.active):hover {
-    background-color: var(--color-bg-hover);
-  }
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+  gap: var(--spacing-small); /* Espaciado entre botones */
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  padding: var(--spacing-small) var(--spacing-medium);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.button.active {
+  border: 1px solid var(--color-success);
+  border-radius: 10px;
+  color: #fff;
+  transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.button:not(.active):hover {
+  background-color: var(--color-bg-hover);
+}

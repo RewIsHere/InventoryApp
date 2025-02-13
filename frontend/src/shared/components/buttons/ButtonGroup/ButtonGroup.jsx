@@ -21,7 +21,9 @@ const ButtonGroup = ({ options, onSelect, selected }) => {
       {options.map((option, index) => (
         <motion.button
           key={index}
-          className={`${styles.button} ${activeOption === option ? styles.active : ""}`}
+          className={`${styles.button} ${
+            activeOption === option ? styles.active : ""
+          }`}
           onClick={() => handleButtonClick(option)}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >

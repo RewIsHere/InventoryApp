@@ -21,7 +21,7 @@ const MovementCard = ({ uuid, productos, usuario, tipo }) => {
         <Badge
           text={tipo}
           color="white"
-          backgroundColor={tipo === "Entrada" ? "#006fee" : "#ff3b30"}
+          backgroundColor={tipo === "Entrada" ? "#ff3b30" : "#006fee"}
         />
       </div>
       <div className={styles.button}>

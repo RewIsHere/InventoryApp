@@ -7,7 +7,7 @@ const LowStockCard = ({
   productName = "Producto desconocido",
   productCategory = "Categoría desconocida",
   productStock = 0,
-  imageSrc = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTIp-VaLjPHPSdgr4FqVxAmr6YI9CwDCW56ZXzX9B_unxNtDXPp9otRcUepKG2fKx2MaGeFTOZy1n-fVrCXfEwnn2ShXyzo9mc05clur1E",
+  imageSrc = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png",
   productLink = "/test",
   isLoading = false, // Propiedad para manejar el estado de carga
 }) => {

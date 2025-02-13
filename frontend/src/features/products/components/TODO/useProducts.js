@@ -8,12 +8,12 @@ export const useProducts = (filters = {}) => {
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
-    limit: 20,
+    limit: 5,
     totalPages: 1,
   }); // Información de paginación
 
   // Función para cargar productos desde el backend
-  const fetchProducts = async (filters = {}, page = 1, limit = 20) => {
+  const fetchProducts = async (filters = {}, page = 1, limit = 5) => {
     setLoading(true);
     try {
       const response = await listProducts({ ...filters, page, limit });
@@ -38,11 +38,11 @@ export const useProducts = (filters = {}) => {
     }
   };
 
-  // Efecto para cargar productos iniciales o actualizar cuando cambian los filtros
+  // Cargar productos iniciales con los filtros iniciales
   useEffect(() => {
     const { page = 1, ...otherFilters } = filters;
-    fetchProducts(otherFilters, page); // Usar el parámetro `page` de los filtros
-  }, [filters]); // Dependencia: `filters` (incluye `page`)
+    fetchProducts(otherFilters, page);
+  }, [filters]); // Dependencia: `filters`
 
   // Función para cargar más productos (paginación infinita)
   const loadMore = () => {

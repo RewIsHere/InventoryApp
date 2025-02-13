@@ -1,48 +1,89 @@
-.iconButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background-color: #283943;
-    color: #6D7F82;
-    cursor: pointer;
-    padding: 0;
-    transition: transform var(--transition-duration) var(--transition-easing),
-                color var(--transition-duration) var(--transition-easing);
-  }
-  
-  .iconButton:hover {
-    color: #39DB7D;
-  }
+.container {
+  position: relative; /* Contexto de posicionamiento relativo para el dropdown */
+  display: inline-block; /* Asegura que el contenedor tenga el tamaño del botón */
+}
 
-  .iconButton:active {
-    border: 1px solid #39DB7D;
-    background-color: rgba(57, 219, 125, 0.2); /* Verde con transparencia */
-  }
-  
-  .iconButton.small {
-    width: 30px;
-    height: 30px;
-    font-size: var(--font-size-small);
-    border-radius: 10px;
-  }
-  
-  .iconButton.medium {
-    width: 40px;
-    height: 40px;
-    font-size: var(--font-size-base);
-    border-radius: 14px;
-  }
-  
-  .iconButton.large {
-    width: 50px;
-    height: 50px;
-    font-size: var(--font-size-large);
-    border-radius: 18px;
-  }
-  
-  .iconButton.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: #283943;
+  color: #6d7f82;
+  cursor: pointer;
+  padding: 0;
+  transition: transform var(--transition-duration) var(--transition-easing),
+    color var(--transition-duration) var(--transition-easing);
+}
+
+.iconButton:hover {
+  color: #39db7d;
+}
+
+.iconButton:active {
+  border: 1px solid #39db7d;
+  background-color: rgba(57, 219, 125, 0.2); /* Verde con transparencia */
+}
+
+.iconButton.small {
+  width: 30px;
+  height: 30px;
+  font-size: var(--font-size-small);
+  border-radius: 10px;
+}
+
+.iconButton.medium {
+  width: 40px;
+  height: 40px;
+  font-size: var(--font-size-base);
+  border-radius: 14px;
+}
+
+.iconButton.large {
+  width: 50px;
+  height: 50px;
+  font-size: var(--font-size-large);
+  border-radius: 18px;
+}
+
+.iconButton.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%; /* Menú justo debajo del avatar */
+  right: 50%; /* Centrado horizontalmente respecto al contenedor del avatar */
+  transform: translateX(-50%); /* Ajustar para que se centre perfectamente */
+  background-color: var(--color-bg-third);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 150px; /* Ancho fijo del menú */
+  margin-top: 8px; /* Espacio entre el avatar y el menú */
+}
+
+.option {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.option:hover {
+  background-color: var(--color-bg-four);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.optionIcon {
+  font-size: 18px;
+}
+
+.optionText {
+  font-size: 14px;
+}

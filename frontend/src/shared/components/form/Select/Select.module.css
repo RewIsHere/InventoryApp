@@ -17,7 +17,7 @@
   padding: auto;
   background-color: #18181b;
   border-radius: 12px;
-  padding:  0px var(--spacing-large) 0px var(--spacing-large) ;
+  padding: 0px var(--spacing-large) 0px var(--spacing-large);
 }
 
 .select {
@@ -69,13 +69,12 @@
   top: 100%;
   left: 0;
   right: 0;
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-third);
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 10;
   max-height: 200px; /* Limitar altura si es necesario */
-  overflow-y: auto;  /* Permite desplazarse si hay muchas opciones */
+  overflow-y: auto; /* Permite desplazarse si hay muchas opciones */
   scrollbar-width: thin; /* Establece el grosor de la barra de desplazamiento */
   scrollbar-color: var(--color-primary) var(--color-bg); /* Color de la barra de desplazamiento y del fondo */
 }
@@ -91,14 +90,18 @@
 }
 
 .optionsMenu::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary); /* Color de la barra de desplazamiento */
+  background-color: var(
+    --color-primary
+  ); /* Color de la barra de desplazamiento */
   border-radius: 4px; /* Bordes redondeados de la barra */
   border: 2px solid var(--color-bg); /* Borde del thumb */
 }
 
 /* Efecto de hover sobre el thumb */
 .optionsMenu::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary-hover); /* Color cuando el usuario pasa el mouse sobre el thumb */
+  background-color: var(
+    --color-primary-hover
+  ); /* Color cuando el usuario pasa el mouse sobre el thumb */
 }
 
 .option {
@@ -111,7 +114,7 @@
 }
 
 .option:hover {
-  background-color: gray;
+  background-color: #373941;
 }
 
 .option:active {
@@ -119,7 +122,12 @@
 }
 
 .selectedOption {
-  background-color: gray; /* Fondo para la opción seleccionada */
+  background-color: rgba(
+    27,
+    217,
+    106,
+    0.25
+  ); /* Fondo para la opción seleccionada */
   font-weight: bold; /* Resaltar texto de la opción seleccionada */
 }
 

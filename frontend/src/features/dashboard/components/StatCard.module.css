@@ -1,9 +1,10 @@
 .card {
+  background-color: var(--color-bg-second);
   display: flex;
   justify-content: left;
   gap: 10px;
   width: 100%;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   height: 100px;
 }
 
@@ -31,12 +32,12 @@
   align-items: center;
   width: 40px;
   height: 40px;
-  background-color: #283943;
+  background-color: var(--color-bg-third);
   border-radius: 10px;
 }
 
 .icon svg {
-  fill: white;
+  fill: var(--color-primary);
   width: 30px;
   height: 30px;
 }

@@ -1,10 +1,23 @@
 import React from "react";
+import styles from "./ProductsPage.module.css";
+import Sidebar from "../components/Sidebar";
+import ProductList from "../components/ProductList";
 
+// ProductsPage.jsx
 const ProductsPage = () => {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>¡Bienvenido a Productos!</h1>
-      <p>Esta es la página protegida que solo los usuarios autenticados pueden ver.</p>
+    <div className={styles.MainContainer}>
+      <div className={styles.PageHeader}>
+        <h1 className={styles.PageTitle}>Productos</h1>
+      </div>
+      <div className={styles.BodyContainer}>
+        <div className={styles.left}>
+          <Sidebar />
+        </div>
+        <div className={styles.right}>
+          <ProductList />
+        </div>
+      </div>
     </div>
   );
 };

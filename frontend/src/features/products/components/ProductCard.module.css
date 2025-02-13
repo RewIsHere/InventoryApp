@@ -1,0 +1,107 @@
+.card {
+  display: grid;
+  grid-template-columns: min-content 1fr min-content auto auto min-content;
+  grid-template-rows: auto auto;
+  gap: 10px 10px;
+  grid-template-areas:
+    "image name divider stockTitle barcodeTitle action"
+    "image statusCategory divider stock barcode action";
+  border-radius: 12px;
+  height: 120px;
+  padding: 5px 20px 5px 20px;
+  background-color: var(--color-bg-second);
+}
+
+.image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: image;
+}
+
+.name {
+  display: flex;
+  justify-content: left;
+  align-items: end;
+  grid-area: name;
+}
+
+.statusCategory {
+  display: flex;
+  align-items: start;
+  grid-area: statusCategory;
+}
+.badge {
+  margin-right: 10px;
+}
+.productcategory {
+  margin-left: 20px;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: divider;
+}
+
+.stockTitle {
+  display: flex;
+  align-items: end;
+  grid-area: stockTitle;
+}
+
+.stock {
+  display: flex;
+  align-items: start;
+  grid-area: stock;
+}
+
+.barcodeTitle {
+  display: flex;
+  align-items: end;
+  grid-area: barcodeTitle;
+}
+
+.barcode {
+  display: flex;
+  align-items: start;
+  grid-area: barcode;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  grid-area: action;
+  margin-right: 10px;
+}
+
+.action svg {
+  fill: #b0bac5;
+}
+
+.productcategory {
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+}
+
+.titleText {
+  color: var(--color-text-secondary);
+}
+
+.productname {
+  font-size: 20px;
+}
+
+.value {
+  font-weight: 400;
+}
+
+svg.deleteicons {
+  fill: #f31260;
+}
+
+.productcategory svg {
+  fill: #b0bac5;
+}

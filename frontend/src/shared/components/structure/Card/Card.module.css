@@ -4,12 +4,11 @@
   padding: var(--spacing-medium);
   transition: all 0.3s ease;
   display: inline-block;
-  position: relative;
 }
 
 /* Solo aplica el hover cuando la clase 'link' está presente */
 .card.link:hover {
-  background-color: #283943;
+  background-color: var(--color-bg-third);
 }
 
 /* Estilo de sombra */

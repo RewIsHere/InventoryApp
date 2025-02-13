@@ -21,7 +21,7 @@ const Header = () => {
           {/* Logo en el lado izquierdo */}
           <img
             className={styles.imgLogo}
-            src="https://jpctdxgxtcilpeqfqull.supabase.co/storage/v1/object/public/product_images/public/c004079a-11db-4b85-8fa1-05a6ef0e6d9f/NewLogo.png"
+            src="https://jpctdxgxtcilpeqfqull.supabase.co/storage/v1/object/public/product_images/public/c004079a-11db-4b85-8fa1-05a6ef0e6d9f/logo.png"
             alt="Logo"
           />
         </div>

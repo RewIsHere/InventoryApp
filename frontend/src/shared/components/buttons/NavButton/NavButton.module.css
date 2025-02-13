@@ -4,10 +4,10 @@
   justify-content: center;
   gap: var(--spacing-small); /* Espacio entre el ícono y el texto */
   text-decoration: none;
-  border: 1px solid var(--color-navbar);
-  outline: 1px solid var(--color-navbar);
+  border: 1px solid var(--color-bg-third);
+  outline: 1px solid var(--color-bg-third);
   outline-offset: -1px; /* Mueve el outline hacia adentro */
-  color: var(--color-navbar-secondary);
+  color: var(--color-text-secondary);
   background-color: transparent;
   padding: var(--spacing-small) var(--spacing-medium);
   font-size: var(--font-size-base);
@@ -16,24 +16,24 @@
 }
 
 .linkButton:hover {
-  background-color: var(--color-navbar);
+  background-color: var(--color-bg-third);
 }
-.linkButton:hover span{
+.linkButton:hover span {
   color: #fff;
 }
 .linkButton:hover .icon svg {
-  fill: #39DB7D;
+  fill: #39db7d;
 }
 
 .linkButton.solid {
-  background-color: var(--color-navbar);
+  background-color: var(--color-bg-third);
   color: #fff;
-  border-color: var(--color-navbar);
+  border-color: var(--color-bg-third);
 }
 
 .linkButton.small {
   padding: var(--spacing-small);
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-base);
   border-radius: 100px;
 }
 
@@ -58,5 +58,5 @@
 }
 
 .linkButton.solid .icon svg {
-  fill: #39DB7D; /* Cambia el color del ícono */
+  fill: #39db7d; /* Cambia el color del ícono */
 }

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@Structure/*": ["src/shared/components/structure/*"],
+      "@Components/*": ["src/shared/components/*"],
+      "@Buttons/*": ["src/shared/components/buttons/*"],
+      "@Form/*": ["src/shared/components/form/*"],
+      "@DataDisplay/*": ["src/shared/components/data-display/*"],
+      "@Navigation/*": ["src/shared/components/navigation/*"],
+      "@Toast/*": ["src/shared/components/toast/Toast/*"],
+      "@Layout/*": ["src/shared/components/layout/*"],
+      "@Auth/*": ["src/features/authentication/*"],
+      "@Dashboard/*": ["src/features/dashboard/*"],
+      "@Products/*": ["src/features/products/*"],
+      "@Movements/*": ["src/features/movements/*"],
+      "@Users/*": ["src/features/users/*"],
+      "@Assets/*": ["src/assets/*"]
+    }
+  },
+  "include": ["src"]
+}

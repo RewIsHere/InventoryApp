@@ -3,10 +3,8 @@
 
 :root {
   /* 🎨 Paleta de colores (Modo Oscuro) */
-  --color-bg: #0d0e0e; /* Fondo principal */
+  /* Fondo principal */
   --color-bg-secondary: #1a262d; /* Fondo secundario (cards, formularios) */
-  --color-text: #ffffff; /* Texto principal */
-  --color-text-secondary: #b0b0b0; /* Texto secundario */
   --color-primary: #39db7d; /* Color primario */
   --color-primary-hover: #512da8; /* Hover del color primario */
   --color-secondary: #ffffff;
@@ -18,6 +16,16 @@
   --color-titles: #ffffff;
   --color-navbar: #233a44;
   --color-navbar-secondary: #5d6b6c;
+
+  /*NEW COLORS*/
+  --color-bg: #000000;
+  --color-bg-second: #101013;
+  --color-bg-third: #222329;
+  --color-bg-four: #30313b;
+  --color-text: #fff;
+  --color-text-secondary: #b0bac5;
+
+  --radius-md: 0.75rem;
 
   /* 📏 Espaciado */
   --spacing-small: 8px;

@@ -1,84 +1,83 @@
 .avatar {
-    display: flex;
-    border: 5px solid #59472c;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%; /* Forma circular */
-    font-size: calc(var(--font-size-base) * 1.2); /* Tamaño de fuente ajustado */
-    font-weight: var(--font-weight-bold);
-    text-transform: uppercase; /* Convertir las iniciales a mayúsculas */
-    transition: transform var(--transition-duration) var(--transition-easing),
-                box-shadow var(--transition-duration) var(--transition-easing);
-  }
-  
-  .avatar:hover {
-    transform: scale(1.1); /* Efecto de escala al pasar el cursor */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
-    cursor: pointer;
-  }
+  display: flex;
+  border: 5px solid #59472c;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Forma circular */
+  font-size: calc(var(--font-size-base) * 1.2); /* Tamaño de fuente ajustado */
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase; /* Convertir las iniciales a mayúsculas */
+  transition: transform var(--transition-duration) var(--transition-easing),
+    box-shadow var(--transition-duration) var(--transition-easing);
+}
 
-  .container {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropdownMenu {
-    position: absolute;
-    top: 100%; /* Menú justo debajo del avatar */
-    right: 50%; /* Centrado horizontalmente respecto al contenedor del avatar */
-    transform: translateX(-50%); /* Ajustar para que se centre perfectamente */
-    background-color: var(--color-bg-secondary);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    width: 200px; /* Ancho fijo del menú */
-    margin-top: 8px; /* Espacio entre el avatar y el menú */
-  }
+.avatar:hover {
+  transform: scale(1.1); /* Efecto de escala al pasar el cursor */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  cursor: pointer;
+}
 
-  .dropdownHeader {
-    max-width: 250px; /* Ancho máximo del menú desplegable */
-    padding: 1rem;
-    background-color: var(--color-bg-header);
-    border-bottom: 1px solid var(--color-border);
-    text-align: left;
-  }
-  .dropdownHeaderText {
-    display: block;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--color-text);
-  }
-  
-  .dropdownHeaderSubtext {
-    display: block;
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    margin-top: 0.25rem;
-    word-wrap: break-word; /* Permite que las palabras largas se rompan */
-    white-space: normal; /* Asegura que el texto pueda ocupar múltiples líneas */
-    margin-bottom: 15px;
-  }
-  
-  .option {
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .option:hover {
-    background-color: gray;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
-  .optionIcon {
-    font-size: 18px;
-  }
-  
-  .optionText {
-    font-size: 14px;
-  }
-  
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%; /* Menú justo debajo del avatar */
+  right: 50%; /* Centrado horizontalmente respecto al contenedor del avatar */
+  transform: translateX(-50%); /* Ajustar para que se centre perfectamente */
+  background-color: var(--color-bg-third);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 200px; /* Ancho fijo del menú */
+  margin-top: 8px; /* Espacio entre el avatar y el menú */
+}
+
+.dropdownHeader {
+  max-width: 250px; /* Ancho máximo del menú desplegable */
+  padding: 1rem;
+  background-color: var(--color-bg-third);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+.dropdownHeaderText {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+.dropdownHeaderSubtext {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+  word-wrap: break-word; /* Permite que las palabras largas se rompan */
+  white-space: normal; /* Asegura que el texto pueda ocupar múltiples líneas */
+  margin-bottom: 15px;
+}
+
+.option {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.option:hover {
+  background-color: var(--color-bg-four);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.optionIcon {
+  font-size: 18px;
+}
+
+.optionText {
+  font-size: 14px;
+}

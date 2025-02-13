@@ -8,7 +8,7 @@ const LowStock = () => {
 
   // Imagen por defecto para productos sin imagen
   const defaultImage =
-    "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2022/11/pikachu-pokemon-escarlata-purpura-2888180.jpg";
+    "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png";
 
   if (loading) {
     // Muestra múltiples LowStockCard con estado de carga
