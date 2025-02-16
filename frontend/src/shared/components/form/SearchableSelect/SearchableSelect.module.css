@@ -1,4 +1,4 @@
-.container { 
+.container {
   position: relative;
   width: 100%;
 }
@@ -7,10 +7,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between; /* Distribuye el contenido entre los extremos */
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-bg);
-  border-radius: 4px;
-  padding: var(--spacing-small);
+  background-color: #18181b;
+  border-radius: 14px;
+  padding: 14px;
   cursor: pointer;
   transition: border-color var(--transition-duration) var(--transition-easing);
 }
@@ -18,7 +17,15 @@
 .openMenuBar:focus-within {
   border-color: var(--color-primary);
 }
-
+.dropdownContainer {
+  margin-top: 4px;
+  background-color: #18181b;
+  border-radius: 14px;
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  box-shadow: rgb(0 0 0 / 20%) 0px 8px 24px;
+}
 .arrowIcon {
   color: var(--color-text-secondary);
   display: flex;
@@ -29,6 +36,7 @@
 .searchIcon {
   margin-right: var(--spacing-small);
   color: var(--color-text-secondary);
+  margin-left: 30px;
 }
 
 .placeholder {
@@ -38,16 +46,17 @@
 .searchBar {
   display: flex;
   align-items: center;
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-bg);
-  border-radius: 4px;
-  padding: var(--spacing-small);
+  background-color: #101013;
+  border: 1px solid #101013;
   cursor: pointer;
   transition: border-color var(--transition-duration) var(--transition-easing);
+  margin: 10px;
+  border-radius: 14px;
 }
 
 .searchBar:focus-within {
   border-color: var(--color-primary);
+  border-radius: 14px;
 }
 
 .searchInput {
@@ -57,6 +66,7 @@
   border: none;
   outline: none;
   font-size: var(--font-size-base);
+  height: 3rem;
 }
 
 .optionsList {
@@ -79,31 +89,37 @@
 }
 
 .optionsList::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary); /* Color de la barra de desplazamiento */
+  background-color: var(
+    --color-primary
+  ); /* Color de la barra de desplazamiento */
   border-radius: 4px; /* Bordes redondeados de la barra */
   border: 2px solid var(--color-bg); /* Borde del thumb */
 }
 
 /* Efecto de hover sobre el thumb */
 .optionsList::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary-hover); /* Color cuando el usuario pasa el mouse sobre el thumb */
+  background-color: var(
+    --color-primary-hover
+  ); /* Color cuando el usuario pasa el mouse sobre el thumb */
 }
 
 .optionItem {
   padding: var(--spacing-small) var(--spacing-medium);
   cursor: pointer;
-  transition: background-color var(--transition-duration) var(--transition-easing);
+  transition: background-color var(--transition-duration)
+    var(--transition-easing);
   position: relative; /* Necesario para posicionar el ícono */
 }
 
 .optionItem:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: #343641;
+  border-radius: 14px;
 }
 
 /* Estilo cuando se selecciona un elemento */
 .selectedOption {
-  background-color: var(--color-bg-primary); /* Resalta el fondo */
-  border: 1px solid var(--color-primary); /* Opcional: agrega borde */
+  background-color: rgba(27, 217, 106, 0.25); /* Resalta el fondo */
+  border-radius: 14px;
 }
 
 /* Estilo para el ícono de check */
@@ -128,20 +144,28 @@
 .actionButton {
   width: 100%;
   padding: var(--spacing-small) var(--spacing-medium);
-  background-color: var(--color-primary);
-  color: #fff;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-weight: 600;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: var(--font-size-base);
-  transition: background-color var(--transition-duration) var(--transition-easing);
+  transition: background-color var(--transition-duration)
+    var(--transition-easing);
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .actionButton:hover:not(:disabled) {
-  background-color: var(--color-primary-hover);
+  color: #2eb366;
 }
 
 .actionButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.label {
+  margin-bottom: var(--spacing-small);
 }

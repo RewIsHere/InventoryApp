@@ -10,7 +10,6 @@
   --color-secondary: #ffffff;
   --color-terciary: #738283;
   --color-success: #4caf50; /* Éxito */
-  --color-danger: #f44336; /* Error */
   --color-selection: rgba(0, 255, 0, 0.1); /* Selección suave */
   --color-selection-hover: rgba(0, 255, 0, 0.2);
   --color-titles: #ffffff;
@@ -24,6 +23,8 @@
   --color-bg-four: #30313b;
   --color-text: #fff;
   --color-text-secondary: #b0bac5;
+  --color-text-secondary-opacity: rgba(176, 186, 197, 0.14);
+  --color-danger: #d93e5d; /* Error */
 
   --radius-md: 0.75rem;
 

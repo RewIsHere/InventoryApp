@@ -1,0 +1,96 @@
+/* AddProductPage.module.css */
+.addProductPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: radial-gradient(65% 30% at 50% -10%, #1bd96a40 0, #000000 100%);
+}
+
+.card h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: white;
+  margin-top: 50px;
+}
+
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 80%;
+  height: 1200px;
+  background-color: transparent;
+}
+
+.form {
+  background-color: var(--color-bg-second);
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  padding-left: 150px;
+  padding-right: 150px;
+  padding-top: 50px;
+  border-radius: 20px;
+}
+
+.secondInputsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.categoryContainer {
+  width: 50%;
+}
+
+.barcodeContainer {
+  width: 50%;
+}
+
+.stockInputsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.stockContainer {
+  width: 50%;
+}
+
+.minStockContainer {
+  width: 50%;
+}
+
+.sectionTitle {
+  font-size: 30px;
+  text-align: center;
+  color: gray;
+}
+
+.generalInfoContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.stockInfoContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.imgContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

@@ -4,7 +4,6 @@
   flex-direction: column;
   gap: var(--spacing-large);
   width: 100%;
-  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -15,18 +14,13 @@
   align-items: center;
   justify-content: center;
   height: 200px;
-  border: 2px dashed var(--color-primary);
   border-radius: 8px;
-  background-color: var(--color-bg-secondary);
+  background-color: #18181b;
   color: var(--color-text);
   text-align: center;
   cursor: pointer;
   transition: border-color var(--transition-duration) var(--transition-easing),
     background-color var(--transition-duration) var(--transition-easing);
-}
-
-.dropZone:hover {
-  border-color: var(--color-primary-hover);
 }
 
 .dropZone.dragging {
@@ -39,6 +33,15 @@
   font-size: 48px;
   margin-bottom: var(--spacing-small);
   color: var(--color-primary);
+  height: 80px;
+  width: 80px;
+  border: 1px solid gray;
+  border-radius: 50%;
+  background-color: #101013;
+}
+
+.icon svg {
+  fill: gray;
 }
 
 /* Input de archivos oculto */
@@ -59,15 +62,11 @@
   display: flex;
   align-items: center;
   padding: var(--spacing-small);
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-bg);
+  background-color: #18181b;
   border-radius: 4px;
-  transition: background-color var(--transition-duration) var(--transition-easing);
+  transition: background-color var(--transition-duration)
+    var(--transition-easing);
   overflow: hidden; /* Asegura que el contenido no se desborde */
-}
-
-.card:hover {
-  background-color: var(--color-bg-hover);
 }
 
 /* Contenido del Card */
@@ -126,7 +125,7 @@
   left: 0;
   width: 100%; /* Ocupa todo el ancho del Card */
   height: 100%; /* Ocupa todo el alto del Card */
-  background-color: var(--color-bg-secondary); /* Color de fondo */
+  background-color: #18181b; /* Color de fondo */
   z-index: 1; /* Colocar detrás del contenido */
   overflow: hidden;
 }
@@ -162,7 +161,9 @@
   top: 0;
   left: 0;
   z-index: 0;
-  transform: rotate(-90deg); /* Rotación para que el progreso comience desde la parte superior */
+  transform: rotate(
+    -90deg
+  ); /* Rotación para que el progreso comience desde la parte superior */
   animation: spin 1s linear infinite; /* Rotación infinita */
 }
 

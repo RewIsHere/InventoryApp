@@ -22,6 +22,7 @@ export const createProduct = async (req, res) => {
         .json({ error: "El campo category_id es obligatorio." });
     }
 
+    // Verificar si la categoría existe
     const { data: categoryData, error: categoryError } = await supabase
       .from("product_categories")
       .select("id")
@@ -34,13 +35,34 @@ export const createProduct = async (req, res) => {
         .json({ error: "La categoría especificada no existe." });
     }
 
+    // Verificar si el código de barras ya existe en la base de datos
+    const { data: existingProduct, error: barcodeError } = await supabase
+      .from("products")
+      .select("id")
+      .eq("barcode", barcode); // Verificar si el barcode ya existe
+
+    // Log de detalles de error
+    if (barcodeError) {
+      console.error("Error al verificar el código de barras:", barcodeError);
+      return res
+        .status(500)
+        .json({ error: "Error al verificar el código de barras." });
+    }
+
+    // Verificar si el array `existingProduct` contiene algún elemento
+    if (existingProduct && existingProduct.length > 0) {
+      return res.status(400).json({
+        error: "El código de barras ya está registrado en otro producto.",
+      });
+    }
+
     // Insertar el producto en la tabla 'products'
     const { data, error } = await supabase
       .from("products")
       .insert({
         name,
         description,
-        barcode,
+        barcode, // Usar directamente el barcode como texto
         stock,
         min_stock,
         status,
@@ -100,66 +122,58 @@ export const createProduct = async (req, res) => {
 // Controlador: Listar productos (con o sin filtros)
 export const listProducts = async (req, res) => {
   try {
-    // Extraer los parámetros de la consulta
     const {
       status,
       category,
       sort,
       stock_alert,
+      search,
       page = 1,
       limit = 20,
     } = req.query;
 
-    // Validar y convertir los valores de `page` y `limit` a números
     const pageNumber = parseInt(page, 10) || 1;
     const pageSize = parseInt(limit, 10) || 20;
-
-    // Calcular el rango de productos a devolver
     const fromIndex = (pageNumber - 1) * pageSize;
     const toIndex = pageNumber * pageSize - 1;
 
-    // Inicializar la consulta base
     let query = supabase.from("products").select(
-      `
-          *,
-          product_images (
-            id,
-            image_url,
-            uploaded_at
-          ),
-          product_categories!inner (
-            name
-          )
-        `,
-      { count: "exact" } // Habilitar conteo total de registros
+      `*,
+        product_images (
+          id,
+          image_url,
+          uploaded_at
+        ),
+        product_categories!inner (
+          name
+        )
+      `,
+      { count: "exact" }
     );
 
-    // Filtro por estado
     if (status && status !== "all") {
       query = query.eq("status", status.toUpperCase());
     }
 
-    // Filtro por categoría (ahora por nombre)
     if (category && category !== "all") {
-      query = query.eq("product_categories.name", category); // Filtrar por el nombre de la categoría
+      query = query.eq("product_categories.name", category);
     }
 
-    // Filtro por alerta de stock usando la función RPC
     if (stock_alert && stock_alert !== "all") {
-      // Usar la función RPC para obtener productos según el tipo de alerta
       const rpcQuery = await supabase.rpc("get_products_by_stock_alert", {
         alert_type: stock_alert,
       });
       if (rpcQuery.error) {
         return res.status(500).json({ error: rpcQuery.error.message });
       }
-      // Extraer los IDs de los productos devueltos por la función RPC
       const productIds = rpcQuery.data.map((product) => product.id);
-      // Filtrar los productos por los IDs obtenidos
       query = query.in("id", productIds);
     }
 
-    // Ordenar resultados
+    if (search) {
+      query = query.or(`name.ilike.%${search}%,barcode.ilike.%${search}%`);
+    }
+
     if (sort) {
       switch (sort) {
         case "name_asc":
@@ -177,19 +191,15 @@ export const listProducts = async (req, res) => {
       }
     }
 
-    // Aplicar paginación
     query = query.range(fromIndex, toIndex);
 
-    // Ejecutar la consulta final
     const { data, error, count } = await query;
 
     if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    // Transformar los datos para incluir solo la imagen más reciente y eliminar `product_images`
     const formattedData = data.map((product) => {
-      // Encontrar la imagen más reciente basada en el campo `uploaded_at`
       const mostRecentImage = product.product_images.reduce(
         (mostRecent, currentImage) => {
           if (
@@ -204,26 +214,21 @@ export const listProducts = async (req, res) => {
         null
       );
 
-      // Eliminar el campo `product_images` y agregar el campo `image`
-      const { product_images, product_categories, ...restOfProduct } = product; // Desestructurar para eliminar `product_images` y `product_categories`
+      const { product_images, product_categories, ...restOfProduct } = product;
 
       return {
         ...restOfProduct,
-        category: product_categories?.name || "Sin categoría", // Agregar el nombre de la categoría
+        category: product_categories?.name || "Sin categoría",
         image: mostRecentImage
-          ? {
-              id: mostRecentImage.id,
-              url: mostRecentImage.image_url,
-            }
-          : null, // Si no hay imágenes, establecer a null
+          ? { id: mostRecentImage.id, url: mostRecentImage.image_url }
+          : null,
       };
     });
 
-    // Devolver los datos junto con información de paginación
     res.status(200).json({
       products: formattedData,
       pagination: {
-        total: count, // Total de productos sin paginación
+        total: count,
         page: pageNumber,
         limit: pageSize,
         totalPages: Math.ceil(count / pageSize),
@@ -286,7 +291,7 @@ export const updateProduct = async (req, res) => {
 
     // Verificar si hay cambios
     if (Object.keys(updates).length === 0) {
-      return res.status(400).json({ message: "No hay cambios para aplicar." });
+      return res.status(400).json({ error: "No hay cambios para aplicar." });
     }
 
     // Marcar la fecha de actualización
@@ -339,6 +344,7 @@ export const deleteProduct = async (req, res) => {
     res.status(200).json({ message: "Producto eliminado correctamente." });
   } catch (error) {
     res.status(500).json({ error: error.message });
+    console.log(error);
   }
 };
 
@@ -505,13 +511,11 @@ export const getProductDetails = async (req, res) => {
   const { data: product, error: productError } = await supabase
     .from("products")
     .select(
-      `
-            *,
-            category:product_categories(*),
-            images:product_images(*),
-            notes:product_notes(*),
-            history:product_history(*)
-        `
+      `*, 
+      category:product_categories(*),
+      images:product_images(*),
+      notes:product_notes(*),
+      history:product_history(*)`
     )
     .eq("id", id)
     .single();
@@ -521,7 +525,22 @@ export const getProductDetails = async (req, res) => {
   if (!product)
     return res.status(404).json({ error: "Producto no encontrado." });
 
-  res.status(200).json(product);
+  // Obtener el autor usando el created_by (UUID del autor)
+  const { data: author, error: authorError } = await supabase
+    .from("users")
+    .select("id, name")
+    .eq("id", product.created_by)
+    .single();
+
+  if (authorError) return res.status(500).json({ error: authorError.message });
+
+  // Incluir el nombre del autor en la respuesta
+  const productWithAuthor = {
+    ...product,
+    created_by: author ? author.name : "Desconocido", // Agregamos el nombre del autor
+  };
+
+  res.status(200).json(productWithAuthor);
 };
 
 // Subir una imagen
@@ -530,6 +549,8 @@ export const uploadImage = async (req, res) => {
     const { id } = req.params;
     const file = req.file; // Obtenido del middleware de multer
     const userId = req.user.id;
+
+    console.log("Archivo recibido:", file); // Log adicional
 
     // Verificar si se proporcionó un archivo
     if (!file) {

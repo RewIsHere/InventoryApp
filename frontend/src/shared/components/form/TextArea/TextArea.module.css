@@ -3,23 +3,29 @@
   width: 100%;
 }
 
+.textarea::placeholder {
+  color: gray;
+  font-weight: 300;
+}
+
 .label {
   display: block;
   margin-bottom: var(--spacing-small);
-  color: var(--color-primary);
+  color: white;
 }
 
 .textarea {
   width: 100%;
-  padding: var(--spacing-small);
+  padding: 30px;
   font-size: var(--font-size-base);
-  background-color: var(--color-bg-secondary);
+  background-color: #18181b;
   color: var(--color-text);
   border: 1px solid transparent; /* Borde por defecto transparente */
   resize: vertical; /* Permitir ajustar verticalmente */
   transition: border-color 0.2s ease-in-out; /* Transición suave para el borde */
   resize: none;
   overflow: hidden;
+  font-family: inherit;
 }
 
 .textarea:focus {
@@ -62,7 +68,6 @@
 
 .large {
   height: 150px;
-  padding: var(--spacing-large);
   font-size: var(--font-size-large);
   border-radius: 16px;
 }

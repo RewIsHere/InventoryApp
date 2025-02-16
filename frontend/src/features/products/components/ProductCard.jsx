@@ -1,39 +1,29 @@
-// ProductCard.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./ProductCard.module.css";
-import { Card, ImageBox, Divider } from "@Structure";
+import { Card, ImageBox, Divider, Modal } from "@Structure";
 import { Badge } from "@DataDisplay";
-import { IconButton } from "@Buttons"; // Importar Modal
-import { Modal } from "@Structure"; // Importar Modal
+import { IconButton } from "@Buttons";
 import DotsIcon from "@Assets/Dots.svg?react";
 import ViewIcon from "@Assets/Redirect.svg?react";
 import EditIcon from "@Assets/Edit.svg?react";
 import DeleteIcon from "@Assets/Trash.svg?react";
 import TagIcon from "@Assets/Tag.svg?react";
-import { useDeleteProduct } from "../hooks/useDeleteProduct"; // Importar el hook
-import { useProducts } from "../hooks/useProducts";
+import { useDeleteProduct } from "../hooks/useDeleteProduct";
+import useProductStore from "../../../shared/stores/productStore";
 
 const ProductCard = ({ id, image, name, status, category, stock, barcode }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
-  const { loading, error, handleDeleteProduct } = useDeleteProduct();
-  const { removeProductFromState } = useProducts(); // Obtener la función para eliminar del estado
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { loading, handleDeleteProduct } = useDeleteProduct();
+  const { removeProductFromState } = useProductStore();
 
-  // Función para abrir el modal
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
-  // Función para cerrar el modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // Función para manejar la eliminación
-  const handleConfirmDelete = () => {
-    handleDeleteProduct(id, () => {
-      closeModal(); // Cerrar el modal después de eliminar
-      removeProductFromState(id); // Eliminar el producto del estado local
+  const handleConfirmDelete = async () => {
+    await handleDeleteProduct(id, () => {
+      removeProductFromState(id);
+      closeModal();
     });
   };
 
@@ -41,7 +31,7 @@ const ProductCard = ({ id, image, name, status, category, stock, barcode }) => {
     {
       icon: <ViewIcon />,
       text: (
-        <Link to={`/product/${id}`} className={styles.link}>
+        <Link to={`/products/${id}/`} className={styles.link}>
           Detalles
         </Link>
       ),
@@ -49,7 +39,7 @@ const ProductCard = ({ id, image, name, status, category, stock, barcode }) => {
     {
       icon: <EditIcon />,
       text: (
-        <Link to={`/product/edit/${id}`} className={styles.link}>
+        <Link to={`/products/${id}/edit/`} className={styles.link}>
           Editar
         </Link>
       ),
@@ -57,14 +47,13 @@ const ProductCard = ({ id, image, name, status, category, stock, barcode }) => {
     {
       icon: <DeleteIcon className={styles.deleteicons} />,
       text: "Eliminar",
-      onClick: openModal, // Abrir el modal al hacer clic en "Eliminar"
+      onClick: openModal,
     },
   ];
 
   return (
     <>
       <Card className={styles.card}>
-        {/* Imagen del producto */}
         <div className={styles.image}>
           <ImageBox
             width="100px"
@@ -76,47 +65,40 @@ const ProductCard = ({ id, image, name, status, category, stock, barcode }) => {
             alt={name}
           />
         </div>
-        {/* Nombre del producto */}
         <div className={styles.name}>
           <span className={styles.productname}>{name}</span>
         </div>
-        {/* Estado y categoría */}
         <div className={styles.statusCategory}>
           <Badge
             text={status}
             color="white"
             backgroundColor={status === "ACTIVO" ? "#006fee" : "#ff4d4d"}
             className={styles.badge}
-          />{" "}
+          />
           <span className={styles.productcategory}>
-            {category}
-            <TagIcon />
+            {category} <TagIcon />
           </span>
         </div>
-        {/* Separador vertical */}
         <div className={styles.divider}>
           <Divider
             orientation="vertical"
             size="1px"
-            color="var(--color-navbar)"
+            color="var(--color-text-secondary-opacity)"
             height="60%"
           />
         </div>
-        {/* Títulos de stock y código de barras */}
         <div className={styles.stockTitle}>
           <span className={styles.titleText}>CANTIDAD DE STOCK</span>
         </div>
         <div className={styles.barcodeTitle}>
-          <span className={styles.titleText}>CODIGO DE BARRAS</span>
+          <span className={styles.titleText}>CÓDIGO DE BARRAS</span>
         </div>
-        {/* Valores de stock y código de barras */}
         <div className={styles.stock}>
           <span className={styles.value}>{stock}</span>
         </div>
         <div className={styles.barcode}>
           <span className={styles.value}>{barcode}</span>
         </div>
-        {/* Menú de acciones */}
         <div className={styles.action}>
           <IconButton icon={<DotsIcon />} options={options} size="medium" />
         </div>

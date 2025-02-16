@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSearchParams } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import { Card } from "@Structure";
@@ -12,7 +12,7 @@ const Sidebar = () => {
   const { categories, loading, error } = useCategories();
 
   // Estado del producto
-  const statusOptions = ["TODOS", "ACTIVO", "INACTIVO"]; // Agregar "TODOS"
+  const statusOptions = ["TODOS", "ACTIVO", "INACTIVO"];
   const currentStatus = searchParams.get("status") || "TODOS";
 
   // Ordenar Por
@@ -35,29 +35,31 @@ const Sidebar = () => {
 
   // Categoría
   const categoryOptions = [
-    { value: "all", label: "TODOS" }, // Opción "TODOS"
+    { value: "all", label: "TODOS" },
     ...categories.map((category) => ({
-      value: category.id, // UUID interno
-      label: category.name, // Nombre visible
+      value: category.id,
+      label: category.name,
     })),
   ];
 
-  // Obtener el nombre de la categoría actual desde la URL
   const currentCategoryName = searchParams.get("category") || "all";
   const currentCategoryUUID =
     currentCategoryName === "all"
       ? "all"
       : categories.find((cat) => cat.name === currentCategoryName)?.id || null;
 
-  // Función para actualizar los filtros
+  // Función para actualizar los filtros asegurando que 'page' no esté en la URL
   const updateFilter = (key, value) => {
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
+      newParams.delete("page"); // Eliminar 'page' antes de actualizar el filtro
+
       if (value === "all" || value === "TODOS") {
-        newParams.delete(key); // Eliminar el parámetro si es "all" o "TODOS"
+        newParams.delete(key);
       } else {
         newParams.set(key, value);
       }
+
       return newParams;
     });
   };
@@ -70,13 +72,13 @@ const Sidebar = () => {
   // Manejar la selección de categoría
   const handleCategoryChange = (selectedCategoryUUID) => {
     if (selectedCategoryUUID === "all") {
-      updateFilter("category", "all"); // Limpiar el parámetro "category"
+      updateFilter("category", "all");
     } else {
       const selectedCategory = categories.find(
         (cat) => cat.id === selectedCategoryUUID
       );
       if (selectedCategory) {
-        updateFilter("category", selectedCategory.name); // Usar el nombre en la URL
+        updateFilter("category", selectedCategory.name);
       }
     }
   };
@@ -96,11 +98,7 @@ const Sidebar = () => {
         <span>ESTADO DEL PRODUCTO</span>
         <ButtonGroup
           options={statusOptions}
-          onSelect={(option) =>
-            option === "TODOS"
-              ? updateFilter("status", "TODOS") // Limpiar el parámetro "status"
-              : updateFilter("status", option)
-          }
+          onSelect={(option) => updateFilter("status", option)}
           selected={currentStatus}
         />
       </div>
@@ -132,8 +130,8 @@ const Sidebar = () => {
         <span>CATEGORÍA</span>
         <Select
           options={categoryOptions}
-          value={currentCategoryUUID} // Usar el UUID interno o "all"
-          onChange={handleCategoryChange} // Manejar la selección de categoría
+          value={currentCategoryUUID}
+          onChange={handleCategoryChange}
           size="medium"
         />
       </div>

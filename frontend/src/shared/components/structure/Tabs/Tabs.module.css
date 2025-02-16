@@ -1,32 +1,35 @@
 .tabsContainer {
   display: flex;
   gap: 16px;
+  background-color: #101013;
+  border-radius: 22px;
 }
 
 .tab {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 300px;
+  width: 100%;
   position: relative;
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
+  color: #b0bac5;
   border-radius: 9999px;
   transition: all 0.3s ease-in-out;
 }
 
 .tab:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(27, 217, 106, 0.25); /* Color de la burbuja */
+  color: #1bd96a;
 }
 
 .tab.active {
-  color: #000;
+  color: #1bd96a;
 }
 
 .bubble {
-  background-color: #fff; /* Color de la burbuja */
+  background-color: rgba(27, 217, 106, 0.25); /* Color de la burbuja */
   mix-blend-mode: difference; /* Cambia el color al hacer la mezcla con el fondo */
   pointer-events: none;
 }

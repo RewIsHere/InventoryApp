@@ -1,72 +1,60 @@
-import React, { useState } from "react";
-import Button from "@Buttons/Button"; // Ajusta la ruta según tu estructura de carpetas
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import Table from "./shared/components/data-display/Table";
+import Pagination from "./shared/components/data-display/Pagination";
 
 const Test = () => {
-  const [message, setMessage] = useState("");
-  const [isDisabled, setIsDisabled] = useState(false);
+  // Datos de ejemplo para la tabla
+  const columns = [
+    { label: "ID", key: "id" },
+    { label: "Nombre", key: "name" },
+    { label: "Edad", key: "age" },
+  ];
 
-  const handleButtonClick = (variant) => {
-    setMessage(`Botón de variante ${variant} presionado`);
+  const allData = Array.from({ length: 50 }, (_, i) => ({
+    id: i + 1,
+    name: `Persona ${i + 1}`,
+    age: 20 + (i % 30),
+  }));
+
+  // Paginación: solo mostrar 10 filas por página
+  const rowsPerPage = 10;
+  const totalPages = Math.ceil(allData.length / rowsPerPage);
+
+  // Obtener los datos de la página actual
+  const getDataForCurrentPage = (currentPage) => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return allData.slice(startIndex, endIndex);
   };
 
-  const toggleButtonState = () => {
-    setIsDisabled((prevState) => !prevState);
+  // Obtener la página actual desde la URL
+  const [searchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+
+  // Estado para los datos actuales
+  const [data, setData] = useState(getDataForCurrentPage(currentPage));
+
+  useEffect(() => {
+    // Actualiza los datos cuando la página actual cambie
+    setData(getDataForCurrentPage(currentPage));
+  }, [currentPage]); // Se activa cuando `currentPage` cambia
+
+  // Manejar la selección de filas en la tabla
+  const handleSelectRows = (selectedRows) => {
+    console.log("Filas seleccionadas:", selectedRows);
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "20px" }}>
-      <h2>Componente Button</h2>
-
-      {/* Botón principal de cada variante */}
-      <div style={{ marginBottom: "10px" }}>
-        <Button
-          variant="primary"
-          size="medium"
-          onClick={() => handleButtonClick("primary")}
-          disabled={isDisabled}
-        >
-          Primario
-        </Button>
-      </div>
-      <div style={{ marginBottom: "10px" }}>
-        <Button
-          variant="secondary"
-          size="medium"
-          onClick={() => handleButtonClick("secondary")}
-          disabled={isDisabled}
-        >
-          Secundario
-        </Button>
-      </div>
-      <div style={{ marginBottom: "10px" }}>
-        <Button
-          variant="outline"
-          size="medium"
-          onClick={() => handleButtonClick("outline")}
-          disabled={isDisabled}
-        >
-          Outline
-        </Button>
-      </div>
-      <div style={{ marginBottom: "10px" }}>
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => handleButtonClick("primary small")}
-          disabled={isDisabled}
-        >
-          Primario Pequeño
-        </Button>
-      </div>
-
-      {/* Botón para alternar el estado deshabilitado */}
-      <div style={{ marginTop: "20px" }}>
-        <Button onClick={toggleButtonState} size="small">
-          {isDisabled ? "Habilitar Botones" : "Deshabilitar Botones"}
-        </Button>
-      </div>
-
-      <p>{message}</p>
+    <div>
+      <h1>Test de la Tabla con Paginación</h1>
+      <Table
+        columns={columns}
+        data={data} // Se pasa la data actualizada
+        allData={allData} // Pasa todos los datos para manejar la selección
+        onSelectRows={handleSelectRows}
+      />
+      <Pagination totalPages={totalPages} />
     </div>
   );
 };

@@ -1,56 +1,73 @@
-import { useState, useEffect } from "react";
-import { listProducts } from "../services/productService";
+import React, { useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import styles from "./ProductList.module.css";
+import ProductCard from "./ProductCard";
+import { Pagination } from "@DataDisplay";
+import useProductStore from "../../../shared/stores/productStore";
 
-export const useProducts = (filters = {}) => {
-  const [products, setProducts] = useState([]); // Almacena todos los productos cargados
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    total: 0,
-    page: 1,
-    limit: 20,
-    totalPages: 1,
-  }); // Información de paginación
+const ProductList = () => {
+  const [searchParams] = useSearchParams();
+  const {
+    products,
+    loading,
+    error,
+    pagination,
+    fetchProducts,
+    removeProductFromState,
+  } = useProductStore();
 
-  // Función para cargar productos desde el backend
-  const fetchProducts = async (filters = {}, page = 1, limit = 20) => {
-    setLoading(true);
-    try {
-      const response = await listProducts({ ...filters, page, limit });
-      const newProducts = Array.isArray(response.products)
-        ? response.products
-        : [];
-      const newPagination = response.pagination || {};
-
-      // Si es la primera página, reemplazar los productos; si no, agregarlos
-      if (page === 1) {
-        setProducts(newProducts);
-      } else {
-        setProducts((prevProducts) => [...prevProducts, ...newProducts]);
-      }
-
-      // Actualizar la información de paginación
-      setPagination(newPagination);
-    } catch (err) {
-      setError(err.message || "Ocurrió un error al cargar los productos.");
-    } finally {
-      setLoading(false);
-    }
+  const transformStatusForBackend = (status) => {
+    if (status === "ACTIVO") return "ACTIVE";
+    if (status === "INACTIVO") return "INACTIVE";
+    return status;
   };
 
-  // Efecto para cargar productos iniciales o actualizar cuando cambian los filtros
+  const currentFilters = useMemo(
+    () => ({
+      search: searchParams.get("search") || "", // Extrae el término de búsqueda
+      status:
+        searchParams.get("status") === "all"
+          ? null
+          : transformStatusForBackend(searchParams.get("status")),
+      category:
+        searchParams.get("category") === "all"
+          ? null
+          : searchParams.get("category"),
+      sort: searchParams.get("sort") || "name_asc",
+      stock_alert:
+        searchParams.get("stock_alert") === "all"
+          ? null
+          : searchParams.get("stock_alert"),
+      page: parseInt(searchParams.get("page") || "1", 10),
+    }),
+    [searchParams]
+  );
+
   useEffect(() => {
-    const { page = 1, ...otherFilters } = filters;
-    fetchProducts(otherFilters, page); // Usar el parámetro `page` de los filtros
-  }, [filters]); // Dependencia: `filters` (incluye `page`)
+    fetchProducts(currentFilters, currentFilters.page);
+  }, [currentFilters, fetchProducts]);
 
-  // Función para cargar más productos (paginación infinita)
-  const loadMore = () => {
-    if (!loading && pagination.page < pagination.totalPages) {
-      const nextPage = pagination.page + 1;
-      fetchProducts(filters, nextPage);
-    }
-  };
+  if (loading && products.length === 0) return <div>Cargando productos...</div>;
+  if (error) return <div>Ocurrió un error: {error}</div>;
+  if (!Array.isArray(products) || products.length === 0)
+    return <div>No se encontraron productos.</div>;
 
-  return { products, loading, error, pagination, loadMore };
+  return (
+    <div className={styles.productList}>
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          {...product}
+          status={product.status === "ACTIVE" ? "ACTIVO" : "INACTIVO"}
+          removeProductFromState={removeProductFromState}
+        />
+      ))}
+
+      {pagination.totalPages > 1 && (
+        <Pagination totalPages={pagination.totalPages} />
+      )}
+    </div>
+  );
 };
+
+export default ProductList;

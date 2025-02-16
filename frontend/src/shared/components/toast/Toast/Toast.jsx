@@ -8,7 +8,7 @@ const Toast = ({ notification, onRemove, index }) => {
       case "success":
         return "#4caf50"; // Verde
       case "error":
-        return "#f44336"; // Rojo
+        return "#ff496e"; // Rojo
       case "warning":
         return "#ff9800"; // Naranja
       case "info":

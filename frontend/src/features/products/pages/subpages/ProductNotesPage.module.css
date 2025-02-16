@@ -1,0 +1,25 @@
+.card {
+  background-color: var(--color-bg-second);
+  width: 100%;
+  height: auto;
+}
+
+.notesList {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 80%;
+}
+
+.addNoteContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 80%;
+}
+
+.form {
+  max-width: 100%;
+  background-color: transparent;
+  margin-bottom: 20px;
+}

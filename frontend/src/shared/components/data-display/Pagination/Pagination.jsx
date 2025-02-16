@@ -7,7 +7,9 @@ import styles from "./Pagination.module.css";
 const Pagination = ({ totalPages }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1", 10));
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page") || "1", 10)
+  );
   const buttonsRef = useRef([]);
 
   const handlePageChange = (page) => {
@@ -63,7 +65,9 @@ const Pagination = ({ totalPages }) => {
     <div className={styles.paginationContainer}>
       {/* Reemplazar el texto con el ícono de flecha izquierda */}
       <motion.button
-        className={`${styles.pageButton} ${currentPage === 1 ? styles.disabled : ""}`}
+        className={`${styles.pageButton} ${
+          currentPage === 1 ? styles.disabled : ""
+        }`}
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
         whileHover={{ scale: 1.1 }}
@@ -80,15 +84,20 @@ const Pagination = ({ totalPages }) => {
           layoutId="bubble"
           initial={false}
           animate={{
-            x: buttonsRef.current[visiblePages.indexOf(currentPage)]?.offsetLeft || 0,
-            width: buttonsRef.current[visiblePages.indexOf(currentPage)]?.offsetWidth || 45,
+            x:
+              buttonsRef.current[visiblePages.indexOf(currentPage)]
+                ?.offsetLeft || 0,
+            width:
+              buttonsRef.current[visiblePages.indexOf(currentPage)]
+                ?.offsetWidth || 45,
             scale: 1.1, // Añadimos el efecto de escalado
           }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         />
 
         {visiblePages.map((page, index) => {
-          const key = typeof page === "number" ? `page-${page}` : `ellipsis-${index}`;
+          const key =
+            typeof page === "number" ? `page-${page}` : `ellipsis-${index}`;
 
           if (page === "...") {
             return (
@@ -102,7 +111,9 @@ const Pagination = ({ totalPages }) => {
             <button
               key={key}
               ref={(el) => (buttonsRef.current[index] = el)}
-              className={`${styles.pageButton} ${currentPage === page ? styles.active : ""}`}
+              className={`${styles.pageButton} ${
+                currentPage === page ? styles.active : ""
+              }`}
               onClick={() => handlePageChange(page)}
             >
               {page}
@@ -113,7 +124,9 @@ const Pagination = ({ totalPages }) => {
 
       {/* Reemplazar el texto con el ícono de flecha derecha */}
       <motion.button
-        className={`${styles.pageButton} ${currentPage === totalPages ? styles.disabled : ""}`}
+        className={`${styles.pageButton} ${
+          currentPage === totalPages ? styles.disabled : ""
+        }`}
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         whileHover={{ scale: 1.1 }}

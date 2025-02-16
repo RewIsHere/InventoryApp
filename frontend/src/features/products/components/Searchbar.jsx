@@ -1,30 +1,36 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FiSearch, FiX } from "react-icons/fi"; // Importamos ambos íconos
+import { FiSearch, FiX } from "react-icons/fi";
 import styles from "./Searchbar.module.css";
 
 const Searchbar = ({ placeholder, onSearch }) => {
   const [query, setQuery] = useState("");
 
   const handleChange = (e) => {
-    setQuery(e.target.value);
+    const value = e.target.value;
+    setQuery(value);
+    if (value === "") {
+      onSearch?.("");
+    }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyUp = (e) => {
     if (e.key === "Enter" && query.trim() !== "") {
-      onSearch?.(query.trim()); // Llamamos a onSearch con el texto ingresado
+      onSearch?.(query.trim());
     }
   };
 
-  const handleIconClick = () => {
+  const handleIconClick = (e) => {
+    e.stopPropagation(); // Evita que el evento se propague
     if (query.trim() !== "") {
-      onSearch?.(query.trim()); // Llamamos a onSearch con el texto ingresado
+      onSearch?.(query.trim());
     }
   };
 
-  const handleClear = () => {
-    setQuery(""); // Limpiar el input
-    onSearch?.(""); // Llamamos a onSearch con una cadena vacía para eliminar el parámetro search de la URL
+  const handleClear = (e) => {
+    e.stopPropagation(); // Evita que el evento se propague
+    setQuery("");
+    onSearch?.("");
   };
 
   return (
@@ -40,7 +46,7 @@ const Searchbar = ({ placeholder, onSearch }) => {
         placeholder={placeholder}
         value={query}
         onChange={handleChange}
-        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
         className={styles.searchInput}
       />
       {query && <FiX className={styles.clearIcon} onClick={handleClear} />}
