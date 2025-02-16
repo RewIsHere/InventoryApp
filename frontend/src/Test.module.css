@@ -1,14 +1,106 @@
-.testContainer {
-    padding: 20px;
-  }
-  
-  .badgeContainer {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  
-  h2 {
-    margin-bottom: 20px;
-  }
-  
+/* Layout principal */
+.multiStepForm {
+  height: auto;
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+/* Sidebar izquierda */
+.sidebar {
+  width: 250px; /* Ancho fijo de la sidebar */
+  padding: 20px;
+  position: fixed; /* Fijo en la pantalla */
+  flex: 1;
+  z-index: 10; /* Asegurarse de que esté encima del contenido */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centrar verticalmente el StepIndicator */
+}
+
+/* Contenido principal */
+.mainContent {
+  flex: 3;
+  margin-left: 250px; /* Espacio para la sidebar */
+  padding: 20px;
+  overflow-y: auto; /* Permitir desplazamiento vertical */
+  height: 100vh; /* Altura completa de la pantalla */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Espacio entre el formulario y los controles */
+}
+
+/* Contenedor del formulario */
+.formContainer {
+  flex-grow: 1; /* Ocupa todo el espacio disponible */
+  max-width: 600px; /* Ancho máximo del formulario */
+  margin: 0 auto; /* Centrado horizontal */
+  padding: 20px;
+  background-color: #fff; /* Fondo blanco */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Controles fijos */
+.fixedControls {
+  position: fixed; /* Fijo en la parte inferior */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-bg-second);
+  padding: 10px 20px;
+  z-index: 10; /* Asegurarse de que esté encima del contenido */
+  height: 15%;
+}
+
+/* Botones */
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Espacio entre los botones y el contenedor adicional */
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:focus {
+  outline: none;
+}
+
+.backBtn {
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.backBtn:hover {
+  background-color: #e0e0e0;
+}
+
+.nextBtn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+.nextBtn:hover {
+  background-color: #43a047;
+}
+
+.submitBtn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.submitBtn:hover {
+  background-color: #0069d9;
+}

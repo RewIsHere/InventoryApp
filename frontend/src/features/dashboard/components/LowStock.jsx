@@ -36,7 +36,7 @@ const LowStock = () => {
   return (
     <div className={styles.LowStockContainer}>
       <div className={styles.title}>
-        <p>Productos con Stock Bajo</p>
+        <p>Los 5 Productos con Stock Bajo</p>
       </div>
       <div className={styles.products}>
         {products.length > 0 ? (
@@ -55,7 +55,7 @@ const LowStock = () => {
                 productCategory={product.category}
                 productStock={product.stock}
                 imageSrc={imageSrc} // Usa la imagen validada
-                productLink={`/products/${product.id}/details`}
+                productLink={`/products/${product.id}`}
               />
             );
           })

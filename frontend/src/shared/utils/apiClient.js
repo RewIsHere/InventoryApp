@@ -22,7 +22,8 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response) {
       // Si hay una respuesta de error, lanzar un error con el cuerpo de la respuesta
-      const errorMessage = error.response.data?.error || "Ocurrió un error inesperado.";
+      const errorMessage =
+        error.response.data?.error || "Ocurrió un error inesperado.";
       throw new Error(errorMessage);
     } else if (error.request) {
       // Si no hay respuesta del servidor, lanzar un error de conexión

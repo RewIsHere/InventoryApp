@@ -1,0 +1,73 @@
+.timelineItem {
+  display: flex;
+  align-items: stretch; /* Asegura que ambos lados tengan la misma altura */
+  margin-bottom: 40px;
+  position: relative;
+}
+
+/* Lado izquierdo: Círculo y línea vertical */
+.timelineLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20px;
+  position: relative;
+}
+
+.circleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #222229;
+  padding: 10px;
+  border-radius: 8px;
+}
+.circle {
+  width: 15px;
+  height: 15px;
+  background-color: #ffa347;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.line {
+  width: 2px;
+  background-color: #ffa347;
+  position: absolute;
+  top: 45px; /* Empieza justo debajo del círculo */
+  left: 50%;
+  transform: translateX(-50%);
+  height: calc(100% - 15px); /* Ocupa el espacio restante */
+}
+
+/* Lado derecho: Contenido */
+.timelineRight {
+  margin-left: 20px;
+  flex: 1; /* Permite que el contenido tome el espacio necesario */
+}
+
+.dateOval {
+  width: fit-content;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: auto;
+  border: 1px solid var(--color-text-secondary);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+
+.details {
+  font-size: 16px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.author {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}

@@ -11,8 +11,8 @@ const DashboardPage = () => {
         <h1 className={styles.PageTitle}>Inicio</h1>
       </div>
       <div className={styles.BodyContainer}>
-        <LowStock />
         <Stats />
+        <LowStock />
         <LatestMovements />
       </div>
     </div>

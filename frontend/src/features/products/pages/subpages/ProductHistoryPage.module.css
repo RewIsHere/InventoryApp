@@ -1,0 +1,10 @@
+.card {
+  background-color: var(--color-bg-second);
+  width: 100%;
+  height: auto;
+}
+
+.timelineList {
+  max-width: 60%;
+  padding: 20px;
+}

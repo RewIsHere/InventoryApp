@@ -1,0 +1,50 @@
+.card {
+  background-color: var(--color-bg-second);
+  width: 100%;
+  height: auto;
+}
+
+.infoBox {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 60%;
+  gap: 18px;
+}
+
+.category {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.barcode {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.desc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.title {
+  color: var(--color-text-secondary);
+}
+
+.var {
+  color: #fff;
+  width: min-content;
+}

@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import styles from "./NumberInput.module.css";
 
-const NumberInput = ({ label, value: initialValue = 0, min = 0, max = 100, step = 1, onChange }) => {
+const NumberInput = ({
+  label,
+  value: initialValue = 0,
+  min = 0,
+  max = 100,
+  step = 1,
+  onChange,
+}) => {
   const [value, setValue] = useState(initialValue);
+
+  // Sincronizar el estado interno con la prop `value`
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
   // Función para manejar el cambio de valor
   const handleChange = (newValue) => {
@@ -37,6 +49,7 @@ const NumberInput = ({ label, value: initialValue = 0, min = 0, max = 100, step 
       <div className={styles.inputWrapper}>
         {/* Botón de decremento */}
         <motion.button
+          type="button" // Evita que el botón envíe el formulario
           className={`${styles.button} ${styles.decrement}`}
           onClick={decrement}
           whileTap={{ scale: 0.95 }}
@@ -44,17 +57,17 @@ const NumberInput = ({ label, value: initialValue = 0, min = 0, max = 100, step 
         >
           -
         </motion.button>
-
         {/* Campo de número editable */}
         <motion.input
           type="number"
           value={value}
           onChange={handleInputChange} // Permite cambiar el valor manualmente
           className={styles.numberInput}
+          placeholder="s"
         />
-
         {/* Botón de incremento */}
         <motion.button
+          type="button" // Evita que el botón envíe el formulario
           className={`${styles.button} ${styles.increment}`}
           onClick={increment}
           whileTap={{ scale: 0.95 }}

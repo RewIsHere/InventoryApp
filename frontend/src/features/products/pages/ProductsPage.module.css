@@ -9,14 +9,17 @@
   max-width: 1200px;
   width: 100%;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }
 
-.PageTitle {
+.titleText {
   color: white;
 }
 
 .BodyContainer {
-  height: 500px;
+  height: auto;
   max-width: 1200px;
   width: 100%;
   display: flex;
@@ -30,4 +33,16 @@
 
 .right {
   flex: 3; /* La lista ocupa más espacio (70% aproximadamente) */
+  height: auto;
+}
+
+.PageTitle {
+  flex: 1;
+}
+
+.rightHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 3;
 }

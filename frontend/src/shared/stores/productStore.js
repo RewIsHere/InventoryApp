@@ -1,39 +1,40 @@
-// src/shared/stores/productStore.js
 import { create } from "zustand";
 import { listProducts } from "../../features/products/services/productService";
 
-const useProductStore = create((set, get) => ({
-  products: [], // Lista de productos
-  loading: true,
+export const useProductStore = create((set, get) => ({
+  products: [],
+  loading: false,
   error: null,
-  pagination: {
-    total: 0,
-    page: 1,
-    limit: 5,
-    totalPages: 1,
-  },
-  filters: {
-    status: null,
-    category: null,
-    sort: "name_asc", // Orden predeterminado
-    stock_alert: null,
-  },
+  pagination: { total: 0, page: 1, limit: 5, totalPages: 1 },
 
-  // Función para cargar productos desde el backend
-  fetchProducts: async (filters = {}, page = 1, limit = 5) => {
-    set({ loading: true });
+  fetchProducts: async (
+    { search = "", ...filters } = {},
+    page = 1,
+    limit = 5
+  ) => {
+    const { loading } = get();
+    if (loading) return; // Evita llamadas innecesarias
+
+    set({ loading: true, error: null });
+
     try {
-      const response = await listProducts({ ...filters, page, limit });
-      const newProducts = Array.isArray(response.products)
-        ? response.products
-        : [];
-      const newPagination = response.pagination || {};
-      set({
-        products:
-          page === 1 ? newProducts : [...get().products, ...newProducts],
-        pagination: newPagination,
-        filters: { ...filters }, // Actualizar filtros actuales
-        loading: false,
+      const response = await listProducts({ search, ...filters, page, limit });
+
+      set((state) => {
+        if (
+          JSON.stringify(state.products) ===
+            JSON.stringify(response.products) &&
+          JSON.stringify(state.pagination) ===
+            JSON.stringify(response.pagination)
+        ) {
+          return { loading: false }; // Evita actualizar si los datos son los mismos
+        }
+
+        return {
+          products: Array.isArray(response.products) ? response.products : [],
+          pagination: response.pagination || {},
+          loading: false,
+        };
       });
     } catch (err) {
       set({
@@ -43,25 +44,10 @@ const useProductStore = create((set, get) => ({
     }
   },
 
-  // Función para eliminar un producto del estado
-  removeProduct: (productId) => {
+  removeProductFromState: (productId) => {
     set((state) => ({
       products: state.products.filter((product) => product.id !== productId),
     }));
-  },
-
-  // Función para aplicar filtros
-  applyFilters: (filters = {}) => {
-    set({ filters });
-    get().fetchProducts(filters); // Recargar productos con los nuevos filtros
-  },
-
-  // Función para cargar más productos (paginación)
-  loadMore: () => {
-    const { pagination, filters } = get();
-    if (pagination.page < pagination.totalPages) {
-      get().fetchProducts(filters, pagination.page + 1);
-    }
   },
 }));
 

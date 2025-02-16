@@ -1,4 +1,3 @@
-// src/features/products/components/Sidebar.jsx
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import styles from "./Sidebar.module.css";
@@ -6,17 +5,15 @@ import { Card } from "@Structure";
 import { ButtonGroup, TextWithIcon } from "@Buttons";
 import { Select } from "@Form";
 import RefreshIcon from "@Assets/Refresh.svg?react";
-import useProductStore from "../../../shared/stores/productStore";
 import { useCategories } from "../hooks/useCategories";
 
 const Sidebar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { categories, loading, error } = useCategories();
-  const { filters, applyFilters } = useProductStore();
 
   // Estado del producto
   const statusOptions = ["TODOS", "ACTIVO", "INACTIVO"];
-  const currentStatus = filters.status || "TODOS";
+  const currentStatus = searchParams.get("status") || "TODOS";
 
   // Ordenar Por
   const sortByOptions = [
@@ -25,7 +22,7 @@ const Sidebar = () => {
     { value: "stock_asc", label: "STOCK: BAJO A ALTO" },
     { value: "stock_desc", label: "STOCK: ALTO A BAJO" },
   ];
-  const currentSort = filters.sort || "name_asc";
+  const currentSort = searchParams.get("sort") || "name_asc";
 
   // Alerta de Stock
   const stockAlertOptions = [
@@ -34,7 +31,7 @@ const Sidebar = () => {
     { value: "normal", label: "NORMAL" },
     { value: "out_of_stock", label: "SIN STOCK" },
   ];
-  const currentStockAlert = filters.stock_alert || "all";
+  const currentStockAlert = searchParams.get("stock_alert") || "all";
 
   // Categoría
   const categoryOptions = [
@@ -45,44 +42,43 @@ const Sidebar = () => {
     })),
   ];
 
-  // Obtener el nombre de la categoría actual desde el estado global
-  const currentCategoryName = filters.category || "all";
+  const currentCategoryName = searchParams.get("category") || "all";
   const currentCategoryUUID =
     currentCategoryName === "all"
       ? "all"
       : categories.find((cat) => cat.name === currentCategoryName)?.id || null;
 
-  // Función para actualizar los filtros
+  // Función para actualizar los filtros asegurando que 'page' no esté en la URL
   const updateFilter = (key, value) => {
-    const newFilters = { ...filters, [key]: value };
-    applyFilters(newFilters); // Aplicar filtros en Zustand
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
+      newParams.delete("page"); // Eliminar 'page' antes de actualizar el filtro
+
       if (value === "all" || value === "TODOS") {
-        newParams.delete(key); // Eliminar el parámetro si es "all" o "TODOS"
+        newParams.delete(key);
       } else {
         newParams.set(key, value);
       }
+
       return newParams;
     });
   };
 
   // Reiniciar filtros
   const resetFilters = () => {
-    applyFilters({}); // Limpiar filtros en Zustand
-    setSearchParams({}); // Limpiar parámetros de la URL
+    setSearchParams({});
   };
 
   // Manejar la selección de categoría
   const handleCategoryChange = (selectedCategoryUUID) => {
     if (selectedCategoryUUID === "all") {
-      updateFilter("category", "all"); // Limpiar el parámetro "category"
+      updateFilter("category", "all");
     } else {
       const selectedCategory = categories.find(
         (cat) => cat.id === selectedCategoryUUID
       );
       if (selectedCategory) {
-        updateFilter("category", selectedCategory.name); // Usar el nombre en la URL
+        updateFilter("category", selectedCategory.name);
       }
     }
   };
@@ -102,11 +98,7 @@ const Sidebar = () => {
         <span>ESTADO DEL PRODUCTO</span>
         <ButtonGroup
           options={statusOptions}
-          onSelect={(option) =>
-            option === "TODOS"
-              ? updateFilter("status", "TODOS")
-              : updateFilter("status", option)
-          }
+          onSelect={(option) => updateFilter("status", option)}
           selected={currentStatus}
         />
       </div>
@@ -138,8 +130,8 @@ const Sidebar = () => {
         <span>CATEGORÍA</span>
         <Select
           options={categoryOptions}
-          value={currentCategoryUUID} // Usar el UUID interno o "all"
-          onChange={handleCategoryChange} // Manejar la selección de categoría
+          value={currentCategoryUUID}
+          onChange={handleCategoryChange}
           size="medium"
         />
       </div>

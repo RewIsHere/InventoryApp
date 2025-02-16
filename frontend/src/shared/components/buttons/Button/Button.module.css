@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 12px;
+  border-radius: 22px;
   padding: var(--spacing-small) var(--spacing-medium);
   font-size: var(--font-size-base);
   font-weight: 600;
@@ -19,7 +19,7 @@
 
 /* Variantes de color */
 .button.primary {
-  background-color: #39DB7D;
+  background-color: #39db7d;
   color: #231c1c;
 }
 
@@ -44,6 +44,17 @@
   color: #fff;
 }
 
+.button.outlineDanger {
+  background-color: transparent;
+  border: 2px solid var(--color-danger);
+  color: var(--color-danger);
+}
+
+.button.outlineDanger:hover {
+  background-color: var(--color-danger);
+  color: #2c2626;
+}
+
 /* Tamaños */
 .button.small {
   padding: var(--spacing-small);
@@ -52,6 +63,12 @@
 
 .button.medium {
   padding: var(--spacing-medium);
+  font-size: var(--font-size-base);
+}
+
+.button.mediumWidth {
+  padding: var(--spacing-medium);
+  width: 30%;
   font-size: var(--font-size-base);
 }
 

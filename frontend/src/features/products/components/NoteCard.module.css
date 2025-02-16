@@ -1,0 +1,36 @@
+.card {
+  background-color: var(--color-bg-third);
+  width: 100%;
+}
+
+.noteHeader {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.author {
+  color: #fff;
+  font-size: 18px;
+}
+
+.date {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.noteContent {
+  margin-top: 18px;
+  overflow-wrap: break-word; /* Rompe las palabras largas si es necesario */
+  word-wrap: break-word; /* Compatibilidad con navegadores antiguos */
+  white-space: normal; /* Permite saltos de línea */
+}
+.content {
+  display: block;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  max-width: 100%; /* Evita que el texto sobrepase su contenedor */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
+}

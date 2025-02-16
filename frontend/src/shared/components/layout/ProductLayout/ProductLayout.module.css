@@ -1,0 +1,93 @@
+.titleText {
+  color: white;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  gap: 0px 14px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "headerContainer headerContainer"
+    "childrenContainer sidebarContainer";
+  margin: 0 auto;
+  max-width: 80rem;
+  padding: 0 1.5rem;
+}
+
+.headerContainer {
+  grid-area: headerContainer;
+  width: 100%;
+  height: 130px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.nameContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nameContainer svg {
+  fill: var(--color-text-secondary);
+}
+
+.actionsContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.sidebarContainer {
+  display: flex;
+  justify-content: center;
+  grid-area: sidebarContainer;
+}
+
+.infoContainer {
+  display: flex;
+  grid-area: childrenContainer;
+  height: auto;
+  flex-direction: column;
+}
+
+.sidebar {
+  width: 100%;
+  height: 250px;
+  background-color: var(--color-bg-second);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.miniCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 90px;
+  margin-bottom: 18px;
+  width: 100%;
+  background-color: #000;
+}
+
+.stockTitle {
+  font-size: 30px;
+}
+
+.stockSubTitle {
+  color: var(--color-text-secondary);
+  font-size: 16px;
+}
+
+.stockVar {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.tabContainer {
+  width: 50%;
+  margin-bottom: 18px;
+}
