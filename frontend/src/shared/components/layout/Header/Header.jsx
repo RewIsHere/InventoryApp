@@ -32,11 +32,11 @@ const Header = () => {
         <div className={`${styles.grow1} ${styles.right}`}>
           {/* Botones Adicionales en el Lado Derecho */}
           <div className={styles.actions}>
-            <NavIconButton
+            {/* <NavIconButton
               to="/settings"
               size="large"
               icon={<SettingsIcon />}
-            />
+            />*/}
             <Avatar
               name={displayName || "?"}
               email={user?.email}

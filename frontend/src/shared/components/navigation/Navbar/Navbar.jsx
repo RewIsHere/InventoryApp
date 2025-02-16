@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import NavButton from "../../buttons/NavButton";
 import styles from "./Navbar.module.css";
-import HomeIcon from '@Assets/Home.svg?react';
-import ProductsIcon from '@Assets/Products.svg?react';
-import MovementsIcon from '@Assets/Movements.svg?react';
-import UsersIcon from '@Assets/Users.svg?react';
+import HomeIcon from "@Assets/Home.svg?react";
+import ProductsIcon from "@Assets/Products.svg?react";
+import MovementsIcon from "@Assets/Movements.svg?react";
+import UsersIcon from "@Assets/Users.svg?react";
 
 const Navbar = () => {
   const [isAnimated, setIsAnimated] = useState(false);
@@ -21,16 +21,45 @@ const Navbar = () => {
     >
       {/* Enlaces de Navegación */}
       <div className={styles.links}>
-        <NavButton to="/dashboard" size="small" icon={<HomeIcon />} isActive={location.pathname === "/dashboard"}>
+        <NavButton
+          to="/dashboard"
+          size="small"
+          icon={<HomeIcon />}
+          isActive={location.pathname === "/dashboard"}
+        >
           Inicio
         </NavButton>
-        <NavButton to="/products" size="small" icon={<ProductsIcon />} isActive={location.pathname === "/products"}>
+        <NavButton
+          to="/products"
+          size="small"
+          icon={<ProductsIcon />}
+          isActive={location.pathname === "/products"}
+        >
           Productos
         </NavButton>
-        <NavButton to="/movements" size="small" icon={<MovementsIcon />} isActive={location.pathname === "/movements"}>
+        {/*
+        <NavButton
+          to="/movements"
+          size="small"
+          icon={<MovementsIcon />}
+          isActive={location.pathname === "/movements"}
+        >
           Movimientos
         </NavButton>
-        <NavButton to="/users" size="small" icon={<UsersIcon />} isActive={location.pathname === "/profile"}>
+        <NavButton
+          to="/pending-products"
+          size="small"
+          icon={<UsersIcon />}
+          isActive={location.pathname === "/profile"}
+        >
+          Productos Pendientes
+        </NavButton>*/}
+        <NavButton
+          to="/users"
+          size="small"
+          icon={<UsersIcon />}
+          isActive={location.pathname === "/profile"}
+        >
           Usuarios y Roles
         </NavButton>
       </div>

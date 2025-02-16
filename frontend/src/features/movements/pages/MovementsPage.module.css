@@ -1,0 +1,48 @@
+.MainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.PageHeader {
+  max-width: 1200px;
+  width: 100%;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.titleText {
+  color: white;
+}
+
+.BodyContainer {
+  height: auto;
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.left {
+  flex: 1; /* La sidebar ocupa menos espacio (30% aproximadamente) */
+}
+
+.right {
+  flex: 3; /* La lista ocupa más espacio (70% aproximadamente) */
+  height: auto;
+}
+
+.PageTitle {
+  flex: 1;
+}
+
+.rightHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 3;
+}
