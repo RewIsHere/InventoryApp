@@ -11,7 +11,7 @@ const MovementCard = ({ uuid, productos, usuario, tipo }) => {
         <span>{uuid}</span>
       </div>
       <div className={styles.products}>
-        <span>{productos} productos escaneados</span>
+        <span>{productos} producto(s) escaneado(s)</span>
       </div>
       <div className={styles.user}>
         <p>Hecho por</p>
@@ -25,7 +25,7 @@ const MovementCard = ({ uuid, productos, usuario, tipo }) => {
         />
       </div>
       <div className={styles.button}>
-        <Link to={`/movements/${uuid}/details`} className={styles.view}>
+        <Link to={`/movements/${uuid}`} className={styles.view}>
           Ver
         </Link>
       </div>

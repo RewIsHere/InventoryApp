@@ -1,0 +1,173 @@
+/* Contenedor principal */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--color-bg-second);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón de retroceso */
+.backButton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: color 0.3s ease;
+}
+.backButton svg {
+  fill: gray;
+}
+.backButton:hover {
+  color: #007bff;
+}
+/* Título */
+.title {
+  text-align: center;
+  font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inputGroup label {
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.inputGroup input {
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.inputGroup input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Botón de escaneo */
+.scanButton {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.scanButton:hover {
+  background-color: #0056b3;
+}
+
+.scanButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Tabla de productos escaneados */
+.cartTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: #18181b;
+}
+
+.cartTable th,
+.cartTable td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #18181b;
+}
+
+.cartTable th {
+  background-color: var(--color-bg-second);
+  font-weight: 700;
+  color: white;
+}
+
+.cartTable td input {
+  width: 80px;
+  padding: 5px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.cartTable .deleteButton {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cartTable .deleteButton:hover {
+  background-color: #a71d2a;
+}
+
+.cartTable .emptyCart {
+  text-align: center;
+  color: #888888;
+  font-style: italic;
+}
+
+/* Botón de confirmar movimiento */
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.confirmButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #28a745;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirmButton:hover {
+  background-color: #1e7e34;
+}
+
+.confirmButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Mensajes de error */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}

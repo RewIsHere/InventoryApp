@@ -37,7 +37,7 @@ const Navbar = () => {
         >
           Productos
         </NavButton>
-        {/*
+
         <NavButton
           to="/movements"
           size="small"
@@ -47,18 +47,18 @@ const Navbar = () => {
           Movimientos
         </NavButton>
         <NavButton
-          to="/pending-products"
+          to="/pendings"
           size="small"
           icon={<UsersIcon />}
-          isActive={location.pathname === "/profile"}
+          isActive={location.pathname === "/pendings"}
         >
           Productos Pendientes
-        </NavButton>*/}
+        </NavButton>
         <NavButton
           to="/users"
           size="small"
           icon={<UsersIcon />}
-          isActive={location.pathname === "/profile"}
+          isActive={location.pathname === "/users"}
         >
           Usuarios y Roles
         </NavButton>

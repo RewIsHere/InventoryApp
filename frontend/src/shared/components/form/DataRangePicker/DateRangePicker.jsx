@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"; 
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./DateRangePicker.module.css";
@@ -41,7 +41,10 @@ export default function DateRangePicker({ onChange }) {
       const spaceBelow = window.innerHeight - inputRect.bottom;
       const spaceAbove = inputRect.top;
 
-      if (spaceBelow < calendarRect.height && spaceAbove > calendarRect.height) {
+      if (
+        spaceBelow < calendarRect.height &&
+        spaceAbove > calendarRect.height
+      ) {
         setCalendarPosition("top");
       } else {
         setCalendarPosition("bottom");
@@ -162,7 +165,9 @@ export default function DateRangePicker({ onChange }) {
         type="text"
         value={
           selectedRange.startDate && selectedRange.endDate
-            ? `${formatDate(selectedRange.startDate)} - ${formatDate(selectedRange.endDate)}`
+            ? `${formatDate(selectedRange.startDate)} - ${formatDate(
+                selectedRange.endDate
+              )}`
             : "Selecciona las fechas"
         }
         onClick={() => setIsCalendarOpen((prev) => !prev)}
@@ -173,7 +178,9 @@ export default function DateRangePicker({ onChange }) {
         {isCalendarOpen && (
           <motion.div
             ref={calendarRef}
-            className={`${styles.calendarContainer} absolute z-10 p-4 rounded-lg bg-gray-800 shadow-xl border border-gray-600 w-full max-w-xs ${
+            className={`${
+              styles.calendarContainer
+            } absolute z-10 p-4 rounded-lg bg-gray-800 shadow-xl border border-gray-600 w-full max-w-xs ${
               calendarPosition === "top" ? "bottom-full mb-2" : "top-full mt-2"
             }`}
             initial={{
@@ -199,15 +206,22 @@ export default function DateRangePicker({ onChange }) {
             }}
           >
             <div className={styles.header}>
-              <button onClick={() => navigateMonth("prev")} className={styles.button}>
+              <button
+                onClick={() => navigateMonth("prev")}
+                className={styles.button}
+              >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <motion.h2
                 className="text-lg font-semibold text-white"
                 key={currentMonth.toISOString()}
-                initial={isNavigating ? { x: direction === "prev" ? -50 : 50 } : {}}
+                initial={
+                  isNavigating ? { x: direction === "prev" ? -50 : 50 } : {}
+                }
                 animate={{ x: 0 }}
-                exit={isNavigating ? { x: direction === "prev" ? 50 : -50 } : {}}
+                exit={
+                  isNavigating ? { x: direction === "prev" ? 50 : -50 } : {}
+                }
                 transition={{ duration: 0.2 }}
                 onAnimationComplete={() => setIsNavigating(false)}
               >
@@ -216,7 +230,10 @@ export default function DateRangePicker({ onChange }) {
                   year: "numeric",
                 })}
               </motion.h2>
-              <button onClick={() => navigateMonth("next")} className={styles.button}>
+              <button
+                onClick={() => navigateMonth("next")}
+                className={styles.button}
+              >
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
@@ -232,9 +249,13 @@ export default function DateRangePicker({ onChange }) {
             <motion.div
               className={styles.calendar}
               key={currentMonth.toISOString()}
-              initial={isNavigating ? { x: direction === "prev" ? -200 : 200 } : {}}
+              initial={
+                isNavigating ? { x: direction === "prev" ? -200 : 200 } : {}
+              }
               animate={{ x: 0 }}
-              exit={isNavigating ? { x: direction === "prev" ? 200 : -200 } : {}}
+              exit={
+                isNavigating ? { x: direction === "prev" ? 200 : -200 } : {}
+              }
               transition={{ duration: 0.2 }}
             >
               {getDaysInMonth(currentMonth).map((date, index) => (
@@ -243,11 +264,13 @@ export default function DateRangePicker({ onChange }) {
                   onClick={() => handleDateClick(date)}
                   onMouseEnter={() => setHoveredDate(date)}
                   onMouseLeave={() => setHoveredDate(null)}
-                  className={`${
-                    styles.dayButton
-                  } ${isCurrentMonth(date) ? styles.whiteText : styles.grayText} ${
-                    isDateSelected(date) ? styles.selectedDate : ""
-                  } ${isDateInRange(date) && !isDateSelected(date) ? styles.inRange : ""} ${
+                  className={`${styles.dayButton} ${
+                    isCurrentMonth(date) ? styles.whiteText : styles.grayText
+                  } ${isDateSelected(date) ? styles.selectedDate : ""} ${
+                    isDateInRange(date) && !isDateSelected(date)
+                      ? styles.inRange
+                      : ""
+                  } ${
                     isSelecting &&
                     hoveredDate?.toDateString() === date.toDateString() &&
                     !isDateSelected(date)

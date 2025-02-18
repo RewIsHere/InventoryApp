@@ -160,6 +160,7 @@ const SearchableSelect = ({
                   className={styles.actionButton}
                   onClick={handleCreateOption}
                   whileTap={{ scale: 0.95 }}
+                  type="button"
                 >
                   + {actionLabel} "{searchTerm}"
                 </motion.button>

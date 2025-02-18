@@ -1,0 +1,144 @@
+/* Contenedor principal */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #000;
+  position: relative;
+}
+
+/* Botón de retroceso */
+.backButton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: color 0.3s ease;
+}
+.backButton svg {
+  fill: gray;
+}
+.backButton:hover {
+  color: #007bff;
+}
+
+/* Card principal */
+.card {
+  background: var(--color-bg-second);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Título */
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+/* Contenedor de opciones */
+.optionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Botones de opciones */
+.optionButton {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.optionButton:hover {
+  background-color: #0056b3;
+}
+
+.optionButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Radio buttons personalizados */
+.movementType {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
+.radioInput {
+  display: none;
+}
+
+.radioCustom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.radioInput:checked + .radioCustom {
+  background-color: #007bff;
+}
+
+/* Botón de inicio */
+.startButton {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #28a745;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.startButton:hover {
+  background-color: #1e7e34;
+}
+
+.startButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Mensajes de error */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.normaltext {
+  color: var(--color-text-secondary);
+}

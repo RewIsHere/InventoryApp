@@ -58,13 +58,13 @@ export const historyMessages = new Map([
   [
     "stock_added",
     (details) =>
-      `Se agregó stock: ${details.quantity} unidades. Tipo de movimiento: ${details.type}.`,
+      `Se agregó stock: ${details.quantity} unidad(es). Tipo de movimiento: ENTRADA.`,
   ],
 
   [
     "stock_removed",
     (details) =>
-      `Se quitó stock: ${details.quantity} unidades. Tipo de movimiento: ${details.type}.`,
+      `Se quitó stock: ${details.quantity} unidad(es). Tipo de movimiento: SALIDA.`,
   ],
 
   ["image_uploaded", (details) => `Se subió una nueva imagen del producto.`],

@@ -1,382 +1,440 @@
 import bcrypt from "bcryptjs";
 import supabase from "../config/db.js";
-import { validateProfileUpdate, validateAdminUpdate, validateListUsersQuery, validateUserId } from "../validations/userValidation.js";
+import {
+  validateProfileUpdate,
+  validateAdminUpdate,
+  validateListUsersQuery,
+  validateUserId,
+} from "../validations/userValidation.js";
 import { isUsernameValid } from "../utils/validationUtils.js";
 
 // Actualizar perfil del usuario
 export const updateUserProfileService = async (userId, updates) => {
-    // Validar los datos con Zod
-    const validatedData = validateProfileUpdate(updates);
+  // Validar los datos con Zod
+  const validatedData = validateProfileUpdate(updates);
 
-    // Obtener los datos actuales del usuario
-    const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("id, email, username, name, surnames, password")
-        .eq("id", userId)
-        .single();
-    if (userError || !user) {
-        throw new Error("User not found");
+  // Obtener los datos actuales del usuario
+  const { data: user, error: userError } = await supabase
+    .from("users")
+    .select("id, email, username, name, surnames, password")
+    .eq("id", userId)
+    .single();
+
+  if (userError || !user) {
+    throw new Error("User not found");
+  }
+
+  // Validar la contraseña actual si se proporciona una nueva contraseña
+  if (validatedData.newPassword && !validatedData.currentPassword) {
+    throw new Error("Current password is required to update the password");
+  }
+  if (validatedData.currentPassword && validatedData.newPassword) {
+    const isPasswordValid = await bcrypt.compare(
+      validatedData.currentPassword,
+      user.password
+    );
+    if (!isPasswordValid) {
+      throw new Error("Current password is incorrect");
     }
-
-    // Validar la contraseña actual si se proporciona una nueva contraseña
-    if (validatedData.newPassword && !validatedData.currentPassword) {
-        throw new Error("Current password is required to update the password");
+    // Verificar si la nueva contraseña es igual a la actual
+    const isNewPasswordSame = await bcrypt.compare(
+      validatedData.newPassword,
+      user.password
+    );
+    if (isNewPasswordSame) {
+      throw new Error(
+        "New password must be different from the current password"
+      );
     }
-    if (validatedData.currentPassword && validatedData.newPassword) {
-        const isPasswordValid = await bcrypt.compare(validatedData.currentPassword, user.password);
-        if (!isPasswordValid) {
-            throw new Error("Current password is incorrect");
-        }
-        // Verificar si la nueva contraseña es igual a la actual
-        const isNewPasswordSame = await bcrypt.compare(validatedData.newPassword, user.password);
-        if (isNewPasswordSame) {
-            throw new Error("New password must be different from the current password");
-        }
+  }
+
+  // Preparar los datos para la actualización
+  const updateData = {};
+
+  if (validatedData.email && validatedData.email !== user.email) {
+    // Verificar que el correo no esté en uso por otro usuario
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select("id")
+      .eq("email", validatedData.email)
+      .neq("id", userId)
+      .single();
+    if (existingUser) {
+      throw new Error("Email is already in use by another user");
     }
+    updateData.email = validatedData.email;
+  } else if (validatedData.email) {
+    throw new Error("Email is already up to date");
+  }
 
-    // Preparar los datos para la actualización
-    const updateData = {};
-    const messages = [];
-
-    if (validatedData.email && validatedData.email !== user.email) {
-        // Verificar que el correo no esté en uso por otro usuario
-        const { data: existingUser } = await supabase
-            .from("users")
-            .select("id")
-            .eq("email", validatedData.email)
-            .neq("id", userId)
-            .single();
-        if (existingUser) {
-            throw new Error("Email is already in use by another user");
-        }
-        updateData.email = validatedData.email;
-    } else if (validatedData.email) {
-        messages.push("Email is already up to date");
+  if (validatedData.username && validatedData.username !== user.username) {
+    // Verificar formato del username
+    if (!isUsernameValid(validatedData.username)) {
+      throw new Error(
+        "Username can only contain letters, numbers, underscores (_), and hyphens (-)"
+      );
     }
-
-    if (validatedData.username && validatedData.username !== user.username) {
-        // Verificar formato del username
-        if (!isUsernameValid(validatedData.username)) {
-            throw new Error("Username can only contain letters, numbers, underscores (_), and hyphens (-)");
-        }
-        // Verificar que el username no esté en uso por otro usuario
-        const { data: existingUsername } = await supabase
-            .from("users")
-            .select("id")
-            .eq("username", validatedData.username)
-            .neq("id", userId)
-            .single();
-        if (existingUsername) {
-            throw new Error("Username is already in use by another user");
-        }
-        updateData.username = validatedData.username;
-    } else if (validatedData.username) {
-        messages.push("Username is already up to date");
+    // Verificar que el username no esté en uso por otro usuario
+    const { data: existingUsername } = await supabase
+      .from("users")
+      .select("id")
+      .eq("username", validatedData.username)
+      .neq("id", userId)
+      .single();
+    if (existingUsername) {
+      throw new Error("Username is already in use by another user");
     }
+    updateData.username = validatedData.username;
+  } else if (validatedData.username) {
+    throw new Error("Username is already up to date");
+  }
 
-    if (validatedData.name && validatedData.name !== user.name) {
-        updateData.name = validatedData.name;
-    } else if (validatedData.name) {
-        messages.push("Name is already up to date");
-    }
+  if (validatedData.name && validatedData.name !== user.name) {
+    updateData.name = validatedData.name;
+  } else if (validatedData.name) {
+    throw new Error("Name is already up to date");
+  }
 
-    if (validatedData.surnames && validatedData.surnames !== user.surnames) {
-        updateData.surnames = validatedData.surnames;
-    } else if (validatedData.surnames) {
-        messages.push("Surnames are already up to date");
-    }
+  if (validatedData.surnames && validatedData.surnames !== user.surnames) {
+    updateData.surnames = validatedData.surnames;
+  } else if (validatedData.surnames) {
+    throw new Error("Surnames are already up to date");
+  }
 
-    if (validatedData.newPassword) {
-        const hashedPassword = await bcrypt.hash(validatedData.newPassword, 10);
-        updateData.password = hashedPassword;
-    }
+  if (validatedData.newPassword) {
+    const hashedPassword = await bcrypt.hash(validatedData.newPassword, 10);
+    updateData.password = hashedPassword;
+  }
 
-    // Si no hay cambios, devolver un mensaje
-    if (Object.keys(updateData).length === 0 && messages.length > 0) {
-        return { message: messages.join(", ") };
-    }
+  // Si no hay cambios, lanzar un error
+  if (Object.keys(updateData).length === 0) {
+    throw new Error("No valid fields provided for update");
+  }
 
-    // Si no se proporcionaron campos válidos, lanzar un error
-    if (Object.keys(updateData).length === 0 && messages.length === 0) {
-        throw new Error("No valid fields provided for update");
-    }
+  // Actualizar el campo updated_at automáticamente
+  updateData.updated_at = new Date().toISOString();
 
-    // Actualizar el campo updated_at automáticamente
-    updateData.updated_at = new Date().toISOString();
+  // Actualizar los detalles del usuario
+  const { error } = await supabase
+    .from("users")
+    .update(updateData)
+    .eq("id", userId);
 
-    // Actualizar los detalles del usuario
-    const { error } = await supabase
-        .from("users")
-        .update(updateData)
-        .eq("id", userId);
-    if (error) throw new Error("Error updating user details");
+  if (error) throw new Error("Error updating user details");
 
-    return { message: "User details updated successfully" };
+  return { message: "User details updated successfully" };
 };
 
 // Actualizar detalles de un usuario por parte del administrador
 export const updateUserByAdminService = async (userId, updates) => {
-    // Validar los datos con Zod
-    const validatedData = validateAdminUpdate(updates);
+  // Validar los datos con Zod
+  const validatedData = validateAdminUpdate(updates);
 
-    // Obtener los datos actuales del usuario
-    const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("id, email, role, username, name, surnames, password")
-        .eq("id", userId)
-        .single();
-    if (userError || !user) {
-        throw new Error("User not found");
+  // Obtener los datos actuales del usuario
+  const { data: user, error: userError } = await supabase
+    .from("users")
+    .select("id, email, role, username, name, surnames, password")
+    .eq("id", userId)
+    .single();
+
+  if (userError || !user) {
+    throw new Error("Usuario no encontrado");
+  }
+
+  // Proteger al superadministrador
+  if (user.role === "superadmin") {
+    if (validatedData.role && validatedData.role !== "superadmin") {
+      throw new Error("No puedes modificar el rol de un superadmin");
     }
+  }
 
-    // Proteger al superadministrador
-    if (user.role === "superadmin") {
-        if (validatedData.role && validatedData.role !== "superadmin") {
-            throw new Error("Cannot modify the role of a superadmin account");
-        }
+  // Preparar los datos para la actualización
+  const updateData = {};
+
+  if (validatedData.email && validatedData.email !== user.email) {
+    // Verificar que el correo no esté en uso por otro usuario
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select("id")
+      .eq("email", validatedData.email)
+      .neq("id", userId)
+      .single();
+    if (existingUser) {
+      throw new Error("El correo ya esta en uso por otro usuario");
     }
+    updateData.email = validatedData.email;
+  } else if (validatedData.email) {
+    throw new Error("Email ya esta al dia");
+  }
 
-    // Preparar los datos para la actualización
-    const updateData = {};
-    const messages = [];
-
-    if (validatedData.email && validatedData.email !== user.email) {
-        // Verificar que el correo no esté en uso por otro usuario
-        const { data: existingUser } = await supabase
-            .from("users")
-            .select("id")
-            .eq("email", validatedData.email)
-            .neq("id", userId)
-            .single();
-        if (existingUser) {
-            throw new Error("Email is already in use by another user");
-        }
-        updateData.email = validatedData.email;
-    } else if (validatedData.email) {
-        messages.push("Email is already up to date");
+  if (validatedData.username && validatedData.username !== user.username) {
+    // Verificar formato del username
+    if (!isUsernameValid(validatedData.username)) {
+      throw new Error(
+        "El nombre de usuario solo puede contener letras, números, guiones bajos (_) y guiones (-)"
+      );
     }
-
-    if (validatedData.username && validatedData.username !== user.username) {
-        // Verificar formato del username
-        if (!isUsernameValid(validatedData.username)) {
-            throw new Error("Username can only contain letters, numbers, underscores (_), and hyphens (-)");
-        }
-        // Verificar que el username no esté en uso por otro usuario
-        const { data: existingUsername } = await supabase
-            .from("users")
-            .select("id")
-            .eq("username", validatedData.username)
-            .neq("id", userId)
-            .single();
-        if (existingUsername) {
-            throw new Error("Username is already in use by another user");
-        }
-        updateData.username = validatedData.username;
-    } else if (validatedData.username) {
-        messages.push("Username is already up to date");
+    // Verificar que el username no esté en uso por otro usuario
+    const { data: existingUsername } = await supabase
+      .from("users")
+      .select("id")
+      .eq("username", validatedData.username)
+      .neq("id", userId)
+      .single();
+    if (existingUsername) {
+      throw new Error("El nombre de usuario ya esta en uso");
     }
+    updateData.username = validatedData.username;
+  } else if (validatedData.username) {
+    throw new Error("El nombre de usuario esta al dia");
+  }
 
-    if (validatedData.name && validatedData.name !== user.name) {
-        updateData.name = validatedData.name;
-    } else if (validatedData.name) {
-        messages.push("Name is already up to date");
+  if (validatedData.name && validatedData.name !== user.name) {
+    updateData.name = validatedData.name;
+  } else if (validatedData.name) {
+    throw new Error("Nombre esta al dia");
+  }
+
+  if (validatedData.surnames && validatedData.surnames !== user.surnames) {
+    updateData.surnames = validatedData.surnames;
+  } else if (validatedData.surnames) {
+    throw new Error("Apellidos esta al dia");
+  }
+
+  if (validatedData.role && validatedData.role !== user.role) {
+    // Verificar que el nuevo rol sea válido
+    const validRoles = ["admin", "employee", "superadmin"];
+    if (!validRoles.includes(validatedData.role)) {
+      throw new Error("Se dio un rol invalido");
     }
+    updateData.role = validatedData.role;
+  } else if (validatedData.role) {
+    throw new Error("El rol esta al dia");
+  }
 
-    if (validatedData.surnames && validatedData.surnames !== user.surnames) {
-        updateData.surnames = validatedData.surnames;
-    } else if (validatedData.surnames) {
-        messages.push("Surnames are already up to date");
+  if (validatedData.password) {
+    // Verificar si la nueva contraseña es igual a la actual
+    const isNewPasswordSame = await bcrypt.compare(
+      validatedData.password,
+      user.password
+    );
+    if (isNewPasswordSame) {
+      throw new Error("La contraseña esta al dia");
+    } else {
+      const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+      updateData.password = hashedPassword;
     }
+  }
 
-    if (validatedData.role && validatedData.role !== user.role) {
-        // Verificar que el nuevo rol sea válido
-        const validRoles = ["admin", "employee", "superadmin"];
-        if (!validRoles.includes(validatedData.role)) {
-            throw new Error("Invalid role provided");
-        }
-        updateData.role = validatedData.role;
-    } else if (validatedData.role) {
-        messages.push("Role is already up to date");
-    }
+  // Si no hay cambios, lanzar un error
+  if (Object.keys(updateData).length === 0) {
+    throw new Error("No hay campos validos para actualizar");
+  }
 
-    if (validatedData.password) {
-        // Verificar si la nueva contraseña es igual a la actual
-        const isNewPasswordSame = await bcrypt.compare(validatedData.password, user.password);
-        if (isNewPasswordSame) {
-            messages.push("Password is already up to date");
-        } else {
-            const hashedPassword = await bcrypt.hash(validatedData.password, 10);
-            updateData.password = hashedPassword;
-        }
-    }
+  // Actualizar el campo updated_at automáticamente
+  updateData.updated_at = new Date().toISOString();
 
-    // Si no hay cambios, devolver un mensaje
-    if (Object.keys(updateData).length === 0 && messages.length > 0) {
-        return { message: messages.join(", ") };
-    }
+  // Actualizar los detalles del usuario
+  const { error } = await supabase
+    .from("users")
+    .update(updateData)
+    .eq("id", userId);
 
-    // Si no se proporcionaron campos válidos, lanzar un error
-    if (Object.keys(updateData).length === 0 && messages.length === 0) {
-        throw new Error("No valid fields provided for update");
-    }
+  if (error) throw new Error("Error al actualizar el usuario");
 
-    // Actualizar el campo updated_at automáticamente
-    updateData.updated_at = new Date().toISOString();
-
-    // Actualizar los detalles del usuario
-    const { error } = await supabase
-        .from("users")
-        .update(updateData)
-        .eq("id", userId);
-    if (error) throw new Error("Error updating user details");
-
-    return { message: "User details updated successfully" };
+  return { message: "Detalles del usuario actualizados correctamente" };
 };
 
-// Listar usuarios con paginación, filtros y ordenamiento
 export const listUsersService = async (queryParams) => {
-    // Validar los parámetros de consulta con Zod
-    const validatedParams = validateListUsersQuery(queryParams);
+  console.log("🔍 Parámetros recibidos:", queryParams);
 
-    const {
-        page = 1,
-        limit = 10,
-        role,
-        search,
-        sortBy = "created_at",
-        sortOrder = "desc",
-    } = validatedParams;
+  const validatedParams = validateListUsersQuery(queryParams);
+  console.log("✅ Parámetros validados:", validatedParams);
 
-    // Valores predeterminados y límites
-    const DEFAULT_LIMIT = 10;
-    const MAX_LIMIT = 20;
-    const pageNumber = parseInt(page, 10);
-    const limitNumber = Math.min(parseInt(limit, 10), MAX_LIMIT);
+  const {
+    page = 1,
+    limit = 10,
+    role,
+    search,
+    sort = "created_at_desc", // Recibe `sort` en vez de `sortBy` y `sortOrder`
+  } = validatedParams;
 
-    if (isNaN(pageNumber) || pageNumber < 1 || isNaN(limitNumber) || limitNumber < 1) {
-        throw new Error("Invalid pagination parameters");
-    }
+  const DEFAULT_LIMIT = 10;
+  const MAX_LIMIT = 20;
+  const pageNumber = parseInt(page, 10);
+  const limitNumber = Math.min(parseInt(limit, 10), MAX_LIMIT);
 
-    const offset = (pageNumber - 1) * limitNumber;
+  if (
+    isNaN(pageNumber) ||
+    pageNumber < 1 ||
+    isNaN(limitNumber) ||
+    limitNumber < 1
+  ) {
+    console.error("❌ Error: Parámetros de paginación inválidos");
+    throw new Error("Invalid pagination parameters");
+  }
 
-    // Construir la consulta base
-    let query = supabase
-        .from("users")
-        .select("id, username, name, surnames, email, role, is_active, created_at, updated_at", { count: "exact" });
+  console.log("📌 Paginación:", { pageNumber, limitNumber });
 
-    // Aplicar filtros
-    if (role) {
-        query = query.eq("role", role); // Filtrar por rol
-    }
-    if (search) {
-        const searchTerm = `%${search}%`;
-        query = query.or(`username.ilike.${searchTerm},email.ilike.${searchTerm},name.ilike.${searchTerm}`);
-    }
+  const offset = (pageNumber - 1) * limitNumber;
 
-    // Aplicar ordenamiento
-    query = query.order(sortBy, { ascending: sortOrder === "asc" });
+  // Mapeo para extraer `sortBy` y `sortOrder`
+  const sortMapping = {
+    username_asc: { field: "username", order: "asc" },
+    username_desc: { field: "username", order: "desc" },
+    email_asc: { field: "email", order: "asc" },
+    email_desc: { field: "email", order: "desc" },
+    created_at_asc: { field: "created_at", order: "asc" },
+    created_at_desc: { field: "created_at", order: "desc" },
+  };
 
-    // Aplicar paginación
-    query = query.range(offset, offset + limitNumber - 1);
+  const { field: sortBy, order: sortOrder } =
+    sortMapping[sort] || sortMapping.created_at_desc;
 
-    // Ejecutar la consulta
-    const { data, error, count } = await query;
-    if (error) throw new Error(error.message);
+  console.log("🔀 Ordenamiento:", { sortBy, sortOrder });
 
-    return {
-        users: data,
-        total: count,
-        page: pageNumber,
-        totalPages: Math.ceil(count / limitNumber),
-    };
+  let query = supabase
+    .from("users")
+    .select(
+      "id, username, name, surnames, email, role, is_active, created_at, updated_at",
+      { count: "exact" }
+    );
+
+  // Aplicar filtros
+  if (role) {
+    query = query.eq("role", role);
+    console.log("🎭 Filtro aplicado - Role:", role);
+  }
+  if (search) {
+    const searchTerm = `%${search}%`;
+    query = query.or(
+      `username.ilike.${searchTerm},email.ilike.${searchTerm},name.ilike.${searchTerm}`
+    );
+    console.log("🔍 Filtro aplicado - Search:", search);
+  }
+
+  // Aplicar ordenamiento
+  query = query.order(sortBy, { ascending: sortOrder === "asc" });
+
+  // Aplicar paginación
+  query = query.range(offset, offset + limitNumber - 1);
+
+  console.log("🛠 Consulta generada antes de ejecutarla:", query);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    console.error("❌ Error en la consulta a Supabase:", error.message);
+    throw new Error(error.message);
+  }
+
+  console.log("✅ Datos obtenidos:", { data, total: count });
+
+  return {
+    users: data,
+    total: count,
+    page: pageNumber,
+    totalPages: Math.ceil(count / limitNumber),
+  };
 };
 
 // Obtener detalles de un usuario por ID
 export const getUserDetailsService = async (userId) => {
-    // Validar el ID del usuario con Zod
-    validateUserId(userId);
+  // Validar el ID del usuario con Zod
+  validateUserId(userId);
 
-    // Consultar los detalles del usuario en la base de datos
-    const { data, error } = await supabase
-        .from("users")
-        .select("id, username, name, surnames, email, role, is_active, created_at, updated_at")
-        .eq("id", userId)
-        .single();
+  // Consultar los detalles del usuario en la base de datos
+  const { data, error } = await supabase
+    .from("users")
+    .select(
+      "id, username, name, surnames, email, role, is_active, created_at, updated_at"
+    )
+    .eq("id", userId)
+    .single();
 
-    if (error || !data) {
-        throw new Error("User not found");
-    }
+  if (error || !data) {
+    throw new Error("User not found");
+  }
 
-    return data;
+  return data;
 };
 
 // Eliminar un usuario por ID
 export const deleteUserService = async (userId) => {
-    // Validar el ID del usuario con Zod
-    validateUserId(userId);
+  // Validar el ID del usuario con Zod (si ya lo tienes implementado)
+  validateUserId(userId);
 
-    // Obtener el usuario antes de eliminarlo
-    const { data: user, error } = await supabase
-        .from("users")
-        .select("id, role")
-        .eq("id", userId)
-        .single();
+  // Obtener el usuario antes de eliminarlo
+  const { data: user, error } = await supabase
+    .from("users")
+    .select("id, role")
+    .eq("id", userId)
+    .single();
 
-    if (error || !user) {
-        throw new Error("User not found");
+  if (error || !user) {
+    throw new Error("Usuario no encontrado");
+  }
+
+  // Verificar si el usuario es un superadministrador
+  if (user.role === "superadmin") {
+    throw new Error("No puedes eliminar la cuenta de un Superadmin");
+  }
+
+  // Intentar eliminar al usuario
+  const { error: deleteError } = await supabase
+    .from("users")
+    .delete()
+    .eq("id", userId);
+
+  // Si hubo un error de eliminación, revisar si es un error de clave foránea
+  if (deleteError) {
+    if (deleteError.message.includes("foreign key")) {
+      throw new Error(
+        "Este usuario no se puede eliminar por que esta asociado a varios productos"
+      );
+    } else {
+      throw new Error("Error al borrar el Usuario");
     }
+  }
 
-    // Verificar si el usuario es un superadministrador
-    if (user.role === "superadmin") {
-        throw new Error("Cannot delete the superadmin account");
-    }
-
-    // Eliminar el usuario
-    const { error: deleteError } = await supabase
-        .from("users")
-        .delete()
-        .eq("id", userId);
-
-    if (deleteError) {
-        throw new Error("Error deleting user");
-    }
-
-    return { message: "User deleted successfully" };
+  return { message: "Usuario eliminado correctamente" };
 };
 
 // Activar o desactivar un usuario por ID
 export const toggleUserActiveStatusService = async (userId, isActive) => {
-    // Validar el ID del usuario con Zod
-    validateUserId(userId);
+  // Validar el ID del usuario con Zod
+  validateUserId(userId);
 
-    // Verificar si el usuario existe
-    const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("id, role, is_active") // Incluimos "is_active" para verificar el estado actual
-        .eq("id", userId)
-        .single();
+  // Verificar si el usuario existe
+  const { data: user, error: userError } = await supabase
+    .from("users")
+    .select("id, role, is_active") // Incluimos "is_active" para verificar el estado actual
+    .eq("id", userId)
+    .single();
 
-    if (userError || !user) {
-        throw new Error("User not found");
-    }
+  if (userError || !user) {
+    throw new Error("User not found");
+  }
 
-    // Proteger al superadministrador
-    if (user.role === "superadmin") {
-        throw new Error("Cannot deactivate the superadmin account");
-    }
+  // Proteger al superadministrador
+  if (user.role === "superadmin") {
+    throw new Error("Cannot deactivate the superadmin account");
+  }
 
-    // Verificar si el estado ya es el mismo que se intenta establecer
-    if (user.is_active === isActive) {
-        return { message: `User is already ${isActive ? "active" : "inactive"}` };
-    }
+  // Verificar si el estado ya es el mismo que se intenta establecer
+  if (user.is_active === isActive) {
+    return { message: `User is already ${isActive ? "active" : "inactive"}` };
+  }
 
-    // Actualizar el estado del usuario
-    const { error } = await supabase
-        .from("users")
-        .update({ is_active: isActive })
-        .eq("id", userId);
+  // Actualizar el estado del usuario
+  const { error } = await supabase
+    .from("users")
+    .update({ is_active: isActive })
+    .eq("id", userId);
 
-    if (error) throw new Error("Error updating user status");
+  if (error) throw new Error("Error updating user status");
 
-    return { message: `User ${isActive ? "activated" : "deactivated"} successfully` };
+  return {
+    message: `User ${isActive ? "activated" : "deactivated"} successfully`,
+  };
 };

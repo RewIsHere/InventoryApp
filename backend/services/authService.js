@@ -50,7 +50,7 @@ export const registerUserService = async (userData) => {
   // Validar formato adicional del username
   if (!isUsernameValid(username)) {
     throw new Error(
-      "Username can only contain letters, numbers, underscores (_), and hyphens (-)"
+      "El nombre de usuario solo puede contener letras, números, guiones bajos (_) y guiones (-)"
     );
   }
 
@@ -61,7 +61,7 @@ export const registerUserService = async (userData) => {
     .eq("username", username)
     .single();
   if (existingUsername) {
-    throw new Error("Username is already in use by another user");
+    throw new Error("El nombre de usuario ya esta en uso");
   }
 
   // Verificar si el email ya está en uso
@@ -71,7 +71,7 @@ export const registerUserService = async (userData) => {
     .eq("email", email)
     .single();
   if (existingEmail) {
-    throw new Error("Email is already in use by another user");
+    throw new Error("El correo ya esta siendo usado por otro usuario");
   }
 
   // Cifrar la contraseña
@@ -87,7 +87,7 @@ export const registerUserService = async (userData) => {
     .single();
   if (error) throw new Error(error.message);
 
-  return { message: "User registered successfully", user: data };
+  return { message: "Usuario registrado correctamente", user: data };
 };
 
 export const loginUserService = async ({ email, password }) => {
@@ -104,15 +104,18 @@ export const loginUserService = async ({ email, password }) => {
       .single();
 
     if (userError || !user) {
-      console.error("User not found or database error:", userError);
-      throw new Error("Invalid credentials");
+      console.error(
+        "Usuario no encontrado o error en la base de datos:",
+        userError
+      );
+      throw new Error("Credenciales invalidas");
     }
 
     // Verificar la contraseña
     const isMatch = await bcrypt.compare(validatedPassword, user.password);
     if (!isMatch) {
       console.error("Password mismatch:", validatedPassword, user.password);
-      throw new Error("Invalid credentials");
+      throw new Error("Contraseña incorrecta");
     }
 
     // Generar tokens
@@ -159,7 +162,7 @@ export const logoutUserService = async (userId) => {
     throw new Error("Error logging out");
   }
 
-  return { message: "Session closed successfully" };
+  return { message: "Sesion cerrada correctamente" };
 };
 
 // Refrescar token de acceso
@@ -218,7 +221,7 @@ export const getProfileService = async (userId) => {
     .single();
 
   if (error || !data) {
-    throw new Error("User not found");
+    throw new Error("Usuario no encontrado");
   }
 
   return data;
@@ -228,7 +231,7 @@ export const getProfileService = async (userId) => {
 export const forgotPasswordService = async (email) => {
   // Validar el correo electrónico
   if (!email) {
-    throw new Error("Email is required");
+    throw new Error("El correo es obligatorio");
   }
 
   // Verificar si el usuario existe
@@ -239,7 +242,7 @@ export const forgotPasswordService = async (email) => {
     .single();
 
   if (userError || !user) {
-    throw new Error("User not found");
+    throw new Error("Usuario no encontrado");
   }
 
   // Generar un nuevo token único
@@ -261,7 +264,7 @@ export const forgotPasswordService = async (email) => {
   // Enviar correo electrónico con el enlace
   await sendResetEmail(user.email, resetLink);
 
-  return { message: "Password reset link sent to your email" };
+  return { message: "El link de restablecimiento fue enviado a tu correo" };
 };
 
 // Restablecer contraseña

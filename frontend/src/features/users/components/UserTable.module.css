@@ -1,0 +1,50 @@
+/* UserTable.module.css */
+.actionsButton {
+  margin: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.actionsButton:hover {
+  background-color: #0056b3;
+}
+
+.actionsButton:focus {
+  outline: none;
+}
+
+.modalButton {
+  margin: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+}
+
+.modalButton:hover {
+  background-color: #218838;
+}
+
+.cancelButton {
+  margin: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  background-color: #dc3545;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #c82333;
+}

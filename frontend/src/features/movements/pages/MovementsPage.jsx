@@ -2,9 +2,9 @@ import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./MovementsPage.module.css";
 import Sidebar from "../components/Sidebar";
-import ProductList from "../components/ProductList";
-import Searchbar from "../components/Searchbar";
 import { Button } from "@Buttons";
+import MovementCard from "../components/MovementCard";
+import MovementsList from "../components/MovementList";
 
 const MovementsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,7 +23,7 @@ const MovementsPage = () => {
   };
 
   const handleNavigation = () => {
-    navigate("/products/add"); // Cambia "/otra-ruta" por la URL deseada
+    navigate("/movements/add"); // Cambia "/otra-ruta" por la URL deseada
   };
 
   return (
@@ -33,10 +33,6 @@ const MovementsPage = () => {
           <h1 className={styles.titleText}>Movimientos</h1>
         </div>
         <div className={styles.rightHeader}>
-          <Searchbar
-            placeholder="Buscar por nombre, codigo de barras..."
-            onSearch={handleSearch}
-          />
           <Button variant="primary" size="medium" onClick={handleNavigation}>
             Añadir Movimiento
           </Button>
@@ -46,7 +42,9 @@ const MovementsPage = () => {
         <div className={styles.left}>
           <Sidebar />
         </div>
-        <div className={styles.right}></div>
+        <div className={styles.right}>
+          <MovementsList />
+        </div>
       </div>
     </div>
   );

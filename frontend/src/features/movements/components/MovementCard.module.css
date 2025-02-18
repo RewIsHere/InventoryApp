@@ -1,0 +1,93 @@
+.card {
+  display: grid;
+  grid-template-columns: 1fr min-content 1fr 1f min-content;
+  grid-template-rows: auto auto;
+  gap: 10px 10px;
+  grid-template-areas:
+    " name divider productsTitle userTitle action"
+    " type divider products user action";
+  border-radius: 12px;
+  height: 120px;
+  padding: 5px 20px 5px 20px;
+  background-color: var(--color-bg-second);
+}
+
+.name {
+  display: flex;
+  justify-content: left;
+  align-items: end;
+  grid-area: name;
+}
+
+.badge {
+  margin-right: 10px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: divider;
+}
+
+.productsTitle {
+  display: flex;
+  align-items: end;
+  grid-area: productsTitle;
+}
+
+.products {
+  display: flex;
+  align-items: start;
+  grid-area: products;
+}
+
+.userTitle {
+  display: flex;
+  align-items: end;
+  grid-area: userTitle;
+}
+
+.user {
+  display: flex;
+  align-items: start;
+  grid-area: user;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  grid-area: action;
+  margin-right: 10px;
+}
+
+.action svg {
+  fill: #b0bac5;
+}
+
+.productcategory {
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+}
+
+.titleText {
+  color: var(--color-text-secondary);
+}
+
+.movementID {
+  font-size: 20px;
+}
+
+.value {
+  font-weight: 400;
+}
+
+svg.deleteicons {
+  fill: #f31260;
+}
+
+.productcategory svg {
+  fill: #b0bac5;
+}

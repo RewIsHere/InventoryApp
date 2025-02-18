@@ -17,6 +17,15 @@ import ProductLayout from "./shared/components/layout/ProductLayout";
 import ProductDetailsPage from "./features/products/pages/subpages/ProductDetailsPage";
 import ProductHistoryPage from "./features/products/pages/subpages/ProductHistoryPage";
 import ProductNotesPage from "./features/products/pages/subpages/ProductNotesPage";
+import UsersPage from "./features/users/pages/UsersPage";
+import EditUserPage from "./features/users/pages/EditUserPage";
+import AddUserPage from "./features/users/pages/AddUserPage";
+import MovementsPage from "./features/movements/pages/MovementsPage";
+import RegisterMovement from "./features/movements/pages/RegisterMovement";
+import ScanProducts from "./features/movements/pages/ScanProducts";
+import MovementDetails from "./features/movements/pages/MovementDetails";
+import PendingPage from "./features/pendingreviews/pages/PendingPage";
+import PendingDetails from "./features/pendingreviews/pages/PendingDetails";
 
 const App = () => {
   return (
@@ -103,6 +112,92 @@ const App = () => {
               <Route path="notes" element={<ProductNotesPage />} />{" "}
               {/* ⬅️ /products/:id/history */}
             </Route>
+
+            <Route
+              path="/movements"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <MovementsPage />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/movements/add"
+              element={
+                <ProtectedRoute>
+                  <RegisterMovement />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movements/scan"
+              element={
+                <ProtectedRoute>
+                  <ScanProducts />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/movements/:id"
+              element={
+                <ProtectedRoute>
+                  <MovementDetails />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pendings"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <PendingPage />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pendings/:id"
+              element={
+                <ProtectedRoute>
+                  <PendingDetails />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/users"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <UsersPage />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/users/add"
+              element={
+                <ProtectedRoute>
+                  <AddUserPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/users/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <EditUserPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </AuthProvider>
       </ToastProvider>

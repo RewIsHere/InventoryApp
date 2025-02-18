@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 300px;
+  background-color: var(--color-bg-second);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.container h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.container li {
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.container li:hover {
+  color: #007bff;
+}
+
+.statusContainer {
+  height: 100px;
+}
+
+.resetContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.resetContainer svg {
+  fill: white;
+}

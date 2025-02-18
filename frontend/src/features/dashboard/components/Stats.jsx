@@ -15,7 +15,7 @@ const Stats = () => {
     // Mostrar esqueletos mientras se cargan los datos
     return (
       <div className={styles.container}>
-        {[...Array(3)].map((_, index) => (
+        {[...Array(2)].map((_, index) => (
           <StatCard
             key={index}
             icon={

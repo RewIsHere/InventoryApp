@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styles from "./Input.module.css";
 
@@ -10,21 +10,14 @@ const Input = ({
   onValueChange,
   size = "medium",
   externalError,
-  defaultValue = "", // Valor por defecto agregado
+  value = "", // Cambié "defaultValue" a "value"
 }) => {
-  const [value, setValue] = useState(defaultValue); // Usar defaultValue para inicializar el estado
   const [error, setError] = useState("");
-
-  // Este efecto se asegura de que el valor por defecto se pueda actualizar si cambia
-  useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
 
   const handleChange = (e) => {
     const newValue = e.target.value;
-    setValue(newValue);
-
     let validationError = "";
+
     if (type === "email" && !/\S+@\S+\.\S+/.test(newValue)) {
       validationError = "Correo inválido";
     }
@@ -52,7 +45,7 @@ const Input = ({
         name={name}
         type={type}
         placeholder={placeholder}
-        value={value} // Usar el estado controlado value
+        value={value} // Cambié a "value" para ser controlado desde el exterior
         onChange={handleChange}
         className={`${styles.input} ${styles[size]} ${
           error || externalError ? styles.error : ""

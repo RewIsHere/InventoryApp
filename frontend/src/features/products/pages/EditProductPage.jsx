@@ -142,7 +142,7 @@ const EditProductPage = () => {
                 type="text"
                 placeholder="Escribe el nombre"
                 name="name"
-                defaultValue={formData.name}
+                value={formData.name}
                 onValueChange={handleInputChange}
                 required
               />
@@ -173,7 +173,7 @@ const EditProductPage = () => {
                     type="text"
                     placeholder="Ingrese el código de barras"
                     name="barcode"
-                    defaultValue={formData.barcode}
+                    value={formData.barcode}
                     onValueChange={handleInputChange}
                     required
                   />
