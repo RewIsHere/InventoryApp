@@ -34,12 +34,12 @@ export const login = async (req, res) => {
       const zodErrors = error.errors.map((err) => err.message);
       return res.status(400).json({ error: zodErrors.join(", ") });
     }
-    if (error.message === "Invalid credentials") {
-      return res.status(401).json({ error: "Invalid credentials" });
+    if (error.message === "Credenciales invalidas") {
+      return res.status(401).json({ error: "Credenciales invalidas" });
     }
 
-    if (error.message === "Invalid credentials") {
-      return res.status(401).json({ error: "Invalid credentials" });
+    if (error.message === "Contraseña incorrecta") {
+      return res.status(401).json({ error: "Contraseña incorrecta" });
     }
     res.status(500).json({ error: error.message });
   }
@@ -49,7 +49,7 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     await logoutUserService(req.user.id);
-    res.status(200).json({ message: "Session closed successfully" });
+    res.status(200).json({ message: "Sesion cerrada correctamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -66,9 +66,7 @@ export const refreshAccessToken = async (req, res) => {
       return res.status(400).json({ error: zodErrors.join(", ") });
     }
     if (error.message === "Invalid or expired refresh token") {
-      return res
-        .status(401)
-        .json({ error: "Invalid or expired refresh token" });
+      return res.status(401).json({ error: "Invalido o token expirado" });
     }
     res.status(500).json({ error: error.message });
   }
@@ -94,7 +92,7 @@ export const forgotPassword = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     if (error.message === "User not found") {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
     res
       .status(500)
@@ -113,20 +111,18 @@ export const resetPassword = async (req, res) => {
       return res.status(400).json({ error: zodErrors.join(", ") });
     }
     if (error.message === "Invalid or expired token") {
-      return res.status(400).json({ error: "Invalid or expired token" });
+      return res.status(400).json({ error: "Token invalido o expirado" });
     }
     if (error.message === "User not found") {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
     if (
       error.message ===
       "New password must be different from the current password"
     ) {
-      return res
-        .status(400)
-        .json({
-          error: "New password must be different from the current password",
-        });
+      return res.status(400).json({
+        error: "La nueva contraseña tiene que ser diferente a la actual",
+      });
     }
     res.status(500).json({ error: error.message });
   }
@@ -148,28 +144,26 @@ export const validateResetToken = async (req, res) => {
     if (error.message === "The token has expired. Please request a new one.") {
       return res
         .status(400)
-        .json({ error: "The token has expired. Please request a new one." });
+        .json({ error: "El token ha expirado. Por favor solicita uno nuevo." });
     }
     if (
       error.message ===
       "The token has an invalid format. Please check the link or request a new one."
     ) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "The token has an invalid format. Please check the link or request a new one.",
-        });
+      return res.status(400).json({
+        error:
+          "El token tiene un formato invalido. Por favor revisa el link o solicita uno nuevo.",
+      });
     }
     if (error.message === "Invalid or expired token JWT") {
       return res
         .status(400)
-        .json({ error: "The token is invalid or has expired." });
+        .json({ error: "El token es invalido o ha expirado." });
     }
     if (error.message === "Invalid or expired token BD") {
       return res
         .status(400)
-        .json({ error: "The token is invalid or has expired." });
+        .json({ error: "El token es invalido o ha expirado." });
     }
 
     // Manejar otros errores inesperados

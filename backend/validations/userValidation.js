@@ -41,19 +41,22 @@ export const validateAdminUpdate = (data) => {
       .min(8, "Password must be at least 8 characters long")
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
-        "Password must include letters, numbers, and special characters"
+        "La contraseña debe incluir, numeros, letras y caracteres especiales"
       )
-      .refine((value) => !/\s/.test(value), "Password cannot contain spaces")
+      .refine(
+        (value) => !/\s/.test(value),
+        "La contraseña debe ser minimo de 8 caracteres"
+      )
       .optional(),
-    name: z.string().min(1, "Name is required").optional(),
-    surnames: z.string().min(1, "Surnames are required").optional(),
+    name: z.string().min(1, "El nombre es requerido").optional(),
+    surnames: z.string().min(1, "Los apellidos son requeridos").optional(),
     role: z.enum(["admin", "employee", "superadmin"]).optional(),
     username: z
       .string()
-      .min(3, "Username must be at least 3 characters long")
+      .min(3, "El nombre de usuario debe ser de minimo 3 caracteres")
       .refine(
         (value) => /^[a-zA-Z0-9_-]+$/.test(value),
-        "Username can only contain letters, numbers, underscores (_), and hyphens (-)"
+        "El nombre de usuario solo puede contener letras, números, guiones bajos (_) y guiones (-)"
       )
       .optional(),
   });

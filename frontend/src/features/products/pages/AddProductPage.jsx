@@ -150,6 +150,7 @@ const AddProductPage = () => {
                 type="text"
                 placeholder="Escribe el nombre"
                 name="name"
+                value={formData.name}
                 onValueChange={handleInputChange}
                 required
               />
@@ -180,6 +181,7 @@ const AddProductPage = () => {
                     type="text"
                     placeholder="Ingrese el código de barras"
                     name="barcode"
+                    value={formData.barcode}
                     onValueChange={handleInputChange}
                     required
                   />
