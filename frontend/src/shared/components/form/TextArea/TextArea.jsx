@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import styles from "./Textarea.module.css";
+import styles from "./TextArea.module.css";
 
 const Textarea = ({ label, placeholder, value, onChange, error, size = "medium", maxLength = 200 }) => {
   // Variantes para la animación de opacidad
