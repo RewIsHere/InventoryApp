@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
     "engines": {
-    "node": "22.15.0"
+    "node": "24.0.2"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
