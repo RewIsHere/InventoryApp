@@ -12,7 +12,7 @@ export const useAuth = () => {
       try {
         const token = localStorage.getItem("authToken");
         if (token) {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}api/v1/auth/profile`, {
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/auth/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           setUser(response.data.user);
